@@ -34,6 +34,11 @@
 
 \let\myCite\cite
 \renewcommand\cite{\unskip~\myCite}
+\let\myRef\ref
+\renewcommand\ref{\unskip~\myRef}
+
+\newcommand\hatx{\^{}}
+
 
 % list of acronyms
 %\usepackage[acronym,nonumberlist,toc,numberedsection=autolabel,nomain]{glossaries}
@@ -75,45 +80,38 @@
 %\newacronym{GNU}{GNU}{GNU's Not Unix!}
 \begin{introduction}
 
+
+
 Classic command line interfaces were mostly replaced by GUIs in consumer software \cite{norman2007ui}. \todo{REF?} However, many professionals around the world still rely on UNIX shells to achieve their daily tasks. CLIs are generally not replaceable by GUIs because GUIs do not scale well when the number of available actions is high \cite{norman2007ui}. 
 
 More than half of all developers use Unix-based operating systems\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers uses Linux and MacOS respectively.}. 
 About half of all developers have been working with Linux during year 2018. \cite{stackoverflow2019devsurvey} 
 
-Default shell on GNU/Linux is bash \cite{ramey1994gnubash} and default shell on MacOS is zsh since October 2019 \cite{apple2019zsh}. This work will primarily focus on these two popular shells.
+Default shell on GNU/Linux is bash \cite{ramey1994gnubash} and default shell on MacOS is zsh since October 2019 \cite{apple2019zsh}. In this work we primarily focus on these two popular shells.
+\todo{TODO: polish the argument why is this work relevant \hatx\hatx\hatx}
 
-The standard shell history contains information about previously executed command lines. Each record contains following information: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in zsh and only when it is enabled.\cite{zshdocs}}.
+The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in zsh and only when it is enabled.\cite{zshdocs}}. 
 
-It is quite common to use shell configuration\footnote{\todotext{e.g. bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This causes sequences of records in the history to no longer represent a sequence of actual executed command lines. 
+Additionally, it is quite common to use shell configuration\footnote{\todotext{e.g. bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This removes more information from history because the original command line sequences are lost.
 
 As we can see the standard shell history contains only very basic information about executed command lines.
-There is additional contextual information available at the time of command execution i.e. present working directory, exit status, and previously executed commands. In this work we explore the possibilities of using the context both to suggest more relevant history records to the user and to directly search using the context.
-\todo{ALT: In this thesis we explore the possibilities of using the contextual information to increase the usability of standard shell history.}
-
-
-This limits the potential of standard shell history utilities because shell usage is contextual. is not generally used to run ad-hoc commands but 
+There is much more contextual data available at the time of command line execution e.g. present working directory, exit status, and previously executed commands. In this work, we explore the possibilities of using the contextual data about executed commands to increase the usefulness of shell history.
 
 
 
-When using shells you likely do not run individual commands completely independently of each other. But instead run commands as parts of different workflows that 
+% BAD: This limits the potential of standard shell history utilities because shell usage is contextual. is not generally used to run ad-hoc commands but 
 
+% MORE PRACTICAL: When using shells you likely do not run individual commands completely independently of each other. But instead run commands as parts of different workflows that 
 
-%\begin{figure}
-%  \tmpframe{\includegraphics[width=\linewidth]{figures/misc/plot_so_dev-primary-os.png}}
-%  \caption{Developers' Primary Operating Systems from \cite{stackoverflow2019devsurvey-os} (87,851 responses)}
-%\end{figure}
+\todotext{TODO: describe the contents of this work / layout} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
 
-\todotext{TODO: explain what is this work about}
+After that, we focus on people. We start broad and research how people use computer tools in general. Then we move on to examining how people use shell and shell history.
 
-\todotext{TODO: argue why is this work important}
+Next, we focus on the contextual information; We cover what information is available to be saved at the time of command line execution and we discuss how it could be used to enhance shell history.
 
+At this point we move on to design(ing) ...
+\todotext{TODO: finish this intro}
 
-
-Dummy citation \cite{greenberg1993computer}
-
-\blind[0]
-
-\todotext{TODO: describe the contents of this work / layout}
 
 \blind[2]
 
@@ -127,6 +125,7 @@ Dummy citation \cite{greenberg1993computer}
 \blind
 
 \section{Shells, existing shell history features and tools}
+
 
 \todotext{TODO: describe contents of this section}
 
@@ -169,6 +168,8 @@ Dummy citation \cite{greenberg1993computer}
 \blind[2]
 
 \subsection{How people use tools}
+
+Dummy citation \cite{greenberg1993computer}
 
 \blind[2]
 
