@@ -32,10 +32,13 @@
 \newcommand{\tmpframe}[1]{\fbox{#1}}
 %\renewcommand{\tmpframe}[1]{#1}
 
+\let\myCite\cite
+\renewcommand\cite{\unskip~\myCite}
+
 % list of acronyms
-% \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel,nomain]{glossaries}
+%\usepackage[acronym,nonumberlist,toc,numberedsection=autolabel,nomain]{glossaries}
 \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
-% \makeglossaries
+%\makeglossaries
 
 \newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
 \newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
@@ -54,12 +57,11 @@
 % \par My thanks also goes to RNDr. Jana Strakov{\' a} at. el for developing Nametag, Named entity recognition solution, I~used in this thesis, and answering my questions.
 % \par Finally I~want to thank my family and friends for their support trough my whole studies.
 \acknowledgements{TODO: I would like to thank my supervisor Ing. Lukáš Bařinka for his guidance, my colleagues and friends for their feedback, hundreds of people who downloaded this project for their trust, and my family for support during writing this thesis. Installfest for accepting my talk about this project. Github users who submitted issues and pull requests to the project.}
-\abstractCS{TODO: Tato práce se zabývá slovními slovníkovými metodami komprese dat, specifickou částí bezztrátových metod komprese dat. Součástí publikace jsou rovněž některé znakově orientované slovníkové metody, především z~rodiny LZ algoritmů, potřebné k~pochopení složitějších slovních metod. Stěžejní dílem práce je popis implementovaných algoritmů pro slovní slovníkovou kompresi dat, jejich modifikací a především výsledky provedených testů, stejně jako jejich vyhodnocení. V~publikaci jsou zároveň uvedeny detaily implementace aplikace a její uživatelská příručka.}
-\abstractEN{TODO: This thesis is an enhancement for standard shell history. It records shell history with context. It uses the recorded context to make it easier to find relevant history records and to make it possible to search search history using context explicitly.
+\abstractCS{\todotext{TODO: CZ abstrakt}  \blind[2]}
+\abstractEN{\todotext{TODO: abstract} This thesis is an enhancement for standard shell history. It records shell history with context. It uses the recorded context to make it easier to find relevant history records and to make it possible to search search history using context explicitly.
 
-
-This thesis is concerned with word-based dictionary methods of data compression. The word-based dictionary methods are part of lossless data compression methods. The character-based dictionary compression methods, especially from LZ-algorithms family, are a part of this issue. These compression methods are very important to understand more difficult word-based ones. The main sight of this publication is description of implemented word-based dictionary compression algorithms. Modifications of these methods and results of experiments are included too. There are also details contextual with implementation of the application and its user manual. The objective of this thesis
-is examination of word-based dictionary data compression methods, possibilities of their improvement and their implementation linked with experiments on well-known data compression corpuses.}
+\blind[2]
+}
 \placeForDeclarationOfAuthenticity{Prague} %where you have signed the declaration
 \keywordsCS{Shell, Příkazová řádka, Historie shellu, Nástroje produktivity}
 \keywordsEN{Shell, Command line, Shell history, Productivity tools}
@@ -68,15 +70,46 @@ is examination of word-based dictionary data compression methods, possibilities 
 
 \begin{document}
 
-% \newacronym{LZW}{LZW}{Lempel Ziv Welch}
-% \newacronym{RLE}{RLE}{Run-Length Encoding}
+%\newacronym{GUI}{GUI}{Graphical User Interface}
+%\newacronym{CLI}{CLI}{Command Line Interface}
+%\newacronym{GNU}{GNU}{GNU's Not Unix!}
 \begin{introduction}
 
-Dummy citation \cite{greenberg1993computer}
+Classic command line interfaces were mostly replaced by GUIs in consumer software \cite{norman2007ui}. \todo{REF?} However, many professionals around the world still rely on UNIX shells to achieve their daily tasks. CLIs are generally not replaceable by GUIs because GUIs do not scale well when the number of available actions is high \cite{norman2007ui}. 
+
+More than half of all developers use Unix-based operating systems\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers uses Linux and MacOS respectively.}. 
+About half of all developers have been working with Linux during year 2018. \cite{stackoverflow2019devsurvey} 
+
+Default shell on GNU/Linux is bash \cite{ramey1994gnubash} and default shell on MacOS is zsh since October 2019 \cite{apple2019zsh}. This work will primarily focus on these two popular shells.
+
+The standard shell history contains information about previously executed command lines. Each record contains following information: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in zsh and only when it is enabled.\cite{zshdocs}}.
+
+It is quite common to use shell configuration\footnote{\todotext{e.g. bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This causes sequences of records in the history to no longer represent a sequence of actual executed command lines. 
+
+As we can see the standard shell history contains only very basic information about executed command lines.
+There is additional contextual information available at the time of command execution i.e. present working directory, exit status, and previously executed commands. In this work we explore the possibilities of using the context both to suggest more relevant history records to the user and to directly search using the context.
+\todo{ALT: In this thesis we explore the possibilities of using the contextual information to increase the usability of standard shell history.}
+
+
+This limits the potential of standard shell history utilities because shell usage is contextual. is not generally used to run ad-hoc commands but 
+
+
+
+When using shells you likely do not run individual commands completely independently of each other. But instead run commands as parts of different workflows that 
+
+
+%\begin{figure}
+%  \tmpframe{\includegraphics[width=\linewidth]{figures/misc/plot_so_dev-primary-os.png}}
+%  \caption{Developers' Primary Operating Systems from \cite{stackoverflow2019devsurvey-os} (87,851 responses)}
+%\end{figure}
 
 \todotext{TODO: explain what is this work about}
 
 \todotext{TODO: argue why is this work important}
+
+
+
+Dummy citation \cite{greenberg1993computer}
 
 \blind[0]
 
@@ -101,11 +134,13 @@ Dummy citation \cite{greenberg1993computer}
 
 \subsection{Recurrent systems}
 
+\todotext{TODO: explain what are recurrent systems}
+
 \blind
 
 \subsection{Shells and built-in history features}
 
-\todo{TODO: shell history configurations options}
+\todo{TODO: shell history configurations options - here or in a separate section}
 
 \blind[4]
 
@@ -115,7 +150,7 @@ Dummy citation \cite{greenberg1993computer}
 
 \blind[1]
 
-\subsection{Existing history tools}
+\subsection{Existing history tools \todotext{TODO: split into more subsections}}
 
 \blind[4]
 
@@ -168,7 +203,7 @@ lines entered for four individuals. (Greenberg)}
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmd-vocab-size.png}}
   \caption{Command vocabulary size vs. the number of command
-lines entered for four individuals.}
+lines entered for \todotext{N individuals}}
 \end{figure}
 
 
@@ -190,10 +225,26 @@ in Hanson et al. (1984). (Greenberg)}
 Table 5.2. The average recurrence rate of the four sample UNIX user
 groups
 
-
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/table_recurr-rate-in-different-samples.png}}
+  \caption{The average recurrence rate of the four sample UNIX user
+groups (Greenberg)}
+\end{figure}
 
 Figure 5.6. Command line vocabulary size vs. the number of commands
 entered for four typical individuals.
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_cmdline-vocab-size.png}}
+  \caption{Command line vocabulary size vs. the number of commands
+entered for four typical individuals. (Greenberg)}
+\end{figure}
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmdline-vocab-size.png}}
+  \caption{Command line vocabulary size vs. the number of commands
+entered for a single experienced programmer \todotext{TODO: title}}
+\end{figure}
 
 
 \blind[4]
@@ -324,13 +375,19 @@ entered for four typical individuals.
 
 \blind
 
+\subsection{Reverting keybindings}
+
+\blind
 
 \subsection{Universal keybinding library}
 \todotext{TODO: explain why: as you see bash and zsh have a different ways of supporting custom keybindings. To simplify our codebase we extracted the keybind setting logic into a library. (unified way to set keybindings)}
 
 \blind
 
-\todo{? talk about performance, daemon, etc.}
+\subsection{Performance issues of custom keybindings in bash}
+
+\blind
+
 
 \section{Fullscreen command line history searching application}
 
@@ -419,6 +476,38 @@ entered for four typical individuals.
 
 \begin{conclusion}
 
+\todotext{TODO: rewrite conclusion}
+
+I have analysed shell history features available in current shells. I explored available history tools and found both positive and negative inspiration.
+
+\par I have found previous research on how people use shell and shell history.  
+I have collected a sample of shell history. I have analyzed the collected usage data and compared it to data used in existing research. I have found which characteristics of shell usage changed over time and which characteristics stayed the same. I have concluded that most of the principals and ideas from the existing research do still hold. I have found out that potential recalled characters increased 4 times since the study was conducted. This and other differences reinforced the idea that it makes sense to design and develop new history related tools. 
+
+\par I have conducted a market research to find out how people interact with shell history and what are the workflows that are not well supported nowadays. I have modelled personas representing target users of the system. I have put together use cases based on actual shell history I have collected.
+I have designed a contextual shell history tools based on problems and suggestions from existing literature, user-centered design guidelines and principals, information learned via market research, and modelled personas.
+I have actively sought feedback from users during both design and implementation. 
+
+I have used usability principals and heuristics to test and evaluate the design.
+
+\par I have implemented a significant portion of the design. The project unobtrusively records shell history with context. It does both use context to offer relevant history records and for searching via fullscreen command line application.
+I have made sure that it's easy to install, update, configure and use. I have shared the resulting implementation with community and received overwhelmingly positive feedback and interest of contributors. Project was downloaded and installed over 5 hundred times since January. Github page of the project consistently attracts daily visitors.  
+
+\par I have described a number of possible metrics. I have explained why simple metrics are not sufficient. I have described the drawbacks of metrics in general. I have suggested meaningful metrics that can be used to evaluate shell history tools. I have used the suggested metrics to evaluate my implementation where possible. 
+
+\par I have used modelled personas and use cases to evaluate utility and usability of the system.
+I have used real life user data to evaluate user experience of the solution.
+
+
+I have made it easier to collect and study usage of shell and shell history in future research.
+I have proved that having contextual shell history brings many benefits. 
+I have demonstrated public demand for history tools. 
+I have created a universal shell library for binding custom functions to keys with the option to revert to previous state. 
+
+
+
+
+\todotext{TODO: write future work}
+
 \end{conclusion}
 
 \bibliographystyle{iso690.bst}
@@ -426,11 +515,11 @@ entered for four typical individuals.
 
 \appendix
 
-% \printglossaries
+%\printglossaries
 
 \chapter{Contents of SD card}\label{app:SDcontent}
 
-Visualise the contents of enclosed media. Use of \verb|dirtree| is recommended. Note that directories src and text with appropriate contents are mandatory.
+\todotext{TODO: Visualise the contents of enclosed media. Use of dirtree is recommended. Note that directories src and text with appropriate contents are mandatory.}
 
 
 \begin{figure}
