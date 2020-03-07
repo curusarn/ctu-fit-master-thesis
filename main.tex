@@ -25,6 +25,7 @@
 \usepackage{todonotes} 
 
 \newcommand{\todotext}[1]{\textcolor{red}{\textbf{[[#1]]}}}
+\newcommand{\redtext}[1]{\textcolor{red}{[[#1]]}}
 \definecolor{mygray}{gray}{0.6}
 \newcommand{\blind}[1][1]{\textcolor{mygray}{\Blindtext[#1][1]}}
 
@@ -103,11 +104,11 @@ There is much more contextual data available at the time of command line executi
 
 % MORE PRACTICAL: When using shells you likely do not run individual commands completely independently of each other. But instead run commands as parts of different workflows that 
 
-\todotext{TODO: describe the contents of this work / layout} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
+\todo{describe the contents of this work / layout} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
 
-After that, we focus on people. We start broad and research how people use computer tools in general. Then we move on to examining how people use shell and shell history.
+After that, we focus on people. We start broad and research how people use computer tools in general. Then we move on to examining how people use shell and shell history. We also look at public discourse related to history tools and engage in online discussions to find out more about configurations and tools people use.
 
-Next, we focus on the contextual information; We cover what information is available to be saved at the time of command line execution and we discuss how it could be used to enhance shell history.
+Next, we focus on the contextual information; We cover what information is available to be saved at the time of command line execution and we discuss how it could be used to enhance shell history. 
 
 At this point we move on to design(ing) ...
 \todotext{TODO: finish this intro}
@@ -127,15 +128,73 @@ At this point we move on to design(ing) ...
 \section{Shells, existing shell history features and tools}
 
 
+
 \todotext{TODO: describe contents of this section}
 
 \blind
 
 \subsection{Recurrent systems}
 
+
 \todotext{TODO: explain what are recurrent systems}
 
 \blind
+
+\subsection{Standard shell history features}
+Most of the history features we see and use today were adopted from older shells. Majority of these features stayed similar to their original versions. We look at the shells and the history features chronologically to see the influence of the earlier ones on the later ones.  
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/misc/shells.png}}
+  \caption{Linux shells since 1977, from \cite{jones2011shells} \todotext{TODO: Better quality or begone.}}
+\end{figure}
+
+
+\subsection{History features of C shell}
+
+C shell (csh) was initially released in 1978. 
+It features history substitution: a simple history mechanism enabling reuse of previously executed commands inspired by Interlisp\cite{joy1994cshintroduction}. Size of the history is configurable\footnote{Examples featured in \cite{joy1994cshintroduction} and \cite{dubois1995tcshusing} show history size set to 10 and 20 records respectively.} but according to \cite{cshman}, too large values may run the shell out of memory.
+
+C shell history substitution allows the user to reuse: the previous command line using \verb|!!|, the last argument of the previous command line using \verb|!$|, and all arguments of the previous command line using \verb|!*|. To run other commands lines than the previous one we could use \verb|!cc| which executes the last command line from history starting with \verb|cc|. Executing a command line based on absolute or relative index can be done using \verb|!5| or \verb|!-2| respectively. To see what command is about to be executed we could use e.g. \verb|!cc:p|, \verb|!5:p|, or \verb|!-2:p|; This only prints the history record instead of executing it. It is also possible to replace parts of command lines using \verb|!!:s/foo/bar/| or a shorthand \verb|^foo^bar| where \verb|foo| is replaced by \verb|bar| in the previous command and the result gets executed. \redtext{When using these features we do not see the resulting substituted command line until executing it. This can lead to errors or printing the substitutions first which slows users down.}
+    
+There is a \verb|history| command which prints out recent history records with their indexes. There are also other less notable history substitution features available; These are accessible using different modifiers that can follow \verb|!| character. Another noteworthy features of csh are: file name tab completion, tilde expansion, command aliases, and job control.\todo{check \& ref? } \redtext{history can be easily persisted across logins}
+
+\subsection{History features of Tenex C shell}
+Tenex C shell (tcsh) is an enhanced version of the C shell released in 1983\todo{REF}; It offers command line editing and programmable tab completion\cite{dubois1995tcshusing}. Since tcsh is a version of C shell, it does support all the previously described features of C shell. The history holds 100 previous command lines by default and it also contains datetime of the command line execution.
+
+
+Tcsh offers command line editing; This means that the user can manipulate the contents of the command line by using various built-in functions. A few examples of such functions are: \verb|delete-word|, \verb|expand-glob|, and \verb|history-search-backward|. All built-in functions can be bound to arbitrary key combinations. Additionally, tcsh features emacs and vi editing modes which come with default keybindings usual for the respective editors. When describing the deafult keybindings for tcsh in this section we are only considering the emacs mode.
+
+A portion of built-in functions allows the user to reuse command lines from the shell history. Functions \verb|up-history| and \verb|down-history| allow the user to step through the history; Default keybindings are \verb|CTRL-P| and \verb|arrow_up| for \verb|up-history|; and \verb|CTRL-N| and \verb|arrow_down| for  \verb|down-history| \cite{tcshman}. This is something you are likely already used to in your modern shell.
+
+  
+% BAD ALT: Pressing \verb|CTRL-P| invokes \verb|up-history| function which replaces the current command line contents with previous command line from history. Pressing \verb|CTRL-P| repeatedly continues up through the history. Pressing \verb|CTRL-N| invokes \verb|down-history| function which steps through the history in the other direction. These two functions are also often bound to \verb|arrow_up| and \verb|arrow_down| keys. 
+
+Besides stepping through history, tcsh features prefix search. \redtext{The function names may sound familiar to you.} The functions \verb|history-search-backward| \todo{make sure this doesn't overflow :( } and \verb|history-search-forward| use the command line contents before the cursor as a prefix to search the history in the desired direction. The default keybinding for these functions is a little weird; You need to press \verb|ESC| and then \verb|p| or \verb|n| for backward or forward search respectively. 
+
+Another useful history feature of tcsh is string search. In contrast to prefix search this feature allows us to search using any part of the command line not just the prefix. This feature is realised by \verb|i-search-back| and \verb|i-search-fwd| functions. Invoking these functions prints a secondary prompt under the primary one: \verb|bck:| or \verb|fwd:| depending on the function. Typing searches the history interactively in the desired direction. Invoking the functions repeatedly steps through the history records that match the query.
+These functions sound quite useful but despite that they are not bound to any keys by default.
+\redtext{So the users need to set up the key bindings themselves.}
+
+Activating vi mode in tcsh changes some of the keybindings. In addition to regular keybindings, stepping through history is available on keys \verb|K| and \verb|J|, and prefix search is available on \verb|SHIFT-K| and \verb|SHIFT-J|. Instead of \verb|i-search-back| and \verb|i-search-fwd| functions vi mode offers \verb|vi-search-back| and \verb|vi-search-fwd| with similar functionality.
+\redtext{vi mode has defaults - back: ? ,fwd: /}
+
+% Since we are mainly interested in history features we only focus on the functions that use history 
+% Command line editing was an important step forward in interactive shell use. It enables the user
+% As the name suggest it was inspired by features available in Tenex operating system. 
+
+\subsection{History features of Korn shell}
+Korn shell (ksh) was initially released in 1983; It was originally written as a proprietary software until being released as open source in 2005. History features of Korn shell are very similar to the features of Tenex C shell. Ksh features stepping through history, string search, and vi mode variant of the string search. It is worth mentioning that in ksh, string search is bound to \verb|CTRL-R| by default which is what you are probably used to in modern shells. We are not going to describe ksh history features in detail because of the similarity with already described tcsh history features.
+
+\subsection{History features of Bourne again shell and Z shell}
+
+
+
+\todotext{TODO: describe standard history features of zsh and bash}
+
+\todotext{TODO: describe }
+
+\subsection{Origins of shell history features}
+
 
 \subsection{Shells and built-in history features}
 
