@@ -7,7 +7,7 @@
 }
 
 
-@article{luu2020clicomplexity,
+@misc{luu2020clicomplexity,
     title = "The growth of command line options, 1979-Present",
     author = "Luu, Dan",
     year = "2020",
@@ -20,16 +20,10 @@
   title={UI breakthrough-command line interfaces},
   author={Norman, Don},
   journal={Jnd. org},
-  year={2007}
+  year={2007},
+  url={https://jnd.org/ui_breakthrough-command_line_interfaces}
 }
 
-@inproceedings{davison1997toward,
-  title={Toward an adaptive command line interface},
-  author={Davison, Brian D and Hirsh, Haym},
-  booktitle={HCI (2)},
-  pages={505--508},
-  year={1997}
-}
 
 @misc{stackoverflow2019devsurvey,
     key={Stack Overflow},
@@ -49,7 +43,8 @@
   number={4es},
   pages={13},
   year={1994},
-  publisher={Belltown Media}
+  publisher={Belltown Media},
+  url={https://www.linuxjournal.com/article/2784}
 }
 
 @misc{apple2019zsh,
@@ -71,7 +66,7 @@
 
 @misc{zshdocs,
     key={Zsh},
-    title={ZSH Documentation}, 
+    title={ZSH Documentation},
     url="http://zsh.sourceforge.net/Doc/", 
     howpublished = {[online]},
     note = {[cit. 2020-03-06]}
@@ -112,6 +107,8 @@
   url={http://web.deu.edu.tr/doc/oreily/unix/ksh/index.htm}
 }
 
+% features of ksh93: http://www.kornshell.org/doc/ksh93.html
+
 %tcsh
 @book{dubois1995tcshusing,
   title={Using csh \& tcsh: Type Less, Accomplish More},
@@ -128,8 +125,7 @@
     note = {[cit. 2020-03-06]}
 }
 
-
-@article{jones2011shells,
+@misc{jones2011shells,
     title = "Evolution of shells in Linux: From Bourne to Bash and beyond",
     author = "Jones, M.",
     year= "2011",
@@ -137,3 +133,90 @@
     url = "https://developer.ibm.com/tutorials/l-linux-shells/",
     note = "[cit. 2020-03-06]"
 }
+
+
+@inproceedings{davison1997toward,
+  title={Toward an adaptive command line interface},
+  author={Davison, Brian D and Hirsh, Haym},
+  booktitle={HCI (2)},
+  pages={505--508},
+  year={1997}
+}
+% 45% online accuracy
+% older longer version of similar research https://rucore.libraries.rutgers.edu/rutgers-lib/59481/PDF/1/play/ (38%)
+% newer more practical? easier to read https://www.aaai.org/Papers/Workshops/1998/WS-98-07/WS98-07-002.pdf
+
+
+
+@inproceedings{korvemaker2000predicting,
+  title={Predicting UNIX command lines: Adjusting to user patterns},
+  author={Korvemaker, Benjamin and Greiner, Russell},
+  booktitle={AAAI/IAAI},
+  pages={230--235},
+  year={2000}
+}
+% simple adaptaion and predictions to the user
+% robust 50% accuracy of prediction of the next command
+% argues that it's very hard to improve this (the 50%)
+% they also use greenberg's data
+% they see value in context
+% they did some interactive prototyping
+% short paper
+
+% more refs
+% https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=predicting+command+unix&btnG=
+
+
+@inproceedings{fitchett2012accessrank,
+  title={Accessrank: predicting what users will do next},
+  author={Fitchett, Stephen and Cockburn, Andy},
+  booktitle={Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
+  pages={2239--2242},
+  year={2012}
+}
+% multi purpose prediction algorithm
+% they predicted commands? (not command lines)
+
+@inproceedings{yoshida1994user,
+  title={User command prediction by graph-based induction},
+  author={Yoshida, Kenichi},
+  booktitle={Proceedings Sixth International Conference on Tools with Artificial Intelligence. TAI 94},
+  pages={732--735},
+  year={1994},
+  organization={IEEE}
+}
+
+% frecency algorithm
+% https://developer.mozilla.org/en-US/docs/Mozilla/Tech/Places/Frecency_algorithm
+
+
+@article{greenberg2001context,
+  title={Context as a dynamic construct},
+  author={Greenberg, Saul},
+  journal={Human--Computer Interaction},
+  volume={16},
+  number={2-4},
+  pages={257--268},
+  year={2001},
+  publisher={Taylor \& Francis}
+}
+% essential piece on how context is highly dynamic and any context-aware should act conservatively to not dissuade users
+% ", a single inappropriate system action may be enough to preclude people from using it further"
+% "observations of how the context-aware application performs in a real-world setting should inform its further design and redesign."
+% Situated Action vs. plan-based approach
+% Determining what information is necessary to infer a contextual state may be difficult
+% Determining an appropriate action from a given context may be difficult
+
+
+
+@article{bellotti2001intelligibility,
+  title={Intelligibility and accountability: human considerations in context-aware systems},
+  author={Bellotti, Victoria and Edwards, Keith},
+  journal={Human--Computer Interaction},
+  volume={16},
+  number={2-4},
+  pages={193--212},
+  year={2001},
+  publisher={Taylor \& Francis}
+}
+%  “There are human aspects of context that cannot be sensed or even inferred, so context-aware systems cannot be designed simply to act on our behalf.”

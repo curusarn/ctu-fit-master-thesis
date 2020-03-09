@@ -38,7 +38,10 @@
 \let\myRef\ref
 \renewcommand\ref{\unskip~\myRef}
 
+% \usepackage{spverbatim} % verb and verbatim with line breaks - doesn't break what I need
+
 \newcommand\hatx{\^{}}
+
 
 
 % list of acronyms
@@ -88,12 +91,12 @@ Classic command line interfaces were mostly replaced by GUIs in consumer softwar
 More than half of all developers use Unix-based operating systems\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers uses Linux and MacOS respectively.}. 
 About half of all developers have been working with Linux during year 2018. \cite{stackoverflow2019devsurvey} 
 
-Default shell on GNU/Linux is bash \cite{ramey1994gnubash} and default shell on MacOS is zsh since October 2019 \cite{apple2019zsh}. In this work we primarily focus on these two popular shells.
+Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on MacOS is zsh since October 2019 \cite{apple2019zsh}. In this work we primarily focus on these two popular shells.
 \todo{TODO: polish the argument why is this work relevant \hatx\hatx\hatx}
 
-The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in zsh and only when it is enabled.\cite{zshdocs}}. 
+The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in Zsh and only when it is enabled.\cite{zshdocs}}. 
 
-Additionally, it is quite common to use shell configuration\footnote{\todotext{e.g. bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This removes more information from history because the original command line sequences are lost.
+Additionally, it is quite common to use shell configuration\footnote{\todotext{e.g. Bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This removes more information from history because the original command line sequences are lost.
 
 As we can see the standard shell history contains only very basic information about executed command lines.
 There is much more contextual data available at the time of command line execution e.g. present working directory, exit status, and previously executed commands. In this work, we explore the possibilities of using the contextual data about executed commands to increase the usefulness of shell history.
@@ -104,7 +107,7 @@ There is much more contextual data available at the time of command line executi
 
 % MORE PRACTICAL: When using shells you likely do not run individual commands completely independently of each other. But instead run commands as parts of different workflows that 
 
-\todo{describe the contents of this work / layout} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
+\todo{describe the contents of this work / layout - redo because moved chapters in analysis} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
 
 After that, we focus on people. We start broad and research how people use computer tools in general. Then we move on to examining how people use shell and shell history. We also look at public discourse related to history tools and engage in online discussions to find out more about configurations and tools people use.
 
@@ -125,23 +128,11 @@ At this point we move on to design(ing) ...
 
 \blind
 
-\section{Shells, existing shell history features and tools}
+\section{Origins of standard history features in shells}
 
+In this chapter we explore the standard shell history features which are most likely available to majority our target users.
+Most of the history features we see and use today were adopted from older shells. Many of these features stayed similar to their original versions. We look at the shells and the history features chronologically to see the evolution and improvements in shell history facilities over the years.  
 
-
-\todotext{TODO: describe contents of this section}
-
-\blind
-
-\subsection{Recurrent systems}
-
-
-\todotext{TODO: explain what are recurrent systems}
-
-\blind
-
-\subsection{Standard shell history features}
-Most of the history features we see and use today were adopted from older shells. Majority of these features stayed similar to their original versions. We look at the shells and the history features chronologically to see the influence of the earlier ones on the later ones.  
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/misc/shells.png}}
@@ -151,94 +142,139 @@ Most of the history features we see and use today were adopted from older shells
 
 \subsection{History features of C shell}
 
-C shell (csh) was initially released in 1978. 
-It features history substitution: a simple history mechanism enabling reuse of previously executed commands inspired by Interlisp\cite{joy1994cshintroduction}. Size of the history is configurable\footnote{Examples featured in \cite{joy1994cshintroduction} and \cite{dubois1995tcshusing} show history size set to 10 and 20 records respectively.} but according to \cite{cshman}, too large values may run the shell out of memory.
+C shell (Csh) was initially released in 1978. 
+It features history substitution: a simple history mechanism enabling reuse of previously executed commands inspired by Interlisp\cite{joy1994cshintroduction}. Size of the history is configurable\footnote{Examples featured in \cite{joy1994cshintroduction} and \cite{dubois1995tcshusing}
+show history size set to 10 and 20 records respectively.} but according to \cite{cshman}, too large values may run the shell out of memory.
+
+% History is disabled by default (I think) persistence accross sessions is on my install
 
 C shell history substitution allows the user to reuse: the previous command line using \verb|!!|, the last argument of the previous command line using \verb|!$|, and all arguments of the previous command line using \verb|!*|. To run other commands lines than the previous one we could use \verb|!cc| which executes the last command line from history starting with \verb|cc|. Executing a command line based on absolute or relative index can be done using \verb|!5| or \verb|!-2| respectively. To see what command is about to be executed we could use e.g. \verb|!cc:p|, \verb|!5:p|, or \verb|!-2:p|; This only prints the history record instead of executing it. It is also possible to replace parts of command lines using \verb|!!:s/foo/bar/| or a shorthand \verb|^foo^bar| where \verb|foo| is replaced by \verb|bar| in the previous command and the result gets executed. \redtext{When using these features we do not see the resulting substituted command line until executing it. This can lead to errors or printing the substitutions first which slows users down.}
     
-There is a \verb|history| command which prints out recent history records with their indexes. There are also other less notable history substitution features available; These are accessible using different modifiers that can follow \verb|!| character. Another noteworthy features of csh are: file name tab completion, tilde expansion, command aliases, and job control.\todo{check \& ref? } \redtext{history can be easily persisted across logins}
+There is a \verb|history| command which prints out recent history records with their indexes. There are also other less notable history substitution features available; These are accessible using different modifiers that can follow \verb|!| character. Another noteworthy features of Csh are: file name tab completion, tilde expansion, command aliases, and job control.\todo{check \& ref? } \redtext{history can be easily persisted across logins}
+
+\redtext{savehist - allows to merge history instead of overwriting it}
+%savehist
+%If set, the shell does 'history -S' before exiting. If the first word is set to a number, at most that many lines are saved. (The number must be less than or equal to history.) If the second word is set to 'merge', the history list is merged with the existing history file instead of replacing it (if there is one) and sorted by time stamp and the most recent events are retained. (+)
+\redtext{commands lines are saved to history after the history expansion is performed}
+
 
 \subsection{History features of Tenex C shell}
-Tenex C shell (tcsh) is an enhanced version of the C shell released in 1983\todo{REF}; It offers command line editing and programmable tab completion\cite{dubois1995tcshusing}. Since tcsh is a version of C shell, it does support all the previously described features of C shell. The history holds 100 previous command lines by default and it also contains datetime of the command line execution.
+Tenex C shell (Tcsh) is an enhanced version of the C shell released in 1983\todo{REF}; It offers command line editing and programmable tab completion\cite{dubois1995tcshusing}. Since Tcsh is a version of C shell, it does support all the previously described features of C shell. The history holds 100 previous command lines by default and it also contains datetime of the command line execution.
 
 
-Tcsh offers command line editing; This means that the user can manipulate the contents of the command line by using various built-in functions. A few examples of such functions are: \verb|delete-word|, \verb|expand-glob|, and \verb|history-search-backward|. All built-in functions can be bound to arbitrary key combinations. Additionally, tcsh features emacs and vi editing modes which come with default keybindings usual for the respective editors. When describing the deafult keybindings for tcsh in this section we are only considering the emacs mode.
+Tcsh offers command line editing; This means that the user can manipulate the contents of the command line by using various built-in functions. A few examples of such functions are: \verb|delete-word|, \verb|expand-glob|, and \verb|history-search-backward|. All built-in functions can be bound to arbitrary key combinations. Additionally, Tcsh features emacs and vi editing modes which come with default keybindings usual for the respective editors. When describing the deafult keybindings for Tcsh in this section we are only considering the emacs mode.
 
 A portion of built-in functions allows the user to reuse command lines from the shell history. Functions \verb|up-history| and \verb|down-history| allow the user to step through the history; Default keybindings are \verb|CTRL-P| and \verb|arrow_up| for \verb|up-history|; and \verb|CTRL-N| and \verb|arrow_down| for  \verb|down-history| \cite{tcshman}. This is something you are likely already used to in your modern shell.
 
   
 % BAD ALT: Pressing \verb|CTRL-P| invokes \verb|up-history| function which replaces the current command line contents with previous command line from history. Pressing \verb|CTRL-P| repeatedly continues up through the history. Pressing \verb|CTRL-N| invokes \verb|down-history| function which steps through the history in the other direction. These two functions are also often bound to \verb|arrow_up| and \verb|arrow_down| keys. 
 
-Besides stepping through history, tcsh features prefix search. \redtext{The function names may sound familiar to you.} The functions \verb|history-search-backward| \todo{make sure this doesn't overflow :( } and \verb|history-search-forward| use the command line contents before the cursor as a prefix to search the history in the desired direction. The default keybinding for these functions is a little weird; You need to press \verb|ESC| and then \verb|p| or \verb|n| for backward or forward search respectively. 
+Besides stepping through history, Tcsh features prefix search. The functions \verb|history-search-backward| \todo{make sure this doesn't overflow :( } and \verb|history-search-forward| use the command line contents before the cursor as a prefix to search the history in the desired direction. The default keybindings for these functions are a little weird; \todo{TODO: Pressing ESC an then x is just a way of pressing ALT-x without having ALT. }
+You need to press \verb|ESC| and then \verb|p| or \verb|n| for backward or forward search respectively. 
 
-Another useful history feature of tcsh is string search. In contrast to prefix search this feature allows us to search using any part of the command line not just the prefix. This feature is realised by \verb|i-search-back| and \verb|i-search-fwd| functions. Invoking these functions prints a secondary prompt under the primary one: \verb|bck:| or \verb|fwd:| depending on the function. Typing searches the history interactively in the desired direction. Invoking the functions repeatedly steps through the history records that match the query.
+Another useful history feature of Tcsh is interactive string search. In contrast to prefix search this feature allows us to search history using any part of the command line not just the prefix. This feature is realised by \verb|i-search-back| and \verb|i-search-fwd| functions. Invoking these functions prints a secondary prompt under the primary one: \verb|bck:| or \verb|fwd:| depending on the invoked function. Typing searches the history interactively in the desired direction. Invoking the functions repeatedly steps through the history records that match the query.
 These functions sound quite useful but despite that they are not bound to any keys by default.
-\redtext{So the users need to set up the key bindings themselves.}
+% \redtext{So the users need to set up the key bindings themselves.}
 
-Activating vi mode in tcsh changes some of the keybindings. In addition to regular keybindings, stepping through history is available on keys \verb|K| and \verb|J|, and prefix search is available on \verb|SHIFT-K| and \verb|SHIFT-J|. Instead of \verb|i-search-back| and \verb|i-search-fwd| functions vi mode offers \verb|vi-search-back| and \verb|vi-search-fwd| with similar functionality.
-\redtext{vi mode has defaults - back: ? ,fwd: /}
+Activating vi mode in Tcsh changes some of the keybindings. In addition to regular keybindings, stepping through history is available on keys \verb|K| and \verb|J|, and prefix search is available on \verb|SHIFT-K| and \verb|SHIFT-J|. Instead of \verb|i-search-back| and \verb|i-search-fwd| functions vi mode offers \verb|vi-search-back| and \verb|vi-search-fwd| with similar functionality.
+% \redtext{vi mode has defaults - back: ? ,fwd: /}
+
+\redtext{histdup - prunes duplicates from history}
+% tcsh man page (+ means "not available in csh")
+%histdup (+)
+%               Controls  handling  of  duplicate  entries in the history list.  If set to `all' only unique history events are entered in the history list.  If set to `prev' and the last
+%               history event is the same as the current command, then the current command is not entered in the history.  If set to `erase' and the same event is  found  in  the  history
+%               list, that old event gets erased and the current one gets inserted.  Note that the `prev' and `all' options renumber history events so there are no gaps.
+
 
 % Since we are mainly interested in history features we only focus on the functions that use history 
 % Command line editing was an important step forward in interactive shell use. It enables the user
 % As the name suggest it was inspired by features available in Tenex operating system. 
 
 \subsection{History features of Korn shell}
-Korn shell (ksh) was initially released in 1983; It was originally written as a proprietary software until being released as open source in 2005. History features of Korn shell are very similar to the features of Tenex C shell. Ksh features stepping through history, string search, and vi mode variant of the string search. It is worth mentioning that in ksh, string search is bound to \verb|CTRL-R| by default which is what you are probably used to in modern shells. We are not going to describe ksh history features in detail because of the similarity with already described tcsh history features.
+Korn shell (Ksh) was initially released in 1983; It was originally written as a proprietary software until being released as open source in 2005.\todo{REF} History features of Korn shell are a very similar to the features of Tenex C shell. Ksh offers stepping through history, string search, and vi mode variant of the string search. It is worth mentioning that in Ksh, string search is bound to \verb|CTRL-R| by default which is what you are probably used to in modern shells. 
 
-\subsection{History features of Bourne again shell and Z shell}
+Ksh offers a shell builtin command \verb|fc| that provides a superset of C shell history mechanism\cite{rosenblatt2000kshlearning}. It allows the user to list recent history entries, edit command lines from history with an editor, and run history entries with changes. Running \verb|fc -l| lists the previous command lines from history (with indexes). So does \verb|history|, because in Ksh it is just an alias for \verb|fc -l|. To edit previous command line from history in an editor we could use \verb|fc| (without arguments) which executes the resulting command after we are done editing it. If we want to choose an editor we could use \verb|fc -e vi|. Running \verb|fc -e - foo=bar| skips the editing, replaces occurrences of \verb|foo| with \verb|bar| and executes the result. To access more then the previous command line we would use absolute or relative indexes similarly to the history expansion in Csh. For example, \verb|fc 5| and \verb|fc -2| opens an editor with fifth from the history list and the second command relative to current command line. It is also possible to select ranges of commands for editing with e.g. \verb|fc -2 -6|.
 
-
-
-\todotext{TODO: describe standard history features of zsh and bash}
-
-\todotext{TODO: describe }
-
-\subsection{Origins of shell history features}
+% We are not describing other Ksh history features in detail because of the similarity with already described Tcsh history features.
 
 
-\subsection{Shells and built-in history features}
+\subsection{History features of Bourne again shell}
+Bourne again shell (Bash) was initially released in 1989.
+Default history size in Bash is 500 records.\cite{bashman} Each history entry contains datetime of the execution. Unless the user disables the \verb|cmdhist| option, all lines of a multi-line command are saved as one history record; Based on \verb|lithist| option, newlines are either embeded into history or replaced by semicolons to keep the syntax of the saved commands correct. 
 
-\todo{TODO: shell history configurations options - here or in a separate section}
+There are shell variables that can be used to prevent certain command lines from being saved to history. Variable \verb|HISTCONTROL| can be used to prevent saving duplicates, and to skip saving command lines starting with a space. Variable \verb|HISTIGNORE| allows using pattern matching to prevent various command lines from being saved into history.  
 
-\blind[4]
+Bash features history expansion (\verb|!!|, \verb|!$|, \verb|!cc|, etc.) which is compatible with the Csh\cite{ramey1994gnubash}.
+Bash features a \verb|histverify| option that alters the behaviour of history expansion. When it is enabled, the results of history expansion are  pasted onto the command line instead of being executed immediately. This option is disabled by default. 
 
-\todotext{TODO: short conclusion about shells}
+\todo{COMMENTED: use this later as an example for memory load}
+% It seems that authors of Bash realised the danger of history expansion; It forced the users were either forced to rely on their memory or to explicitly ask for the history expansion result to be printed first.}
+% This shows us both the importance of not relying on memory/recall and the importance of adhering to the existing standard.
+\todo{NOTE: we could briefly introduce Readline}
+Command line editing in Bash provides most of the history related functions from Tcsh. Some of these functions have different names and some of them have different default keybindings.
 
-\subsection{History features of Read-eval-print loops}
+Functions for stepping through history \verb|up-history| and \verb|down-history| are named \verb|previous-history| and \verb|next-history| respectively; Default keybindings did not change. 
 
-\blind[1]
+Interactive string search (better known as reverse search) is available in Bash as \verb|reverse-search-history| and \verb|forward-search-history| with default keybindings \verb|CTRL-R| and \verb|CTRL-S|. 
+Common issue with this keybinding is that \verb|CTRL-S| is often used to freeze the output of the terminal using OS's terminal driver\todo{REF: ask Barinka, he will know}; This means that many users do not have the option to search in the "forward" direction.   
+Bash also provides non-interactive versions of these functions bound to \verb|ALT-P| and \verb|ALT-N|. However, besides saving your CPU from searching the history multiple time, they do not seem to provide any advantage over their interactive counterparts. 
 
-\subsection{Existing history tools \todotext{TODO: split into more subsections}}
+Prefix search functions are still available under the same name (\verb|history-search-backward| \todo{overflow!} and \verb|history-search-forward|) but they do not have default keybindings in Bash. Alternative substring searching versions for these functions are available which do not search just by prefix but can match anywhere on the command line: \verb|history-substring-search-backward| and \verb|history-substring-search-forward|.\todo{overflow!}
 
-\blind[4]
+Another two history functions we can find in Bash are \verb|yank-last-arg| and \verb|yank-nth-arg|. The first one pastes the last argument of the previous history entry onto the command line. The second one pastes the Nth argument. Default keybindings for \verb|yank-last-arg| are \verb|ALT-.| or \verb|ALT-_|. To use \verb|yank-nth-arg| we need to provide an argument to Bash input library; This can be done by pressing an \verb|ALT| key with a numeric argument. Then we can press \verb|CTRL-ALT-Y|. Without providing any argument the function pastes the first argument of the previous history entry onto the command line.
 
-\todotext{TODO: short conclusion about history tools}
+
+Other than command line editing functions Bash offers builtin commands to list, reuse and manipulate the history. The \verb|fc| builtin is very similar to the one available in Ksh. We can list of recent command lines from history with \verb|fc -l|, edit and execute them with \verb|fc| without any arguments, and substitute and execute them with \verb|fc -s foo=bar|. It is possible to select command lines and ranges of command lines from the history using absolute or relative indexes.
+
+Compared to Ksh, \verb|history| is no longer just an alias; It is a Bash builtin which can be used to display and control the shell history. Without any arguments, \verb|history| prints out a list of previous history entries with indexes. Using various command line options it can be used to: add command lines to history, delete them, or clear the history. It can load new or all history entries from the history file to the history of this shell session; New entries could appear in the history file because of other simultaneously running shell sessions. Conversely, we can use the \verb|history| builtin to append or write the history of this shell session to the history file.
+
+
+\subsection{History features of Z shell}
+
+Z shell (Zsh) was originally released in 1990. Most of the history features available in Bash are also offered by Zsh.
+The default history size is just 30 lines. The history contains the executed command line, the datetime and the duration of the execution. This information is only saved to history when the \verb|EXTENDED_HISTORY| option is enabled. 
+
+% Zsh is overall more feature-rich than Bash. 
+% Many features and options that are natively supported in Zsh are non-trivial or impossible to set up in Bash\todo{example?, ref?}.
+% We are not going to cover Zsh in great detail because of its similarity to Bash.
+
+Zsh does feature csh-style history expansion. Like Bash, it can be configured to evaluate the history expansion and paste the result onto the command line instead of executing it; This behavior can be enabled using \verb|HIST_VERIFY| option. Another way to see what the history expansion evaluates to is the \verb|magic-space| function. It evaluates history expansion and inserts a space when invoked. When we bind this function to spacebar the history expansion will get evaluated every time we press \verb|SPACE|.
+
+\todo{NOTE: we could briefly introduce ZSH ZLE}
+We can find Zsh equivalents for almost all Bash command line editing functions that allow history reuse. In addition, we can find variations and extra functions compared to what is available in Bash. Using \verb|arrow_up| and \verb|arrow_down| keys we can retrieve recent command lines from history. Prefix search is available but unbound by default. There is a variant of prefix search that always searches by first word on the current command line no matter where the cursor is. This variant of prefix search is bound to \verb|ALT-P| and \verb|ALT-N| by default. Interactive reverse search functions are also available with the same default keybindings as in Bash.
+
+Zsh offers pattern matching variants for the most of the history searching functions; These treat the typed query as a pattern instead of a string that should be matched exactly. Vi mode variants for some of the searching functions are available as well.  
+
+The \verb|fc| builtin command is supported and the functionality is comparable to its Bash counterpart. Like in Ksh, \verb|history| is just an alias for \verb|fc -l|. 
+
+% There are alternatives to achieve almost anything that can be done in Bash. For example, ...
+
+
+\blind
+\todotext{TODO: short conclusion about shells ? }
+
 
 \section{How people use shell and shell history}
 
-\todotext{TODO: intro - why we analyze people}
+\todotext{TODO: how do standard shell history features relate to the way people use shell}
 
-\blind
-
-\todotext{TODO: introduce personas}
-
-\todotext{TODO: describe use cases}
+\todotext{TODO: intro - why we need to study the ways people use shell and shell history }
 
 \blind[2]
 
-\subsection{How people use tools}
-
-Dummy citation \cite{greenberg1993computer}
-
-\blind[2]
-
-\subsection{How people use shell}
+\subsection{How people use shell - split into more subsections?}
 
 \todotext{TODO: Greenberg conducted a study in his work \cite{greenberg1993computer} in 19XX which provides a lot of insight into how people use shell. It's not obvious that conclusions and ideas in the work still hold. To make sure that the usage of shell didn't change to the point where we can't use the ideas anymore. }
 
-plots:
+\todotext{TODO: Predicting users' next command line - what is the state of the art, what are the disadvantages}
 
-Figure 3.1. The normalized command frequency, compared with Zipf.
+\todotext{TODO: Sequential relationships of commands}
+
+\blind[4]
+% plots:
+
+% Figure 3.1. The normalized command frequency, compared with Zipf.
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_zipf-cmd-frq.png}}
@@ -247,12 +283,11 @@ Figure 3.1. The normalized command frequency, compared with Zipf.
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_zipf-cmd-frq.png}}
-  \caption{The normalized command frequency, compared with Zipf.}
+  \caption{The normalized command frequency, compared with Zipf. \todotext{unify labels to match Greenberg, export in vector, lose top title, add data from more people}}
 \end{figure}
+\todo{make sure figures are not all over the place}
 
-
-Figure 3.2. Command vocabulary size vs. the number of command
-lines entered for four individuals.
+% Figure 3.2. Command vocabulary size vs. the number of command lines entered for four individuals.
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_cmd-vocab-size.png}}
@@ -267,8 +302,7 @@ lines entered for \todotext{N individuals}}
 \end{figure}
 
 
-Figure 3.3. Sequential structure of UNIX command usage, from Figure 4
-in Hanson et al. (1984).
+% Figure 3.3. Sequential structure of UNIX command usage, from Figure 4 in Hanson et al. (1984).
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/graph_ref_cmd-sequences.png}}
@@ -282,17 +316,14 @@ in Hanson et al. (1984). (Greenberg)}
 \end{figure}
 
 
-Table 5.2. The average recurrence rate of the four sample UNIX user
-groups
+% Table 5.2. The average recurrence rate of the four sample UNIX user groups
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/table_recurr-rate-in-different-samples.png}}
-  \caption{The average recurrence rate of the four sample UNIX user
-groups (Greenberg)}
+  \caption{The average recurrence rate of the four sample UNIX user groups (Greenberg) \todotext{redo as an actual table}} 
 \end{figure}
 
-Figure 5.6. Command line vocabulary size vs. the number of commands
-entered for four typical individuals.
+% Figure 5.6. Command line vocabulary size vs. the number of commands entered for four typical individuals.
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_cmdline-vocab-size.png}}
@@ -306,17 +337,92 @@ entered for four typical individuals. (Greenberg)}
 entered for a single experienced programmer \todotext{TODO: title}}
 \end{figure}
 
+% greenberg 1993 vs now
+% the average length of command lines is 7.58
+% recurrence rate is 74.4% for Experienced Programmers (avg group), max chars. recalled for an optimal conditioning method is 4.43 characters predicted per submission.
+
+
+\todotext{How have shell usage changed since standard shell history features and greenberg study - longer commands, more commands; sessions (there can be more terminal windows open -> history is not strictly sequential anymore); }
+
+\todo{avg recurrence rate \& avg max possible recalled characters}
+%tivvit
+%>>> Avg recurrence rate = 65.21241973788372
+%>>> Max avg recalled characters = 17.545342598293605
+%>>> Max avg recalled characters (including prefix matches) = 30.283226317178293
+%w/o errors
+%>>> Avg recurrence rate = 65.3752138841359
+%>>> Max avg recalled characters = 16.457467611830847
+%>>> Max avg recalled characters (including prefix matches) = 28.687973600586652
+%eva
+%>>> Avg recurrence rate = 77.79189967802067
+%>>> Max avg recalled characters = 15.405016098966277
+%>>> Max avg recalled characters (including prefix matches) = 22.08049483138451
+%w/o errors
+%>>> Avg recurrence rate = 76.5637108380383
+%>>> Max avg recalled characters = 15.118897376286949
+%>>> Max avg recalled characters (including prefix matches) = 22.381932912653603
+%me @ seznam
+%>>> Avg recurrence rate = 65.33170816646351
+%>>> Max avg recalled characters = 18.805850600731326
+%>>> Max avg recalled characters (including prefix matches) = 33.09333101166638
+%w/o errors
+%>>> Avg recurrence rate = 66.93366194290408
+%>>> Max avg recalled characters = 18.43787225302937
+%>>> Max avg recalled characters (including prefix matches) = 31.69172314643664
+
 
 \blind[4]
+
 
 \subsection{How people use shell history}
+\todo{practical chapter with concrete examples based on the standard history features}
+
+\todotext{TODO: intro}
+
+\blind 
+
+\todotext{TODO: talk about our online research - my twitter thread, hackernews threads, SO questions, etc.}
+\todotext{TODO: features people want, ask for; opinions, ...}
+
+\blind
+
+\todotext{TODO: introduce personas - HERE?!}
+\todotext{TODO: describe use cases - HERE?! - yes because we want to compare the standard history features to our solution in the end using these use cases }
 
 \blind[4]
-
 
 \todotext{TODO: conclusion of the chapter}
 
 \blind
+
+\section{Existing history tools and common history configurations}
+\todo{chapter with various possible solutions, inspirations, etc.}
+
+\todotext{TODO: mention our online research again}
+\todotext{TODO: shell history configurations options}
+
+
+
+\subsection{Existing history tools \todotext{TODO: split into more subsections}}
+
+\todotext{TODO: common configuration options and what problems are they solving}
+
+\todotext{TODO: configuration management projects e.g.: oh-my-zsh}
+
+\todotext{TODO: }
+
+\subsection{History features of Read-eval-print loops}
+
+\subsection{History features of Friendly interactive shell}
+
+\todo{more subsections ...}
+\blind[1]
+
+\blind[4]
+
+\todotext{TODO: short conclusion about history tools, configurations, etc.}
+
+
 
 \section{Available contextual information}
 
@@ -327,6 +433,10 @@ entered for a single experienced programmer \todotext{TODO: title}}
 \blind[2]
 
 \subsection{Derivable contextual information}
+
+\blind[2]
+
+\subsection{Usage of history features as a context}
 
 \blind[2]
 
@@ -345,7 +455,7 @@ entered for a single experienced programmer \todotext{TODO: title}}
 
 \blind[2]
 
-\section{Front-end and User interaction}\todo{I don't like the title}
+\section{Interactive history features} % front-end
 
 \todotext{TODO: intro}
 
@@ -391,6 +501,7 @@ entered for a single experienced programmer \todotext{TODO: title}}
 \blind[3]
 
 \chapter{Implementation}
+\todo{merge sections to have less of them}
 \todotext{describe layout/contents of the chapter}
 
 \blind
@@ -423,7 +534,7 @@ entered for a single experienced programmer \todotext{TODO: title}}
 
 \section{Custom arrow key bindings}
 
-\todotext{TODO: intro: we want arrow key bindings to be able to record usage related metadata + it's a good idea to have the option to customize and use context to enhance arrow key bindings. Plus impossibility of gathering usage data and using the default bindings (at least in bash)}
+\todotext{TODO: intro: we want arrow key bindings to be able to record usage related metadata + it's a good idea to have the option to customize and use context to enhance arrow key bindings. Plus impossibility of gathering usage data and using the default bindings (at least in Bash)}
 
 \blind
 
@@ -431,7 +542,7 @@ entered for a single experienced programmer \todotext{TODO: title}}
 
 \blind
 
-\subsection{Keybinding custom functions in bash}
+\subsection{Keybinding custom functions in Bash}
 
 \blind
 
@@ -440,11 +551,11 @@ entered for a single experienced programmer \todotext{TODO: title}}
 \blind
 
 \subsection{Universal keybinding library}
-\todotext{TODO: explain why: as you see bash and zsh have a different ways of supporting custom keybindings. To simplify our codebase we extracted the keybind setting logic into a library. (unified way to set keybindings)}
+\todotext{TODO: explain why: as you see Bash and zsh have a different ways of supporting custom keybindings. To simplify our codebase we extracted the keybind setting logic into a library. (unified way to set keybindings)}
 
 \blind
 
-\subsection{Performance issues of custom keybindings in bash}
+\subsection{Performance issues of custom keybindings in Bash}
 
 \blind
 
