@@ -65,7 +65,7 @@
 % \par Then I~would like to thank Ing. Michal Bukovsk{\' y} along with his whole Email.cz team in Seznam.cz for letting me work with them and use their data.
 % \par My thanks also goes to RNDr. Jana Strakov{\' a} at. el for developing Nametag, Named entity recognition solution, I~used in this thesis, and answering my questions.
 % \par Finally I~want to thank my family and friends for their support trough my whole studies.
-\acknowledgements{TODO: I would like to thank my supervisor Ing. Lukáš Bařinka for his guidance, my colleagues and friends for their feedback, hundreds of people who downloaded this project for their trust, and my family for support during writing this thesis. Installfest for accepting my talk about this project. Github users who submitted issues and pull requests to the project.}
+\acknowledgements{\todotext{TODO: I would like to thank my supervisor Ing. Lukáš Bařinka for his guidance, my colleagues and friends for their feedback, hundreds of people who downloaded this project for their trust, and my family for support during writing this thesis. Installfest for accepting my talk about this project. Github users who submitted issues and pull requests to the project.}}
 \abstractCS{\todotext{TODO: CZ abstrakt}  \blind[2]}
 \abstractEN{\todotext{TODO: abstract} This thesis is an enhancement for standard shell history. It records shell history with context. It uses the recorded context to make it easier to find relevant history records and to make it possible to search search history using context explicitly.
 
@@ -93,6 +93,9 @@ About half of all developers have been working with Linux during year 2018. \cit
 
 Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on MacOS is zsh since October 2019 \cite{apple2019zsh}. In this work we primarily focus on these two popular shells.
 \todo{TODO: polish the argument why is this work relevant \hatx\hatx\hatx}
+
+\todotext{TODO: what is the shell history good for}
+\todotext{TODO: why could contextual history improve the history offerings}
 
 The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in Zsh and only when it is enabled.\cite{zshdocs}}. 
 
@@ -139,6 +142,9 @@ Most of the history features we see and use today were adopted from older shells
   \caption{Linux shells since 1977, from \cite{jones2011shells} \todotext{TODO: Better quality or begone.}}
 \end{figure}
 
+\todotext{TODO: Add summaries of the features using bullet point lists.}
+\todotext{TODO: Point out drawback of the features as you describe them.}
+\todotext{TODO: Break up the walls of text with bold text and bullet point lists.}
 
 \subsection{History features of C shell}
 
@@ -192,7 +198,7 @@ Activating vi mode in Tcsh changes some of the keybindings. In addition to regul
 % As the name suggest it was inspired by features available in Tenex operating system. 
 
 \subsection{History features of Korn shell}
-Korn shell (Ksh) was initially released in 1983; It was originally written as a proprietary software until being released as open source in 2005.\todo{REF} History features of Korn shell are a very similar to the features of Tenex C shell. Ksh offers stepping through history, string search, and vi mode variant of the string search. It is worth mentioning that in Ksh, string search is bound to \verb|CTRL-R| by default which is what you are probably used to in modern shells. 
+Korn shell (Ksh) was initially released in 1983; It was originally written as a proprietary software until being released as open source in 2005. \todo{REF} History features of Korn shell are a very similar to the features of Tenex C shell. Ksh offers stepping through history, string search, and vi mode variant of the string search. It is worth mentioning that in Ksh, string search is bound to \verb|CTRL-R| by default which is what you are probably used to in modern shells. 
 
 Ksh offers a shell builtin command \verb|fc| that provides a superset of C shell history mechanism\cite{rosenblatt2000kshlearning}. It allows the user to list recent history entries, edit command lines from history with an editor, and run history entries with changes. Running \verb|fc -l| lists the previous command lines from history (with indexes). So does \verb|history|, because in Ksh it is just an alias for \verb|fc -l|. To edit previous command line from history in an editor we could use \verb|fc| (without arguments) which executes the resulting command after we are done editing it. If we want to choose an editor we could use \verb|fc -e vi|. Running \verb|fc -e - foo=bar| skips the editing, replaces occurrences of \verb|foo| with \verb|bar| and executes the result. To access more then the previous command line we would use absolute or relative indexes similarly to the history expansion in Csh. For example, \verb|fc 5| and \verb|fc -2| opens an editor with fifth from the history list and the second command relative to current command line. It is also possible to select ranges of commands for editing with e.g. \verb|fc -2 -6|.
 
@@ -257,13 +263,99 @@ The \verb|fc| builtin command is supported and the functionality is comparable t
 
 \section{How people use shell and shell history}
 
+In this chapter we examine how people use shell and shell history.
+
+1) Consider previous research that studies the properties of how people use command based systems
+
+2) 
+
+To do so we consider previous research on the topic which features an analysis of ... 
+
+
 \todotext{TODO: how do standard shell history features relate to the way people use shell}
 
 \todotext{TODO: intro - why we need to study the ways people use shell and shell history }
 
 \blind[2]
 
+
+
+\subsection{Collecting shell history}
+
+
+
 \subsection{How people use shell - split into more subsections?}
+
+
+
+\todotext{Frequency distributions of commands}
+
+\redtext{ Zipf distribution, which has the property that a relatively small number of items have high usage frequencies, and a very large number of items have low usage frequencies}
+
+\redtext{ A looser characteristic of this kind of rank distribution is the well-known 80-20 rule of thumb that has been commonly observed in commercial transaction systems - 20\% of the items in question are used 80\% of the time (Knuth, 1973; Peachey,Bunt, and Colbourn, 1982).2}
+ \redtext{In measurements recorded from a UNIX site, Hanson, Kraut, and Farber (1984) report a similar trend - 10\% of the 400-500 commands available account for 90\% of the usage}
+
+\redtext{ME: We have collected contextual shell history from a number of people }
+
+\todotext{TODO: describe how the plot was created}
+
+\redtext{ME: Our newly collected data matches the distribution found in greenberg study}
+
+\redtext{ME: Based on our data ... }
+
+\redtext{Top 10 \% of cmds amounts for 65.5061446260756 \% of all command lines}
+\redtext{Top 20 \% of cmds amounts for 79.95709255415899 \% of all command lines}
+\redtext{ME: Our data follow the 80-20 rule but it's still a difference compared to the stats from the study - we suspect that difference is mainly caused by larger number of commands used by the users overall}
+
+
+
+\redtext{Top used commands differ between people - }
+\redtext{According to greenberg, even when people have very similar expertise and identical goals the commands they use vary significantly. - Our data is in line with this idea.} 
+
+
+\todotext{Vocabulary}
+
+\redtext{Command vocabulary is the set of commands used by a given person. We are interested in analysing how the vocabulary of the user changes over time.}
+
+\redtext{Greenberg reports adoption or about 5\% for all users before they enter 1k command line. They conclude that this is an initial learning period when the system encounters most of the commands for the first time. According to Greenber, after initial 1k cmd lines entered the adoption rate drops quicky under 1\%. This is somewhat in line with our findings. We did observe about 5\% cmd adoption rate during the first 1k cmdlines entered for vast majority of our users. Between 1k and 2k we saw a drop in adoption of new commands to about 3\%. Between 2k and 3k the adoption dropped to numbers between 1\% and 2\% for most users. Most users would eventually drop to a stable adoption rate of anywhere between 1 to 3\%.}
+
+\redtext{This difference could be caused by multiple factors. There is more commands available compared to XX years before. Additionally, custom commands/scripts seem to be very common in our data while they seem to be non-existent in the greenberg study. This alone could have a huge impact. Draper (see below) was referring to a number of commands available to users of ... as 570. }
+
+\redtext{Nowadays the number of available commands is virtually unlimited because users can install and create new commands. Number of initially available commands on a newly installed system is in thousands.}
+
+\redtext{ REF: Draper (1984) estimated the times a command was invoked by noting the UNIX processes spawned during each user's interaction with the system (method 4, Section 2.2.1).5 He suggested that the overall trends observed are representative of real command use. First, out of a vocabulary of the 570 commands available to the population, only 394 (70\%) were used at least once. }
+
+\redtext{We can conclude that command usage distribution was and still is very uneven (few commands dominate the distribution) and that the number of available commands significantly increases over time.}
+
+% eva: Cmd adoption rate at 1k cmdlines = 0.054
+% eva: Cmd adoption rate at 2k cmdlines = 0.044
+% eva: Cmd adoption rate between 1k and 2k cmdlines = 0.034
+% eva: Cmd adoption rate between 2k and 3k cmdlines = 0.01
+% eva: New cmd adoption rate after 1k cmdlines = 0.012322801815991847
+% eva: New cmd adoption rate after 2k cmdlines = 0.010109261717553355
+% simon: Cmd adoption rate at 1k cmdlines = 0.087
+% simon: Cmd adoption rate at 2k cmdlines = 0.061
+% simon: Cmd adoption rate between 1k and 2k cmdlines = 0.035
+% simon: Cmd adoption rate between 2k and 3k cmdlines = 0.016
+% simon: New cmd adoption rate after 1k cmdlines = 0.022236340533672173
+% simon: New cmd adoption rate after 2k cmdlines = 0.018807092960773777
+% tivvit: Cmd adoption rate at 1k cmdlines = 0.054
+% tivvit: Cmd adoption rate at 2k cmdlines = 0.0375
+% tivvit: Cmd adoption rate between 1k and 2k cmdlines = 0.021
+% tivvit: Cmd adoption rate between 2k and 3k cmdlines = 0.022
+% tivvit: New cmd adoption rate after 1k cmdlines = 0.014787430683918669
+% tivvit: New cmd adoption rate after 2k cmdlines = 0.01411790063584438
+
+\redtext{??? When collecting history there is always an initial period where we encounter many new commands at a high rate because the current vocabulary is very small. This part is expected as we notice commands for the first time Part of the curve after the initial "steep" period represents the rate of adopting new commands by users. Some new commands are adopted because of new tasks and goals of the user. Some commands seem ... }
+
+
+
+\todotext{Sequences}
+
+\redtext{toolsmith and the original sequence graph talked about how individuals have }
+
+
+
 
 \todotext{TODO: Greenberg conducted a study in his work \cite{greenberg1993computer} in 19XX which provides a lot of insight into how people use shell. It's not obvious that conclusions and ideas in the work still hold. To make sure that the usage of shell didn't change to the point where we can't use the ideas anymore. }
 
@@ -283,7 +375,7 @@ The \verb|fc| builtin command is supported and the functionality is comparable t
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_zipf-cmd-frq.png}}
-  \caption{The normalized command frequency, compared with Zipf. \todotext{unify labels to match Greenberg, export in vector, lose top title, add data from more people}}
+  \caption{The normalized command frequency, compared with Zipf. \todotext{unify labels to match Greenberg, export in vector, lose top title, add data from more people, have one line for each person and then one line for all people together}}
 \end{figure}
 \todo{make sure figures are not all over the place}
 
@@ -312,7 +404,7 @@ in Hanson et al. (1984). (Greenberg)}
 
 \begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequences.pdf}}
-  \caption{Sequential structure of command usage.}
+  \caption{Sequential structure of command usage. \todotext{Make this more narrow so the text is bigger}}
 \end{figure}
 
 
@@ -345,7 +437,16 @@ entered for a single experienced programmer \todotext{TODO: title}}
 \todotext{How have shell usage changed since standard shell history features and greenberg study - longer commands, more commands; sessions (there can be more terminal windows open -> history is not strictly sequential anymore); }
 
 \todo{avg recurrence rate \& avg max possible recalled characters}
+% together (beware there is a lot of me - cleanup and redo)
+%>>> Top 10 %% of cmds amounts for 65.5061446260756 %% of all command lines
+%>>> Top 20 %% of cmds amounts for 79.95709255415899 %% of all command lines
+%>>> Avg recurrence rate = 70.28292049957133
+%>>> Max avg recalled characters = 17.345876682809276
+%>>> Max avg recalled characters (including prefix matches) = 26.93303519707116
+
 %tivvit
+%>>> Top 10 %% of cmds amounts for 58.38949982263214 %% of all command lines
+%>>> Top 20 %% of cmds amounts for 73.26179496275275 %% of all command lines
 %>>> Avg recurrence rate = 65.21241973788372
 %>>> Max avg recalled characters = 17.545342598293605
 %>>> Max avg recalled characters (including prefix matches) = 30.283226317178293
@@ -354,6 +455,8 @@ entered for a single experienced programmer \todotext{TODO: title}}
 %>>> Max avg recalled characters = 16.457467611830847
 %>>> Max avg recalled characters (including prefix matches) = 28.687973600586652
 %eva
+%>>> Top 10 %% of cmds amounts for 60.87177747625509 %% of all command lines
+%>>> Top 20 %% of cmds amounts for 79.68113975576662 %% of all command lines
 %>>> Avg recurrence rate = 77.79189967802067
 %>>> Max avg recalled characters = 15.405016098966277
 %>>> Max avg recalled characters (including prefix matches) = 22.08049483138451
@@ -362,6 +465,8 @@ entered for a single experienced programmer \todotext{TODO: title}}
 %>>> Max avg recalled characters = 15.118897376286949
 %>>> Max avg recalled characters (including prefix matches) = 22.381932912653603
 %me @ seznam
+%>>> Top 10 %% of cmds amounts for 57.32517482517483 %% of all command lines
+%>>> Top 20 %% of cmds amounts for 68.0944055944056 %% of all command lines
 %>>> Avg recurrence rate = 65.33170816646351
 %>>> Max avg recalled characters = 18.805850600731326
 %>>> Max avg recalled characters (including prefix matches) = 33.09333101166638
@@ -388,6 +493,20 @@ entered for a single experienced programmer \todotext{TODO: title}}
 
 \todotext{TODO: introduce personas - HERE?!}
 \todotext{TODO: describe use cases - HERE?! - yes because we want to compare the standard history features to our solution in the end using these use cases }
+
+\todotext{USECASE: use case where we find something in history and want to find a similar command immediately: 1 use resh cli to find the first command, 2 execute, 3 arrow\_up, 4 ctrlR gives you similar results to what you found before}
+
+\todotext{USECASE: come back to a project and continue previous work on it}
+
+\todotext{USECASE: fix a typo in a previous command}
+
+\todotext{USECASE: use: sudo !! to run a previous command with sudo}
+
+\todotext{USECASE: find a long (w/ many arguments/options) curl request to github api}
+
+\todotext{USECASE: run a recent git command}
+
+\todotext{USECASE: find a command using datetime, command(first word) }
 
 \blind[4]
 
