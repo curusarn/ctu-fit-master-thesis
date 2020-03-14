@@ -303,6 +303,20 @@ To do so we consider previous research on the topic which features an analysis o
 
 \redtext{ME: Based on our data ... }
 
+% ALL: Top 100 %% of cmds amounts for 100.0 %% of all command lines
+% ALL: Top 10 %% of cmds amounts for 63.43728659230594 %% of all command lines
+% ALL: Top 20 %% of cmds amounts for 71.34987480081949 %% of all command lines
+% eva: Top 100 %% of cmds amounts for 100.0 %% of all command lines
+% eva: Top 10 %% of cmds amounts for 62.012411347517734 %% of all command lines
+% eva: Top 20 %% of cmds amounts for 73.35992907801419 %% of all command lines
+% simon: Top 100 %% of cmds amounts for 100.0 %% of all command lines
+% simon: Top 10 %% of cmds amounts for 57.7319587628866 %% of all command lines
+% simon: Top 20 %% of cmds amounts for 66.18556701030928 %% of all command lines
+% tivvit: Top 100 %% of cmds amounts for 100.0 %% of all command lines
+% tivvit: Top 10 %% of cmds amounts for 53.33086145099493 %% of all command lines
+% tivvit: Top 20 %% of cmds amounts for 64.93634902978619 %% of all command lines
+
+
 \redtext{Top 10 \% of cmds amounts for 65.5061446260756 \% of all command lines}
 \redtext{Top 20 \% of cmds amounts for 79.95709255415899 \% of all command lines}
 \redtext{ME: Our data follow the 80-20 rule but it's still a difference compared to the stats from the study - we suspect that difference is mainly caused by larger number of commands used by the users overall}
@@ -312,12 +326,12 @@ To do so we consider previous research on the topic which features an analysis o
 \redtext{Top used commands differ between people - }
 \redtext{According to greenberg, even when people have very similar expertise and identical goals the commands they use vary significantly. - Our data is in line with this idea.} 
 
-
-\todotext{Vocabulary}
+\subsubsection*{Command Vocabulary}
 
 \redtext{Command vocabulary is the set of commands used by a given person. We are interested in analysing how the vocabulary of the user changes over time.}
 
-\redtext{Greenberg reports adoption or about 5\% for all users before they enter 1k command line. They conclude that this is an initial learning period when the system encounters most of the commands for the first time. According to Greenber, after initial 1k cmd lines entered the adoption rate drops quicky under 1\%. This is somewhat in line with our findings. We did observe about 5\% cmd adoption rate during the first 1k cmdlines entered for vast majority of our users. Between 1k and 2k we saw a drop in adoption of new commands to about 3\%. Between 2k and 3k the adoption dropped to numbers between 1\% and 2\% for most users. Most users would eventually drop to a stable adoption rate of anywhere between 1 to 3\%.}
+\todotext{TODO: update the values}
+\redtext{Greenberg reports adoption or about 5\% for all users before they enter 1k command line. They conclude that this is an initial learning period when the system encounters most of the commands for the first time. According to Greenber, after initial 1k cmd lines entered the adoption rate drops quicky under 1\%. This is somewhat in line with our findings. We did observe about 5\% cmd adoption rate during the first 1k cmdlines entered for vast majority of our users. Between 1k and 2k we saw a drop in adoption of new commands to about 3\%. Between 2k and 3k the adoption dropped to numbers between 1\% and 2\% for most users. Most users would eventually drop to a stable adoption rate of anywhere between 1 to 2\%.}
 
 \redtext{This difference could be caused by multiple factors. There is more commands available compared to XX years before. Additionally, custom commands/scripts seem to be very common in our data while they seem to be non-existent in the greenberg study. This alone could have a huge impact. Draper (see below) was referring to a number of commands available to users of ... as 570. }
 
@@ -327,33 +341,91 @@ To do so we consider previous research on the topic which features an analysis o
 
 \redtext{We can conclude that command usage distribution was and still is very uneven (few commands dominate the distribution) and that the number of available commands significantly increases over time.}
 
-% eva: Cmd adoption rate at 1k cmdlines = 0.054
-% eva: Cmd adoption rate at 2k cmdlines = 0.044
-% eva: Cmd adoption rate between 1k and 2k cmdlines = 0.034
-% eva: Cmd adoption rate between 2k and 3k cmdlines = 0.01
-% eva: New cmd adoption rate after 1k cmdlines = 0.012322801815991847
-% eva: New cmd adoption rate after 2k cmdlines = 0.010109261717553355
-% simon: Cmd adoption rate at 1k cmdlines = 0.087
-% simon: Cmd adoption rate at 2k cmdlines = 0.061
-% simon: Cmd adoption rate between 1k and 2k cmdlines = 0.035
-% simon: Cmd adoption rate between 2k and 3k cmdlines = 0.016
-% simon: New cmd adoption rate after 1k cmdlines = 0.022236340533672173
-% simon: New cmd adoption rate after 2k cmdlines = 0.018807092960773777
-% tivvit: Cmd adoption rate at 1k cmdlines = 0.054
-% tivvit: Cmd adoption rate at 2k cmdlines = 0.0375
-% tivvit: Cmd adoption rate between 1k and 2k cmdlines = 0.021
-% tivvit: Cmd adoption rate between 2k and 3k cmdlines = 0.022
-% tivvit: New cmd adoption rate after 1k cmdlines = 0.014787430683918669
-% tivvit: New cmd adoption rate after 2k cmdlines = 0.01411790063584438
+% >>> Top 100 %% of cmds amounts for 100.0 %% of all command lines
+% >>> Top 10 %% of cmds amounts for 63.43728659230594 %% of all command lines
+% >>> Top 20 %% of cmds amounts for 71.34987480081949 %% of all command lines
+% eva: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.051
+% eva: Cmd adoption rate at 2k cmdlines = 0.0345
+% eva: Cmd adoption rate between 1k and 2k cmdlines = 0.018
+% eva: Cmd adoption rate between 2k and 3k cmdlines = 0.013
+% eva: New cmd adoption rate after 1k cmdlines = 0.007725856697819315
+% eva: New cmd adoption rate after 2k cmdlines = 0.006263345195729538
+% eva: New cmd adoption rate after 3k cmdlines = 0.005145228215767635
+% simon: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.076
+% simon: Cmd adoption rate at 2k cmdlines = 0.0505
+% simon: Cmd adoption rate between 1k and 2k cmdlines = 0.025
+% simon: Cmd adoption rate between 2k and 3k cmdlines = 0.007
+% simon: New cmd adoption rate after 1k cmdlines = 0.015840041547649963
+% simon: New cmd adoption rate after 2k cmdlines = 0.012627148368993335
+% simon: New cmd adoption rate after 3k cmdlines = 0.015667206915180983
+% tivvit: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.045
+% tivvit: Cmd adoption rate at 2k cmdlines = 0.0315
+% tivvit: Cmd adoption rate between 1k and 2k cmdlines = 0.018
+% tivvit: Cmd adoption rate between 2k and 3k cmdlines = 0.011
+% tivvit: New cmd adoption rate after 1k cmdlines = 0.009304948540814888
+% tivvit: New cmd adoption rate after 2k cmdlines = 0.007877892663712457
+% tivvit: New cmd adoption rate after 3k cmdlines = 0.007264873355586099
+% >>> Avg recurrence rate = 70.29523637022278
+% >>> Max avg recalled characters = 16.34658576344865
+% >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
+
 
 \redtext{??? When collecting history there is always an initial period where we encounter many new commands at a high rate because the current vocabulary is very small. This part is expected as we notice commands for the first time Part of the curve after the initial "steep" period represents the rate of adopting new commands by users. Some new commands are adopted because of new tasks and goals of the user. Some commands seem ... }
 
 
 
-\todotext{Sequences}
+
+\subsubsection*{Sequential relationships between commands}
+\todotext{TODO: write the chapter}
+
+We just looked at frequencies of commands and command vocabulary of shell users. Now we take a look the dependencies between commands.
+
+"Through a multivariate analysis of UNIX commands invoked
+by the site population, Hanson, Kraut, and Farber (1984) examined the interaction
+effects between commands. Their results show statistically significant relationships
+between certain command chains; the relations between the fifty most frequently
+used commands are shown in Figure 3.3. Each ball in the network represents
+a command, its size indicates the usage frequency, and the arrow indicates the
+significant dependencies. One dimension of these relationships is modularity.
+Some commands, such as Is, are core commands - they are used frequently and
+are surrounded by many other commands (i.e., highly modular and independent).
+Others are not; they are surrounded by specific command sequences. An example
+of the latter is cp, which is generally preceded by itself and followed by chmod."
+
+"Commands are also related by functional clusters, such as editing, process management, orientation, social communication, and so on (Hanson, Kraut, and Farber,
+1984), which may not be revealed by statistics."
+
+
+Greenberg concluded that assuming that the sequential dependencies of commands found by polling all the users together is a mistake. 
+
+In earlier chapter, we saw that there are a big differences in vocabularies of different people so it is not surprising that sequential properties of the commands also differ significantly between individuals.
+
+We created a graph sequential dependencies between commands for a selected individual. Since we are studying sequential properties of commands with the relation to history tools; We chose not to use the same method as Hanson so the graphs are not comparable. 
+
+We created the graph by taking N most used commands. Each node represents a command and the size of the node is proportionate to the command frequency. Each vertex represents a \redtext{transition chance} from one command to the next one. We decided to create the graph this way because it better represents properties that could be potentially used in history tools. Because it only uses the probability of transition from one command to the next one whereas in the method used by Hanson also considers the reverse transition probability; That is the probability that given command was preceded by the previous command. For example, when predicting the next command we only have the information about the past and current command. 
+
+\todotext{TODO: Table with arrowstyles, arrowheads, and transition probabilities.}
+
+The \verb|_start_| command represents a start of a new terminal session.
+The \verb|_end_| command represents an end of the terminal session; It does not matter how the session ended.
+
+
+We can see some commands from which there are no verteces; This could be caused by user closing the session
+
 
 \redtext{toolsmith and the original sequence graph talked about how individuals have }
 
+\todo{Summed up toolsmith}
+ %The rank frequency distribution of command usage by groups of like and
+%unlike users is approximated by a Zipf distribution.
+%2. With a few exceptions, the frequency of use of most commands differs between
+%groups - rank order is not maintained.
+%3. There is little overlap between the command vocabulary of different users,
+%even for those with apparently similar task requirements and expertise.
+%4. Individuals have small command vocabularies, and new commands are acquired slowly and irregularly. Consequently, the Zipf model may not be an
+%accurate estimate of an individual's behavior.
+%5. Some commands cluster around or follow others in statistically significant
+%ways, although these dependencies vary from one individual to another.
 
 
 
@@ -361,7 +433,9 @@ To do so we consider previous research on the topic which features an analysis o
 
 \todotext{TODO: Predicting users' next command line - what is the state of the art, what are the disadvantages}
 
+
 \todotext{TODO: Sequential relationships of commands}
+
 
 \blind[4]
 % plots:
@@ -403,10 +477,27 @@ in Hanson et al. (1984). (Greenberg)}
 \end{figure}
 
 \begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequences.pdf}}
-  \caption{Sequential structure of command usage. \todotext{Make this more narrow so the text is bigger}}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
+  \caption{Sequential structure of command usage. Legend: \ref{tab:seq-table} }
+  \label{seq-graph}
 \end{figure}
 
+\begin{figure}
+
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Edge style & Transition probability            \\\hline
+Regular/full     & 100 - 30\% (specified by labels) \\
+Dashed      & 30 - 20\%                         \\
+Dotted      & 20 - 10\%                         \\
+\hline
+\end{tabular}
+\caption{Legend for figure \ref{seq-graph}}
+\label{tab:seq-table}
+\end{figure}
+
+\todo{sequential graph and its legend table must be on the same page!}
 
 % Table 5.2. The average recurrence rate of the four sample UNIX user groups
 
@@ -437,43 +528,34 @@ entered for a single experienced programmer \todotext{TODO: title}}
 \todotext{How have shell usage changed since standard shell history features and greenberg study - longer commands, more commands; sessions (there can be more terminal windows open -> history is not strictly sequential anymore); }
 
 \todo{avg recurrence rate \& avg max possible recalled characters}
-% together (beware there is a lot of me - cleanup and redo)
-%>>> Top 10 %% of cmds amounts for 65.5061446260756 %% of all command lines
-%>>> Top 20 %% of cmds amounts for 79.95709255415899 %% of all command lines
-%>>> Avg recurrence rate = 70.28292049957133
-%>>> Max avg recalled characters = 17.345876682809276
-%>>> Max avg recalled characters (including prefix matches) = 26.93303519707116
+% >>> Top 100 %% of cmds amounts for 100.0 %% of all command lines
+% >>> Top 10 %% of cmds amounts for 63.43728659230594 %% of all command lines
+% >>> Top 20 %% of cmds amounts for 71.34987480081949 %% of all command lines
+% eva: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.051
+% eva: Cmd adoption rate at 2k cmdlines = 0.0345
+% eva: Cmd adoption rate between 1k and 2k cmdlines = 0.018
+% eva: Cmd adoption rate between 2k and 3k cmdlines = 0.013
+% eva: New cmd adoption rate after 1k cmdlines = 0.007725856697819315
+% eva: New cmd adoption rate after 2k cmdlines = 0.006263345195729538
+% eva: New cmd adoption rate after 3k cmdlines = 0.005145228215767635
+% simon: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.076
+% simon: Cmd adoption rate at 2k cmdlines = 0.0505
+% simon: Cmd adoption rate between 1k and 2k cmdlines = 0.025
+% simon: Cmd adoption rate between 2k and 3k cmdlines = 0.007
+% simon: New cmd adoption rate after 1k cmdlines = 0.015840041547649963
+% simon: New cmd adoption rate after 2k cmdlines = 0.012627148368993335
+% simon: New cmd adoption rate after 3k cmdlines = 0.015667206915180983
+% tivvit: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.045
+% tivvit: Cmd adoption rate at 2k cmdlines = 0.0315
+% tivvit: Cmd adoption rate between 1k and 2k cmdlines = 0.018
+% tivvit: Cmd adoption rate between 2k and 3k cmdlines = 0.011
+% tivvit: New cmd adoption rate after 1k cmdlines = 0.009304948540814888
+% tivvit: New cmd adoption rate after 2k cmdlines = 0.007877892663712457
+% tivvit: New cmd adoption rate after 3k cmdlines = 0.007264873355586099
+% >>> Avg recurrence rate = 70.29523637022278
+% >>> Max avg recalled characters = 16.34658576344865
+% >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
 
-%tivvit
-%>>> Top 10 %% of cmds amounts for 58.38949982263214 %% of all command lines
-%>>> Top 20 %% of cmds amounts for 73.26179496275275 %% of all command lines
-%>>> Avg recurrence rate = 65.21241973788372
-%>>> Max avg recalled characters = 17.545342598293605
-%>>> Max avg recalled characters (including prefix matches) = 30.283226317178293
-%w/o errors
-%>>> Avg recurrence rate = 65.3752138841359
-%>>> Max avg recalled characters = 16.457467611830847
-%>>> Max avg recalled characters (including prefix matches) = 28.687973600586652
-%eva
-%>>> Top 10 %% of cmds amounts for 60.87177747625509 %% of all command lines
-%>>> Top 20 %% of cmds amounts for 79.68113975576662 %% of all command lines
-%>>> Avg recurrence rate = 77.79189967802067
-%>>> Max avg recalled characters = 15.405016098966277
-%>>> Max avg recalled characters (including prefix matches) = 22.08049483138451
-%w/o errors
-%>>> Avg recurrence rate = 76.5637108380383
-%>>> Max avg recalled characters = 15.118897376286949
-%>>> Max avg recalled characters (including prefix matches) = 22.381932912653603
-%me @ seznam
-%>>> Top 10 %% of cmds amounts for 57.32517482517483 %% of all command lines
-%>>> Top 20 %% of cmds amounts for 68.0944055944056 %% of all command lines
-%>>> Avg recurrence rate = 65.33170816646351
-%>>> Max avg recalled characters = 18.805850600731326
-%>>> Max avg recalled characters (including prefix matches) = 33.09333101166638
-%w/o errors
-%>>> Avg recurrence rate = 66.93366194290408
-%>>> Max avg recalled characters = 18.43787225302937
-%>>> Max avg recalled characters (including prefix matches) = 31.69172314643664
 
 
 \blind[4]
