@@ -168,7 +168,7 @@ There is a \verb|history| command which prints out recent history records with t
 Tenex C shell (Tcsh) is an enhanced version of the C shell released in 1983\todo{REF}; It offers command line editing and programmable tab completion\cite{dubois1995tcshusing}. Since Tcsh is a version of C shell, it does support all the previously described features of C shell. The history holds 100 previous command lines by default and it also contains datetime of the command line execution.
 
 
-Tcsh offers command line editing; This means that the user can manipulate the contents of the command line by using various built-in functions. A few examples of such functions are: \verb|delete-word|, \verb|expand-glob|, and \verb|history-search-backward|. All built-in functions can be bound to arbitrary key combinations. Additionally, Tcsh features emacs and vi editing modes which come with default keybindings usual for the respective editors. When describing the deafult keybindings for Tcsh in this section we are only considering the emacs mode.
+Tcsh offers command line editing; This means that the user can manipulate the contents of the command line by using various built-in functions. A few examples of such functions are: \verb|delete-word|, \verb|expand-glob|, and \verb|history-search-backward|. All built-in functions can be bound to arbitrary key combinations. Additionally, Tcsh features emacs and vi editing modes which come with default keybindings usual for the respective editors. When describing the default keybindings for Tcsh in this section we are only considering the emacs mode.
 
 A portion of built-in functions allows the user to reuse command lines from the shell history. Functions \verb|up-history| and \verb|down-history| allow the user to step through the history; Default keybindings are \verb|CTRL-P| and \verb|arrow_up| for \verb|up-history|; and \verb|CTRL-N| and \verb|arrow_down| for  \verb|down-history| \cite{tcshman}. This is something you are likely already used to in your modern shell.
 
@@ -263,45 +263,53 @@ The \verb|fc| builtin command is supported and the functionality is comparable t
 
 \section{How people use shell and shell history}
 
-In this chapter we examine how people use shell and shell history.
+In this chapter we examine how people use shell and shell history. We consider previous research that studies the properties of how people use command based systems. We also collected a sample of user shell histories and we will be discussing where our data matches the existing findings and where it does not. 
 
-1) Consider previous research that studies the properties of how people use command based systems
+We are looking at properties of command line usage to see if find justifications for standard history features. Examining shell history could also give us insights into how to design history tools. 
 
-2) 
-
-To do so we consider previous research on the topic which features an analysis of ... 
-
-
-\todotext{TODO: how do standard shell history features relate to the way people use shell}
-
-\todotext{TODO: intro - why we need to study the ways people use shell and shell history }
-
-\blind[2]
-
-
+After examining shell usage itself we focus on how people use shell history features. We explore existing online discourse about history tools to discover common workflows, problems and configurations.
 
 \subsection{Collecting shell history}
 
+\todotext{TODO: describe how we collected history (skipping errors)}
+\blind
+
+\subsection{Frequency distributions of commands}
+
+In this section, we focus on commands instead of whole command lines. By command we mean the first word of the command line executed by the user. Command is usually an executable program or a shell builtin.
+
+\redtext{According to \cite{greenberg1993computer}, frequency distribution of commands used by a group of similar users follows Zipf distribution.}
+
+\redtext{Zipf distribution has the property that a relatively small number of items have high usage frequencies, and a very large number of items have low usage frequencies.}
+
+\todotext{TODO: 80-20 rule is a looser characteristic of Zipf distribution - 20 \% of items account for 80 \% of usage ... alternative 90-10}
+\blind
 
 
-\subsection{How people use shell - split into more subsections?}
 
 
+\todotext{TODO: describe and explain the plots}
 
-\todotext{Frequency distributions of commands}
+% A looser characteristic of this kind of rank distribution is the well-known 80-20 rule of thumb that has been commonly observed in commercial transaction systems - 20\% of the items in question are used 80\% of the time (Knuth, 1973; Peachey,Bunt, and Colbourn, 1982).2
 
-\redtext{ Zipf distribution, which has the property that a relatively small number of items have high usage frequencies, and a very large number of items have low usage frequencies}
+% In measurements recorded from a UNIX site, Hanson, Kraut, and Farber (1984) report a similar trend - 10\% of the 400-500 commands available account for 90\% of the usage
 
-\redtext{ A looser characteristic of this kind of rank distribution is the well-known 80-20 rule of thumb that has been commonly observed in commercial transaction systems - 20\% of the items in question are used 80\% of the time (Knuth, 1973; Peachey,Bunt, and Colbourn, 1982).2}
- \redtext{In measurements recorded from a UNIX site, Hanson, Kraut, and Farber (1984) report a similar trend - 10\% of the 400-500 commands available account for 90\% of the usage}
 
-\redtext{ME: We have collected contextual shell history from a number of people }
+% Figure 3.1. The normalized command frequency, compared with Zipf.
 
-\todotext{TODO: describe how the plot was created}
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_zipf-cmd-frq.png}}
+  \caption{The normalized command frequency, compared with Zipf from \cite{greenberg1993computer}}
+\end{figure}
 
-\redtext{ME: Our newly collected data matches the distribution found in greenberg study}
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_zipf-cmd-frq.png}}
+  \caption{The normalized command frequency, compared with Zipf. \todotext{unify labels to match Greenberg, export in vector, lose top title, add data from more people}}
+\end{figure}
+\todo{command rank plots should be on the same page}
+\todo{make sure figures are not all over the place}
 
-\redtext{ME: Based on our data ... }
+\todotext{TODO: In our plot the combined history of all the subjects somewhat follows zipf. BUT also most of the individual users follow the zipf - there are exceptions. In Greenberg study individual histories did not follow zipf.}
 
 % ALL: Top 100 %% of cmds amounts for 100.0 %% of all command lines
 % ALL: Top 10 %% of cmds amounts for 63.43728659230594 %% of all command lines
@@ -317,33 +325,61 @@ To do so we consider previous research on the topic which features an analysis o
 % tivvit: Top 20 %% of cmds amounts for 64.93634902978619 %% of all command lines
 
 
-\redtext{Top 10 \% of cmds amounts for 65.5061446260756 \% of all command lines}
-\redtext{Top 20 \% of cmds amounts for 79.95709255415899 \% of all command lines}
-\redtext{ME: Our data follow the 80-20 rule but it's still a difference compared to the stats from the study - we suspect that difference is mainly caused by larger number of commands used by the users overall}
+\todotext{TODO: According to \cite{greenberg1993computer},: For each of the four
+user groups, 10\% of the commands used accounted for 84\%-91\% of all usage}
 
 
+\redtext{Top 10 \% of cmds amounts for 63 \% of all command lines}
+\redtext{Top 20 \% of cmds amounts for 71 \% of all command lines}
 
-\redtext{Top used commands differ between people - }
-\redtext{According to greenberg, even when people have very similar expertise and identical goals the commands they use vary significantly. - Our data is in line with this idea.} 
+\redtext{Our data does somewhat follow the 80-20 (71-20) rule (relatively few items account for a significant portion of the distribution) but it is a significant difference compared to the stats from the study. Because of the low number of subjects we can only theoretize why this is - more commands available?, small sample size?, longer collection period?}
 
-\subsubsection*{Command Vocabulary}
+\redtext{We suspect that difference is mainly caused by larger number of commands used by the users overall}
+
+\redtext{TODO: Top used commands differ between people}
+\redtext{According to greenberg, even when people have very similar expertise and identical goals the commands they use vary significantly. Surprising number of commands is not shared by the users from the same group. This diversion shows that there are many ways to achieve the same goal. Commands are smaller units that make up the goals of the users. - Our data is in line with these ideas.} 
+
+\todotext{Conclusion: Command frequencies are highly uneven and individual.}
+
+\subsection{Command Vocabulary}
 
 \redtext{Command vocabulary is the set of commands used by a given person. We are interested in analysing how the vocabulary of the user changes over time.}
 
-\todotext{TODO: update the values}
-\redtext{Greenberg reports adoption or about 5\% for all users before they enter 1k command line. They conclude that this is an initial learning period when the system encounters most of the commands for the first time. According to Greenber, after initial 1k cmd lines entered the adoption rate drops quicky under 1\%. This is somewhat in line with our findings. We did observe about 5\% cmd adoption rate during the first 1k cmdlines entered for vast majority of our users. Between 1k and 2k we saw a drop in adoption of new commands to about 3\%. Between 2k and 3k the adoption dropped to numbers between 1\% and 2\% for most users. Most users would eventually drop to a stable adoption rate of anywhere between 1 to 2\%.}
+\todotext{TODO: describe and explain plots}
 
-\redtext{This difference could be caused by multiple factors. There is more commands available compared to XX years before. Additionally, custom commands/scripts seem to be very common in our data while they seem to be non-existent in the greenberg study. This alone could have a huge impact. Draper (see below) was referring to a number of commands available to users of ... as 570. }
+
+% Figure 3.2. Command vocabulary size vs. the number of command lines entered for four individuals.
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_cmd-vocab-size.png}}
+  \caption{Command vocabulary size vs. the number of command
+lines entered for four individuals. (Greenberg)}
+\end{figure}
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmd-vocab-size.png}}
+  \caption{Command vocabulary size vs. the number of command
+lines entered for \todotext{N individuals}}
+\end{figure}
+
+
+
+\todotext{TODO: initial "steep" period in the plot is caused by the system encountering the commands for the first time. the more stable part is more representative of actual adoption rate of new commands.}
+
+\todotext{TODO: Greenberg found out that bursts in adoption of new commands is sometimes caused by new goals of the user but sometimes no such new goal can be found in the data. Our data does support this. }
+
+\redtext{Greenberg reports adoption or about 5\% for all users before they enter 1k command line. He concludes that this is an initial learning period when the system encounters most of the commands for the first time. According to Greenbers, after initial 1k cmd lines entered the adoption rate drops quicky under 1\%. This is somewhat in line with our findings. We did observe about 5\% cmd adoption rate during the first 1k cmdlines entered for vast majority of our users. Between 1k and 2k we saw a drop in adoption of new commands to about 3\%. After 2k the adoption dropped to numbers lower than 2\% for most users.}
+
+\todotext{TODO: Two differences - longer initial period of 2k cmdlines and higher adoption rate of up to 2\%}
+
+\redtext{These differences could be caused by multiple factors. There is more commands available compared to XX years before. Additionally, custom commands/scripts seem to be quite common in our data while they seem to be non-existent in the greenberg study. This alone could have a huge impact. Draper (see below) was referring to a number of commands available to users of ... as 570. }
 
 \redtext{Nowadays the number of available commands is virtually unlimited because users can install and create new commands. Number of initially available commands on a newly installed system is in thousands.}
 
-\redtext{ REF: Draper (1984) estimated the times a command was invoked by noting the UNIX processes spawned during each user's interaction with the system (method 4, Section 2.2.1).5 He suggested that the overall trends observed are representative of real command use. First, out of a vocabulary of the 570 commands available to the population, only 394 (70\%) were used at least once. }
+% REF: Draper (1984) estimated the times a command was invoked by noting the UNIX processes spawned during each user's interaction with the system (method 4, Section 2.2.1).5 He suggested that the overall trends observed are representative of real command use. First, out of a vocabulary of the 570 commands available to the population, only 394 (70\%) were used at least once. 
 
-\redtext{We can conclude that command usage distribution was and still is very uneven (few commands dominate the distribution) and that the number of available commands significantly increases over time.}
+\redtext{We can conclude that command usage distribution was and still is very uneven (few commands dominate the distribution) and that the number of available commands slowly and unevenly increases over time but the adoption of new commands is faster than in the past.}
 
-% >>> Top 100 %% of cmds amounts for 100.0 %% of all command lines
-% >>> Top 10 %% of cmds amounts for 63.43728659230594 %% of all command lines
-% >>> Top 20 %% of cmds amounts for 71.34987480081949 %% of all command lines
 % eva: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.051
 % eva: Cmd adoption rate at 2k cmdlines = 0.0345
 % eva: Cmd adoption rate between 1k and 2k cmdlines = 0.018
@@ -369,53 +405,83 @@ To do so we consider previous research on the topic which features an analysis o
 % >>> Max avg recalled characters = 16.34658576344865
 % >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
 
-
-\redtext{??? When collecting history there is always an initial period where we encounter many new commands at a high rate because the current vocabulary is very small. This part is expected as we notice commands for the first time Part of the curve after the initial "steep" period represents the rate of adopting new commands by users. Some new commands are adopted because of new tasks and goals of the user. Some commands seem ... }
-
-
-
-
-\subsubsection*{Sequential relationships between commands}
-\todotext{TODO: write the chapter}
+\subsection{Sequential dependencies between commands}
 
 We just looked at frequencies of commands and command vocabulary of shell users. Now we take a look the dependencies between commands.
 
-"Through a multivariate analysis of UNIX commands invoked
-by the site population, Hanson, Kraut, and Farber (1984) examined the interaction
-effects between commands. Their results show statistically significant relationships
-between certain command chains; the relations between the fifty most frequently
-used commands are shown in Figure 3.3. Each ball in the network represents
-a command, its size indicates the usage frequency, and the arrow indicates the
-significant dependencies. One dimension of these relationships is modularity.
-Some commands, such as Is, are core commands - they are used frequently and
-are surrounded by many other commands (i.e., highly modular and independent).
-Others are not; they are surrounded by specific command sequences. An example
-of the latter is cp, which is generally preceded by itself and followed by chmod."
+\todotext{TODO: describe the graph by Hanson - all users together, node size indicates frequency of the command, arrows indicate significant dependencies, 50 cmds. }
 
-"Commands are also related by functional clusters, such as editing, process management, orientation, social communication, and so on (Hanson, Kraut, and Farber,
-1984), which may not be revealed by statistics."
+\todotext{TODO: describe findings by Hanson - significant chains, core/modular cmds vs. cmds with significant dependencies, functional clusters of commands}
 
 
-Greenberg concluded that assuming that the sequential dependencies of commands found by polling all the users together is a mistake. 
+
+
+
+% Figure 3.3. Sequential structure of UNIX command usage, from Figure 4 in Hanson et al. (1984).
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/graph_ref_cmd-sequences.png}}
+  \caption{Sequential structure of UNIX command usage, from Figure 4
+in Hanson et al. (1984). (Greenberg)}
+\end{figure}
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
+  \caption{Sequential structure of command usage.}
+  \label{seq-graph}
+\end{figure}
+
+\begin{figure}
+
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Edge style & Transition probability            \\\hline
+Regular/full     & 1.0 -- 0.3 (specified by labels) \\
+Dashed      & 0.3 -- 0.2                         \\
+Dotted      & 0.2 -- 0.1                         \\
+\hline
+\end{tabular}
+\caption{Sequential structure of command usage (legend).}
+\label{tab:seq-table}
+\end{figure}
+
+\todo{sequential graph and its legend table must be on the same page!}
+
+
+
+
+% REF: "Through a multivariate analysis of UNIX commands invoked by the site population, Hanson, Kraut, and Farber (1984) examined the interaction effects between commands. Their results show statistically significant relationships between certain command chains; the relations between the fifty most frequently used commands are shown in Figure 3.3. Each ball in the network represents a command, its size indicates the usage frequency, and the arrow indicates the significant dependencies. One dimension of these relationships is modularity. Some commands, such as Is, are core commands - they are used frequently and are surrounded by many other commands (i.e., highly modular and independent). Others are not; they are surrounded by specific command sequences. An example of the latter is cp, which is generally preceded by itself and followed by chmod." "Commands are also related by functional clusters, such as editing, process management, orientation, social communication, and so on (Hanson, Kraut, and Farber, 1984), which may not be revealed by statistics."
+
+\redtext{Greenberg concluded that assuming that the sequential dependencies of commands found by polling all the users together is a mistake.}
 
 In earlier chapter, we saw that there are a big differences in vocabularies of different people so it is not surprising that sequential properties of the commands also differ significantly between individuals.
 
 We created a graph sequential dependencies between commands for a selected individual. Since we are studying sequential properties of commands with the relation to history tools; We chose not to use the same method as Hanson so the graphs are not comparable. 
 
-We created the graph by taking N most used commands. Each node represents a command and the size of the node is proportionate to the command frequency. Each vertex represents a \redtext{transition chance} from one command to the next one. We decided to create the graph this way because it better represents properties that could be potentially used in history tools. Because it only uses the probability of transition from one command to the next one whereas in the method used by Hanson also considers the reverse transition probability; That is the probability that given command was preceded by the previous command. For example, when predicting the next command we only have the information about the past and current command. 
+\todotext{TODO: polish this up}
+We created the graph by taking 41 most used commands. Each node represents a command and the size of the node is proportionate to the command frequency. Each vertex represents a transition probability from one command to the next one. We decided to create the graph this way because it represents properties that could be potentially used in history tools; It only uses the probability of transition from one command to the next one. Hanson used a method which also considers the reverse transition probabilities; That is the probability that given command was preceded by the previous command. For example, when predicting the next command we only have the information about the past and current command. 
 
-\todotext{TODO: Table with arrowstyles, arrowheads, and transition probabilities.}
 
 The \verb|_start_| command represents a start of a new terminal session.
 The \verb|_end_| command represents an end of the terminal session; It does not matter how the session ended.
 
+\todotext{Errors filtered out because we want to study the history to help people achieve their goals - filtering exit status !0 is not fully correct but the resulting data is more useful than without any filtering.}
 
-We can see some commands from which there are no verteces; This could be caused by user closing the session
+\todotext{There are strong dependencies between certain commands - e.g. mkdir almost always followed cd - cd into the newly created directory, source is almost always followed by git w/o clear reason; Existence of strong dependencies suggests that it could be worth to predict the next command using the previous one.}
+
+\todotext{Many commands have a high probability of being repeated - e.g. jq which is almost always followed by itself, curl, git, ssh ...; High rate of commands being repeated shows the need to recall recent history records - even the most immediate ones. Remember that these high rates of repeated commands are not caused only by errors and typos because all commands with non-zero status were filtered out.}
+
+\todotext{Ad. above: Almost all commands repeat themselves with a significant probability. Some commands do not repeat themselves. E.g. hstr, rm, cp, source, mc ... these are simple commands that do not usually have many arguments and achieve simple goals that do not need to be repeated (remove file, copy file). It seems that commands with more arguments are repeated more A) because they help the user achieve complex goals B) the user adjusts the command because it is nontrivial to put it together the arguments C) command performs something fairly complex and user repeats the command (external change) }
+
+\todotext{At the beginning of the session the user often changes to a different directory. Or they use hstr which is a history searching tool.}
+
+\todotext{There are some very frequent commands that are used over and over again. This makes it easier to predict the next command. But it does not mean that it is easy to predict the next command line. Vast majority of these invocations only share the command but not the arguments.}
+
+\todotext{Sequential graphs differ significantly between users. However, the findings described above could be also found in the sequential graphs of other users.}
 
 
-\redtext{toolsmith and the original sequence graph talked about how individuals have }
-
-\todo{Summed up toolsmith}
+\todo{NOTE: Summed up toolsmith}
  %The rank frequency distribution of command usage by groups of like and
 %unlike users is approximated by a Zipf distribution.
 %2. With a few exceptions, the frequency of use of most commands differs between
@@ -429,75 +495,17 @@ We can see some commands from which there are no verteces; This could be caused 
 
 
 
-\todotext{TODO: Greenberg conducted a study in his work \cite{greenberg1993computer} in 19XX which provides a lot of insight into how people use shell. It's not obvious that conclusions and ideas in the work still hold. To make sure that the usage of shell didn't change to the point where we can't use the ideas anymore. }
-
-\todotext{TODO: Predicting users' next command line - what is the state of the art, what are the disadvantages}
+% \todotext{TODO: Greenberg conducted a study in his work \cite{greenberg1993computer} in 19XX which provides a lot of insight into how people use shell. It's not obvious that conclusions and ideas in the work still hold. To make sure that the usage of shell didn't change to the point where we can't use the ideas anymore. }
 
 
-\todotext{TODO: Sequential relationships of commands}
+\subsection{Recurrence rate of command lines}
+\todo{avg recurrence rate \& avg max possible recalled characters}
+% >>> Avg recurrence rate = 70.29523637022278
+% >>> Max avg recalled characters = 16.34658576344865
+% >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
 
+\blind
 
-\blind[4]
-% plots:
-
-% Figure 3.1. The normalized command frequency, compared with Zipf.
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_zipf-cmd-frq.png}}
-  \caption{The normalized command frequency, compared with Zipf. (Greenberg)}
-\end{figure}
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_zipf-cmd-frq.png}}
-  \caption{The normalized command frequency, compared with Zipf. \todotext{unify labels to match Greenberg, export in vector, lose top title, add data from more people, have one line for each person and then one line for all people together}}
-\end{figure}
-\todo{make sure figures are not all over the place}
-
-% Figure 3.2. Command vocabulary size vs. the number of command lines entered for four individuals.
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_cmd-vocab-size.png}}
-  \caption{Command vocabulary size vs. the number of command
-lines entered for four individuals. (Greenberg)}
-\end{figure}
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmd-vocab-size.png}}
-  \caption{Command vocabulary size vs. the number of command
-lines entered for \todotext{N individuals}}
-\end{figure}
-
-
-% Figure 3.3. Sequential structure of UNIX command usage, from Figure 4 in Hanson et al. (1984).
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/graph_ref_cmd-sequences.png}}
-  \caption{Sequential structure of UNIX command usage, from Figure 4
-in Hanson et al. (1984). (Greenberg)}
-\end{figure}
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
-  \caption{Sequential structure of command usage. Legend: \ref{tab:seq-table} }
-  \label{seq-graph}
-\end{figure}
-
-\begin{figure}
-
-\centering
-\begin{tabular}{|l|l|}
-\hline
-Edge style & Transition probability            \\\hline
-Regular/full     & 100 - 30\% (specified by labels) \\
-Dashed      & 30 - 20\%                         \\
-Dotted      & 20 - 10\%                         \\
-\hline
-\end{tabular}
-\caption{Legend for figure \ref{seq-graph}}
-\label{tab:seq-table}
-\end{figure}
-
-\todo{sequential graph and its legend table must be on the same page!}
 
 % Table 5.2. The average recurrence rate of the four sample UNIX user groups
 
@@ -524,41 +532,17 @@ entered for a single experienced programmer \todotext{TODO: title}}
 % the average length of command lines is 7.58
 % recurrence rate is 74.4% for Experienced Programmers (avg group), max chars. recalled for an optimal conditioning method is 4.43 characters predicted per submission.
 
+\subsection{Predicting command lines entered by users}
+\todotext{TODO: Predicting users' next command line - what is the state of the art, what are the disadvantages}
+
+\blind[2]
+
 
 \todotext{How have shell usage changed since standard shell history features and greenberg study - longer commands, more commands; sessions (there can be more terminal windows open -> history is not strictly sequential anymore); }
 
-\todo{avg recurrence rate \& avg max possible recalled characters}
-% >>> Top 100 %% of cmds amounts for 100.0 %% of all command lines
-% >>> Top 10 %% of cmds amounts for 63.43728659230594 %% of all command lines
-% >>> Top 20 %% of cmds amounts for 71.34987480081949 %% of all command lines
-% eva: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.051
-% eva: Cmd adoption rate at 2k cmdlines = 0.0345
-% eva: Cmd adoption rate between 1k and 2k cmdlines = 0.018
-% eva: Cmd adoption rate between 2k and 3k cmdlines = 0.013
-% eva: New cmd adoption rate after 1k cmdlines = 0.007725856697819315
-% eva: New cmd adoption rate after 2k cmdlines = 0.006263345195729538
-% eva: New cmd adoption rate after 3k cmdlines = 0.005145228215767635
-% simon: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.076
-% simon: Cmd adoption rate at 2k cmdlines = 0.0505
-% simon: Cmd adoption rate between 1k and 2k cmdlines = 0.025
-% simon: Cmd adoption rate between 2k and 3k cmdlines = 0.007
-% simon: New cmd adoption rate after 1k cmdlines = 0.015840041547649963
-% simon: New cmd adoption rate after 2k cmdlines = 0.012627148368993335
-% simon: New cmd adoption rate after 3k cmdlines = 0.015667206915180983
-% tivvit: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.045
-% tivvit: Cmd adoption rate at 2k cmdlines = 0.0315
-% tivvit: Cmd adoption rate between 1k and 2k cmdlines = 0.018
-% tivvit: Cmd adoption rate between 2k and 3k cmdlines = 0.011
-% tivvit: New cmd adoption rate after 1k cmdlines = 0.009304948540814888
-% tivvit: New cmd adoption rate after 2k cmdlines = 0.007877892663712457
-% tivvit: New cmd adoption rate after 3k cmdlines = 0.007264873355586099
-% >>> Avg recurrence rate = 70.29523637022278
-% >>> Max avg recalled characters = 16.34658576344865
-% >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
 
 
-
-\blind[4]
+\blind[2]
 
 
 \subsection{How people use shell history}
