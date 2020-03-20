@@ -65,7 +65,16 @@
 % \par Then I~would like to thank Ing. Michal Bukovsk{\' y} along with his whole Email.cz team in Seznam.cz for letting me work with them and use their data.
 % \par My thanks also goes to RNDr. Jana Strakov{\' a} at. el for developing Nametag, Named entity recognition solution, I~used in this thesis, and answering my questions.
 % \par Finally I~want to thank my family and friends for their support trough my whole studies.
-\acknowledgements{\todotext{TODO: I would like to thank my supervisor Ing. Lukáš Bařinka for his guidance, my colleagues and friends for their feedback, hundreds of people who downloaded this project for their trust, and my family for support during writing this thesis. Installfest for accepting my talk about this project. Github users who submitted issues and pull requests to the project.}}
+\acknowledgements{I would like to thank my supervisor Ing. Lukáš Bařinka for his guidance and advice. His insights and expertise shaped this work significantly. 
+
+Next, my thanks goes to my colleagues and friends for their valuable feedback. They helped me spot my personal biases and assumptions rooted in my personal shell workflows. 
+
+I am grateful for the trust of hundreds of people who downloaded this project. I would also like to thank all GitHub users who submitted issues and pull requests to the project.
+
+I want to thank Installfest conference organizers for the opportunity to give a talk and to demo this project on Installfest.  
+
+Finally, I would like to thank my family for their support during writing this thesis.
+}
 \abstractCS{\todotext{TODO: CZ abstrakt}  \blind[2]}
 \abstractEN{\todotext{TODO: abstract} This thesis is an enhancement for standard shell history. It records shell history with context. It uses the recorded context to make it easier to find relevant history records and to make it possible to search search history using context explicitly.
 
@@ -351,6 +360,7 @@ user groups, 10\% of the commands used accounted for 84\%-91\% of all usage}
 % Figure 3.2. Command vocabulary size vs. the number of command lines entered for four individuals.
 
 \begin{figure}
+\centering
   \tmpframe{\includegraphics[width=0.6\linewidth]{figures/greenberg/plot_ref_cmd-vocab-size.png}}
   \caption{Command vocabulary size vs. the number of command
 lines entered for four individuals. (Greenberg)}
@@ -486,7 +496,7 @@ The \verb|_end_| command represents an end of the terminal session; It does not 
 
 \todo{add words delete words}
 
-\todo{NOTE: Summed up toolsmith}
+\todo{NOTE: Summed up toolsmith \%\%\%}
  %The rank frequency distribution of command usage by groups of like and
 %unlike users is approximated by a Zipf distribution.
 %2. With a few exceptions, the frequency of use of most commands differs between
@@ -504,24 +514,105 @@ The \verb|_end_| command represents an end of the terminal session; It does not 
 
 
 \subsection{Recurrence rate of command lines}
-\todo{avg recurrence rate \& avg max possible recalled characters}
+
+\redtext{In the previous sections we have examined how people use commands when interacting with a command line interface. Now we focus on whole command lines entered by the user. By \textit{command line entry}, we mean the line entered by the user as it appears in the shell history. Multi-line commands are considered a single command line entry.} 
+
+\todotext{It is important to study command line entries because they contain the full information entered by the user. In contrast, commands only offer partial information. For example, even if we were able to predict the next command of the user with 100\% accuracy user would still have to type in all the arguments themselves. Usefulness of such history mechanism would not be great.}
+
+\todotext{Greenberg has reported average recurrence rate of 73.8\% for all subjects; Recurrence rates for computer scientists and experienced programmers were 74.4\% and 67.7\% respectively. Average recurrence rate of command line entries in our data is 70.3\%. Based on descriptions of groups in \cite{greenberg1993computer} our subjects are computer scientists and experienced programmers.}
+
+\todotext{High average recurrence rate shows the potential of shell history tools. The fact that command line entry was already entered by the user does not mean the user will recall it from history. For example, if remembering and retyping is easier than using history facilities there is no point in recalling the command line entry from the shell history. Naturally, longer command line entries are more likely to be recalled and shorter ones are more likely to be retyped. ... other factors of recall utility }
+
+% Table 5.2. The average recurrence rate of the four sample UNIX user groups
+
+\begin{table}[]
+\centering
+\begin{tabular}{lllll}
+\hline \hline
+Sample name             & \multicolumn{2}{c}{Recurrance rate} & \multicolumn{2}{c}{Range} \\
+                        & mean             & std dev          & minimum     & maximum     \\ \hline
+Novice Programers       & 80.4\%           & 7.2              & 64.7\%      & 91.7\%      \\
+Experienced Programmers & 74.4\%           & 9.7              & 51.4\%      & 90\%        \\
+Computer Scientists      & 67.7\%           & 8.2              & 46.4\%      & 82\%        \\
+Non-programmers         & 69.4\%           & 8.1              & 50\%        & 84.3\%      \\
+                        &                  &                  &             &             \\
+Total                   & 73.8\%           & 9.6              & 46.4\%      & 91.7\%      \\ \hline \hline 
+\end{tabular}
+\caption{The average recurrence rate of the four sample UNIX user groups from \cite{greenberg1993computer}}
+\label{tab:recurrence_rate}
+\end{table}
+
+% \begin{figure}
+%   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/table_recurr-rate-in-different-samples.png}}
+%   \caption{The average recurrence rate of the four sample UNIX user groups (Greenberg) \todotext{redo as an actual table}} 
+% \end{figure}
+
+
+\subsection{Maximum possible recalled characters}
+
+\redtext{Recurrence rate represents how often people execute command line entries that were already entered before. Maximum possible recalled characters represents how many characters can be recalled from shell history assuming we store all previously entered commands. This metric show us the potential of shell history tools quantified in recalled characters.}
+
+\todotext{TODO: Greenberg reports average command line entry length of 7.58 characters. Maximum possible recalled characters per command line submission was 4.43 characters. Whenever the user types in a new command line entry there can be no characters recalled; This lowers the maximum recalled characters per command line entry.}
+
+\todotext{TODO: Our data shows average command line entry length of 29.26 characters. Maximum possible recalled characters per command line entry is 16.34 characters. We see a significant increase in the average command line entry compared to Greenberg. Naturally, this also increases the potential recalled characters.}
+
+\redtext{This difference makes sense when we look at commands that are available today. There are new complex commands with subcommands and long options. Consider} \verb|git|\redtext{, it has many subcommands which accept different options; Additionally, the order of arguments matters.}
+
+\todo{Is this where we talk about complex commands ??? }
+
+\todotext{We conclude that the potential of shell history facilities has increased over the years because of differences in shell usage, available commands, and shell itself.}
+
+\subsection{Maximum possible recalled characters including prefix matches}
+% prefix matches
+
+\todotext{TODO: We found situations in our collected shell history where the user gradually modified recently submitted command line entries. These entries often did not exactly match any of previous command lines entries but they were very similar. Workflows that repeat parts of previous command line entries are an opportunity for shell history use. Previously introduced metric does not account for this type of command line entry reuse. To estimate the potential of shell history tools we measured the potential recalled characters considering prefix matches.}
+
+\todotext{TODO: Maximum possible recalled characters including prefix matches is 26.77 characters per command line entry. You can see that this is close to the average command line entry length; This means that almost all command line entries share prefixes of significant length with previously submitted command line entries. This of course does not mean that it is possible to create a shell history system that achieves these amounts of character reuse. However the potential of history facilities is great. }
+
+
+
+
+\todo{NOTE: avg recurrence rate \& avg max possible recalled characters \%\%\%}
+% ALL avg cmdline = 29.269552945461168
 % >>> Avg recurrence rate = 70.29523637022278
 % >>> Max avg recalled characters = 16.34658576344865
 % >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
 
+
+% greenberg 1993 vs now
+% the average length of command lines is 7.58
+% recurrence rate is 74.4% for Experienced Programmers (avg group), max chars. recalled for an optimal conditioning method is 4.43 characters predicted per submission.
+
 \blind
 
+\subsection{Potential recalled characters as a function of distance}
 
-% Table 5.2. The average recurrence rate of the four sample UNIX user groups
+\todotext{TODO: add graph with all subjects combined or separated}
 
 \begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/table_recurr-rate-in-different-samples.png}}
-  \caption{The average recurrence rate of the four sample UNIX user groups (Greenberg) \todotext{redo as an actual table}} 
+\centering
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_cmdline-recurr-rate.png}}
+  \caption{Recurrence distribution as a measure of distance. (Greenberg)}
 \end{figure}
+
+
+\subsection{Command line entry vocabulary}
+
+\todotext{TODO: find out where to put this !!! }
+
+\todo{!!! conclusions from plots !!!}
+
+
+
+\todotext{}
+
+
+
 
 % Figure 5.6. Command line vocabulary size vs. the number of commands entered for four typical individuals.
 
 \begin{figure}
+\centering
   \tmpframe{\includegraphics[width=0.6\linewidth]{figures/greenberg/plot_ref_cmdline-vocab-size.png}}
   \caption{Command line vocabulary size vs. the number of commands
 entered for four typical individuals. (Greenberg)}
@@ -533,14 +624,9 @@ entered for four typical individuals. (Greenberg)}
 entered for a single experienced programmer \todotext{TODO: title}}
 \end{figure}
 
-% greenberg 1993 vs now
-% the average length of command lines is 7.58
-% recurrence rate is 74.4% for Experienced Programmers (avg group), max chars. recalled for an optimal conditioning method is 4.43 characters predicted per submission.
-
 \subsection{Predicting command lines entered by users}
 \todotext{TODO: Predicting users' next command line - what is the state of the art, what are the disadvantages}
 
-\todo{!!! conclusions from plots !!!}
 \blind[2]
 
 
