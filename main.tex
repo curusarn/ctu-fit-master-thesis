@@ -61,10 +61,7 @@
 \authorWithDegrees{Bc. Šimon Let} %author's name with academic degrees
 \author{Šimon Let} %author's name without academic degrees
 \supervisor{Ing. Lukáš Bařinka}
-% my BP thesis: I~would like to thank my supervisor Ing. V{\' i}t List{\' i}k, without his assistance and guidance this thesis would have not be accomplished.
-% \par Then I~would like to thank Ing. Michal Bukovsk{\' y} along with his whole Email.cz team in Seznam.cz for letting me work with them and use their data.
-% \par My thanks also goes to RNDr. Jana Strakov{\' a} at. el for developing Nametag, Named entity recognition solution, I~used in this thesis, and answering my questions.
-% \par Finally I~want to thank my family and friends for their support trough my whole studies.
+
 \acknowledgements{I would like to thank my supervisor Ing. Lukáš Bařinka for his guidance and advice. His insights and expertise shaped this work significantly. 
 
 Next, my thanks goes to my colleagues and friends for their valuable feedback. They helped me spot my personal biases and assumptions rooted in my personal shell workflows. 
@@ -73,7 +70,7 @@ I am grateful for the trust of hundreds of people who downloaded this project. I
 
 I want to thank Installfest conference organizers for the opportunity to give a talk and to demo this project on Installfest.  
 
-Finally, I would like to thank my family for their support during writing this thesis.
+Finally, I would like to thank my family for their support during writing this thesis and trough my whole studies.
 }
 \abstractCS{\todotext{TODO: CZ abstrakt}  \blind[2]}
 \abstractEN{\todotext{TODO: abstract} This thesis is an enhancement for standard shell history. It records shell history with context. It uses the recorded context to make it easier to find relevant history records and to make it possible to search search history using context explicitly.
@@ -135,6 +132,12 @@ At this point we move on to design(ing) ...
 
 
 \chapter{Analysis}
+
+\todo{DEFINE "command line entry"/"history entry" is a full command entered/submitted by the user}
+\todo{DEFINE "stub" is the first word of the command line entry - usually an executable, a shell builtin, or an alias.}
+
+\todo{REPLACE "command line" -$>$ "command line entry"}
+\todo{REPLACE "command" -$>$ "stub"}
 
 \todotext{TODO: describe layout/contents of the chapter}
 
@@ -270,7 +273,7 @@ The \verb|fc| builtin command is supported and the functionality is comparable t
 \todotext{TODO: short conclusion about shells ? }
 
 
-\section{How people use shell and shell history}
+\section{How people use shell}
 
 In this chapter we examine how people use shell and shell history. We consider previous research that studies the properties of how people use command based systems. We also collected a sample of user shell histories and we will be discussing where our data matches the existing findings and where it does not. 
 
@@ -293,7 +296,7 @@ In this section, we focus on commands instead of whole command lines. By command
 
 \todotext{TODO: 80-20 rule is a looser characteristic of Zipf distribution - 20 \% of items account for 80 \% of usage ... alternative 90-10}
 \blind
-
+80-20 rule -$>$ https://en.wikipedia.org/wiki/Pareto\_principle
 
 
 
@@ -372,6 +375,12 @@ lines entered for four individuals. (Greenberg)}
 lines entered for \todotext{N individuals}}
 \end{figure}
 
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmd-vocab-size-time.png}}
+  \caption{Command vocabulary size in time of \todotext{N individuals} (empty spaces are for days without any shell history)}
+\end{figure}
+
+
 
 
 \todotext{TODO: initial "steep" period in the plot is caused by the system encountering the commands for the first time. the more stable part is more representative of actual adoption rate of new commands.}
@@ -424,8 +433,6 @@ We just looked at frequencies of commands and command vocabulary of shell users.
 \todotext{TODO: describe the graph by Hanson - all users together, node size indicates frequency of the command, arrows indicate significant dependencies, 50 cmds. }
 
 \todotext{TODO: describe findings by Hanson - significant chains, core/modular cmds vs. cmds with significant dependencies, functional clusters of commands}
-
-
 
 
 
@@ -595,6 +602,12 @@ Total                   & 73.8\%           & 9.6              & 46.4\%      & 91
   \caption{Recurrence distribution as a measure of distance. (Greenberg)}
 \end{figure}
 
+\begin{figure}
+\centering
+  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmdline-recurr-rate.png}} 
+  \caption{Recurrence distribution as a measure of distance.}
+\end{figure}
+
 
 \subsection{Command line entry vocabulary}
 
@@ -634,37 +647,101 @@ entered for a single experienced programmer \todotext{TODO: title}}
 
 
 
-\blind[2]
+\blind[3]
 
 
-\subsection{How people use shell history}
-\todo{practical chapter with concrete examples based on the standard history features}
+\section{How people use shell history}
 
-\todotext{TODO: intro}
+\todo{DESC: practical chapter with concrete examples based on the standard history features}
 
+In the previous sections, we have looked at existing research about shell usage. We compared the findings from literature with a small sample of data we collected ourselves. 
+
+We saw that there is a lot of recurrence and patterns in the way people use shell. These properties of shell usage show us the potential of shell history. When designing any shell history tools we should leverage and respect them.
+
+However, we should not blindly assume that leveraging the recurrence and patterns of shell usage will produce useful history tools. To see the full picture, we need to examine not only how people use shell but how they use shell history.  
+
+For example, studying your shell usage could show us that you often use a specific command line entry. However, there is a significant difference in workflow based on whether you prefer to recall the entry from history or if you prefer to type it out. A shell history mechanism that suggests command line entries that you never retrieve from history provides zero value. 
+
+Consider another example; You download and install a new history tool that is supposed to increase your productivity. It promises to predict what command line entry you are going to use next. It is activated when you press \verb|arrow_up|. There is an issue with such a tool; You are likely used to having access to recent history entries when you press \verb|arrow_up|. You probably have a strong expectation that \verb|arrow_up| gives you previous history entry; Chances are that sometimes you press \verb|arrow_up| and execute the retrieved history entry without even reading it. History tool that breaks this expectation will cause mistakes and ultimately you will be forced to either change your habits or uninstall the tool.  
+
+\todotext{TODO: no usable research on how people use shell facilities (Greenberg has usage from csh with history expansion only)}
+\todotext{TODO: to get an idea of how people use shell history we explored and "initiated/participated" in online discourse}
 \blind 
 
-\todotext{TODO: talk about our online research - my twitter thread, hackernews threads, SO questions, etc.}
-\todotext{TODO: features people want, ask for; opinions, ...}
 
-\blind
+\subsection{Online discourse about shell history}
+
+\todotext{TODO: talk about our online research - my twitter thread, hackernews threads, SO questions, etc.}
+
+\todotext{SO and SE show the standard issues, questions, wanted features}
+\todotext{TW thread shown things people use and features they want}
+
+
+\todotext{TODO: Naturally, people are selective about what they share online this skews the available information. People are not likely to share the basic usage habits they do not even realize they have. BUT they will share their custom configurations and scripts. }
+% We find mentions of issues they run into when using standard history features.
+
+\subsection{Common shell history issues and usage patterns}
+
+\todotext{TODO: In this section, we present our observations and highlight sentiments that people voice online. Our observations include issues people face when using shell history, what people expect from shell history and }
+
+\todotext{TODO: We focus on more general findings. We leave specific tools people use for a later section.}
+
+
+\subsubsection*{Robustness of standard shell history}
+
+The most common issues people ask questions about are related to robustness of the history.
+
+People expect shell history to gracefully handle multiple \textbf{simultaneous sessions}. This is not the case; The user can run into multiple issues depending on what is the default configuration in the package provided by the distribution.
+\todotext{The most common issue is - losing history from sessions because the last session overwrites the history file. Some people expect the history to be shared between sessions and it is nontrivial to set it up (in bash, zsh has an option)}
+\todotext{The most severe issue is a race condition that can cause bash to lose the entire shell history. There is no mechanism that ensures that two shell sessions will not write out shell history at the same time. People have reported losing their whole history because of this issue. When users shutdown their machine with multiple open terminals the chance of the race condition increases because all the shell sessions will be "killed" by the "system" at roughly the same time.}
+
+
+\todotext{Unlimited history - people expect}
+\todotext{unlimited search}
+
+
+\todotext{Full transcript - people expect}
+
+
+\subsubsection*{Basic/Standard shell history features/usage}
+
+\subsubsection*{Contextual history}
+
+\subsubsection*{Control over what gets into history}
+
+\subsubsection*{Shell history across multiple devices / Synchronizing history between devices}
+
+\subsubsection*{Smart shell history features}
+
+
 
 \todotext{TODO: introduce personas - HERE?!}
-\todotext{TODO: describe use cases - HERE?! - yes because we want to compare the standard history features to our solution in the end using these use cases }
 
-\todotext{USECASE: use case where we find something in history and want to find a similar command immediately: 1 use resh cli to find the first command, 2 execute, 3 arrow\_up, 4 ctrlR gives you similar results to what you found before}
+\todotext{TODO: Experienced user}
 
-\todotext{USECASE: come back to a project and continue previous work on it}
+\todotext{TODO: Novice shell user}
 
-\todotext{USECASE: fix a typo in a previous command}
+
+
+\todotext{TODO: describe "use cases" - HERE?! - yes because we want to compare the standard history features to our solution in the end using these use cases }
+
+\todotext{USECASE: fix a typo in a previous command - press arrow up, }
 
 \todotext{USECASE: use: sudo !! to run a previous command with sudo}
+
+\todotext{USECASE: recall a recent command - press arrow up 5-6 (3-8) times; type prefix + press arrow up 2-3 times NOTE: recent in time vs. recent in command sequence}
+
+\todotext{USECASE: come back to a project and continue previous work on it}
 
 \todotext{USECASE: find a long (w/ many arguments/options) curl request to github api}
 
 \todotext{USECASE: run a recent git command}
 
 \todotext{USECASE: find a command using datetime, command(first word) }
+
+\todotext{USECASE: use case where we find something in history and want to find a similar command immediately: 1 use resh cli to find the first command, 2 execute, 3 arrow\_up, 4 ctrlR gives you similar results to what you found before}
+
+\todo{TODO: Provide a concrete example for all of the use cases !}
 
 \blind[4]
 
@@ -679,21 +756,64 @@ entered for a single experienced programmer \todotext{TODO: title}}
 \todotext{TODO: shell history configurations options}
 
 
+\subsection{how much do people configure and customize \redtext{TODO: better title?}} 
+\todotext{TODO: Some people enjoy actively tweaking and customizing their setups and we look at the configurations they are sharing to explore possible features and options. - the lesson here is to keep things extensible and hackable.}
 
-\subsection{Existing history tools \todotext{TODO: split into more subsections}}
+\todotext{TODO: Large group of people does not want to spend time configuring and customizing their shell and expect it to just work.}
+\todotext{TODO: There is one major reason and one minor reason. The major reason is that to customize and configure you need to either pause whatever you are doing or dedicate some extra time for it. This seems obvious but the fact that customization is extra work will deter many people from configuring their shells. }
+\todotext{TODO: The lesson here is that the default configuration should provide good out of the box experience for the average user. }
+
+\todotext{TODO: Another reason people avoid customization is when they often ssh to many different machines. The issue is that they get used to the custom the local environment and then they miss the customizations on different machines they visit. Depending on how much time they spend on other machines, it might be more convenient to just use the standard defaults everywhere.}
+
+\todotext{TODO: This kind of issue is tough one to deal with; People may be hesitant to even use new history tools because of this issue. We should be aware of this issue and consider how could shell history work across multiple devices.}
 
 \todotext{TODO: common configuration options and what problems are they solving}
 
+\todotext{-$>$ issues caused by running simultaneous sessions - SO full of questions, semi tricky config, PROMPT-COMMAND, histappend option }
+
+\todotext{TODO: per directory history}
+
+\todotext{TODO: per date + session history}
+
+\todotext{TODO: more configurations ...}
+
 \todotext{TODO: configuration management projects e.g.: oh-my-zsh}
 
-\todotext{TODO: }
+\todotext{TODO: many people avoid custom configuration because they move between many devices (ssh into servers)}
+
+\subsection{Existing history tools \todotext{TODO: split into more subsections}}
+
+\todotext{TODO: fuzzy search - fzf}
+
+\todotext{TODO: hstr - addresses the issue of Ctrl-R that only shows one result}
+
+\begin{figure}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/misc/hstr-v2-30.png}}
+  \caption{Hstr screenshot \todotext{TODO: title}}
+\end{figure}
+
+\todotext{TODO: bashhub - contextual cloud shell history}
+
+\todotext{TODO: mcfly - contextual NN powered history search}
+
+\todotext{TODO: advanced-shell-history - contextual history with smart querying - too buggy to be useful}
+
+
+\todotext{TODO: Other less notable shell history tools - underdeveloped, non-interactive, ...}
+
 
 \subsection{History features of Read-eval-print loops}
 
+\todotext{TODO: Python - arrow down}
+
 \subsection{History features of Friendly interactive shell}
 
-\todo{more subsections ...}
-\blind[1]
+\todotext{TODO: autosuggestions}
+
+\todotext{TODO: contextual autosuggestions}
+
+\todotext{TODO: missing reverse search}
+
 
 \blind[4]
 
@@ -920,6 +1040,7 @@ entered for a single experienced programmer \todotext{TODO: title}}
 
 \section{Use cases}
 
+\todotext{TODO: we rolled out the prefix search as a default and we received zero negative feedback. Study of usage of history utilities does indicate that prefix search does not interfere with normal arrow up workflow. We asked users about the feature and some of them were not aware of it.}
 
 
 \begin{conclusion}
