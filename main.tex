@@ -682,38 +682,104 @@ Consider another example; You download and install a new history tool that is su
 
 \subsection{Common shell history issues and usage patterns}
 
-\todotext{TODO: In this section, we present our observations and highlight sentiments that people voice online. Our observations include issues people face when using shell history, what people expect from shell history and }
+\todotext{TODO: In this section, we present our observations and highlight sentiments that people voice online. Our observations include issues people face when using shell history, what people expect from shell history and ...}
 
 \todotext{TODO: We focus on more general findings. We leave specific tools people use for a later section.}
 
 
-\subsubsection*{Robustness of standard shell history}
+\subsubsection*{Robustness/Reliability of standard shell history}
 
 The most common issues people ask questions about are related to robustness of the history.
 
-People expect shell history to gracefully handle multiple \textbf{simultaneous sessions}. This is not the case; The user can run into multiple issues depending on what is the default configuration in the package provided by the distribution.
-\todotext{The most common issue is - losing history from sessions because the last session overwrites the history file. Some people expect the history to be shared between sessions and it is nontrivial to set it up (in bash, zsh has an option)}
-\todotext{The most severe issue is a race condition that can cause bash to lose the entire shell history. There is no mechanism that ensures that two shell sessions will not write out shell history at the same time. People have reported losing their whole history because of this issue. When users shutdown their machine with multiple open terminals the chance of the race condition increases because all the shell sessions will be "killed" by the "system" at roughly the same time.}
+People expect shell history to handle multiple \textbf{simultaneous sessions} gracefully. This is generally not the case; The user can run into multiple issues depending on what is the default configuration in the package provided by their distribution.
 
+\todotext{The most common issue is - losing history from sessions because the last session overwrites the history file. Some people also expect the history to be shared between sessions which is nontrivial to set it up (in bash, zsh has an option)}
+
+\todotext{The most severe issue is a race condition that can cause bash to lose the entire shell history. There is no mechanism that ensures that two shell sessions will not write out shell history at the same time. People have reported losing their whole history because of this issue. When users shutdown their machine with multiple open terminals the chance of the race condition increases because all the shell sessions will be "killed" by the "system" at roughly the same time.}
 
 \todotext{Unlimited history - people expect}
 \todotext{unlimited search}
 
 
-\todotext{Full transcript - people expect}
+\todotext{history as a Full transcript of actions - people expect}
+
+
+\todotext{TODO: Shell history is not reliable enough -> People do not trust it -> They start using other solutions}
+\todotext{Using other tools because of preference or convenience is okay. Using other tools because shell history does not feel reliable is a failure of shell history.}
+
+\todotext{Many of these issues can be solved with a right configuration; However, this begs a question, should tools rely on additional configuration for the basic functionality to work properly?}
 
 
 \subsubsection*{Basic/Standard shell history features/usage}
+\todo{Not sure if this is the right place - it might be}
 
-\subsubsection*{Contextual history}
+\todotext{TODO: Recalling recent history}
 
-\subsubsection*{Control over what gets into history}
+\todotext{TODO: Simple stepping through history using arrow keys - failry straight-forward feature commonly used when people need to access recently executed command line entries.}
+
+\todotext{TODO: Prefix search is realized by verb|history-search-backward| and verb|history-search-forward| readline functions in bash. It is very common to replace the simple stepping through history with prefix search; When you use prefix search with an empty line it works almost identically to stepping through history. Prefix search functionality is essentially a superset to stepping through history. }
+
+
+\todotext{Prefix search is often praised in shells where it is enabled by default\footnote{The Fish shell and a popular configuration framework oh-my-zsh both come with a prefix search enabled by default and bound to verb|arrow\_up|} and it is often ignored in bash where one needs to configure it.}
+
+\todotext{TODO: Reverse search}
+
+\todotext{TODO: Reverse search is an interesting feature. Many people use it and find it useful. That makes sense because it is the most powerful interactive history mechanism available to users.} 
+
+\todotext{There are a few issues with reverse search we should point out. Reverse search only shows one result at a time; To show the next one we can press verb|CTRL-R| repeatedly. Common issue people have is that when you press verb|CTRL-R| too many times it is not trivial to go back to the previous result.}
+
+\todotext{TODO: Shows only one result - going through results one by one can be quite tiresome}
+
+\todotext{The default keybinding for getting a previous result is verb|CTRL-S|. The issue is that verb|CTRL-S| is also commonly used for flow control. By default, in some distributions, pressing verb|CTRL-S| freezes all the input coming to the terminal. This can be quite obviously very confusing for new users. It is possible to configure verb|CTRL-S| to be free for forward history search; However, if people do not change the configuration they have no way to get to a previous search result.}
+
+% Terminal can be unfrozen by pressing \verb|CTRL-Q|.
+
+\todotext{TODO: Query in reverse search is consecutive - not ideal when we only remember parts of the command. E.g. ... ?}
+
+\todotext{TODO: manual filtering}
+\todotext{history | grep - gives you a lot of power and extensibility}
+\todotext{This seems to be quite common.}
+\todotext{Two takeaways: Interactive Std. history features may be lacking if people use manual filtering instead - lets try to fix it, AND people like extensible and standard solutions}
+
+
+\todotext{TODO: History substitution}
+\todotext{you don't see what you execute unless you enable the option - minority of people seem to use these (more than just individuals but not many people)}
+\todotext{ !! is quite common, e.g. sudo !!}
+
+
+
+\subsubsection*{Additional information in shell history}
+
+A common sentiment we can find online is the wish to have additional information saved in shell history; The most frequently requested additional information is the current working directory and the time of the execution. Other requested information includes duration of the execution, user and host. 
+
+Some people would also like if there was a way to filter out history entries with non-zero status or perhaps, even to not save them to history at all.
+
+\redtext{We are going to cover the benefits and possibilities afforded by saving additional information to shell history in the later sections in detail.}
+
+\subsubsection*{Control over what gets saved to history}
+Sometimes people do not want certain command line entries to be saved to history. 
+
+It is very common to have the shell configured to not save duplicate entries to the history.  
+Another common reason to not want a certain command line to be saved to history is when it contains some sensitive information. This is typically a password passed as an argument to an executable.
+
+Other command line entries that some people do not want in their history are short useless commands and dangerous commands. An example of the former is \verb|ls| which is easier to type again than to recall from history; An example of the latter is \verb|rm -rf *| which could have catastrophic impact if recalled and executed by accident.
+
+There are configuration options available that make it easy to filter what gets saved to history using simple pattern matching. There is also an option to ignore command line entries starting with a space; This is commonly used to prevent arbitrary commands from being saved to history.
+
+It is worth noting that people sometimes want to delete history entries after they submitted them. Another workflow some people have is to disable saving of command line entries to history for the rest of the current session.
 
 \subsubsection*{Shell history across multiple devices / Synchronizing history between devices}
 
+\redtext{Quite a few people wish to have their shell history synchronized between multiple devices. This is not surprising because many services work independently of a device and the user data is often stored online. It is understandable that people expect their shell history to follow this trend.  }
+
+\redtext{Some people shared workflows that involve reuse of shell history between devices. For example, someone wanted to have access to shell history from different machines when setting up new servers.}
+
 \subsubsection*{Smart shell history features}
 
+\todotext{TODO: A portion of questions we can find online is about features that would require the shell history to understand the contents of the submitted command line entries. This means that shell history would have to include at least a limited parsing of the shell. Examples of such features are expansion of aliases and transformation of relative paths to absolute ones. These expansions could make the history entries independent of set aliases and current working directory. }
 
+
+\subsection{Target users and typical workflows}
 
 \todotext{TODO: introduce personas - HERE?!}
 
@@ -736,6 +802,8 @@ People expect shell history to gracefully handle multiple \textbf{simultaneous s
 \todotext{USECASE: find a long (w/ many arguments/options) curl request to github api}
 
 \todotext{USECASE: run a recent git command}
+
+\todotext{USECASE: search for a command, there is multiple matching results, pick and run the latest one that evaluated with non-zero status}
 
 \todotext{USECASE: find a command using datetime, command(first word) }
 
