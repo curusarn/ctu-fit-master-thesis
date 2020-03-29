@@ -689,16 +689,23 @@ Consider another example; You download and install a new history tool that is su
 
 \subsubsection*{Robustness/Reliability of standard shell history}
 
-The most common issues people ask questions about are related to robustness of the history.
+The most common issues people ask questions about are related to reliability of the history.
+There are various reasons why certain command lines might not be saved to the shell history; This means that people experience situations, when they expect some entry to be present in the history  but they cannot find it because it is missing.
+
+To understand why reliability is essential, imagine you are looking for a command line entry and you are absolutely certain you executed it in the past; In this situation, you could spend a significant amount of time trying to retrieve the command line entry from the history. You could give up at any time but how likely is that if you know that you executed the command line entry earlier.
+
+The most common reason people lose portions of their shell history is caused by how shells handle multiple simultaneous shell sessions.    
+\todotext{CONNECT}
 
 People expect shell history to handle multiple \textbf{simultaneous sessions} gracefully. This is generally not the case; The user can run into multiple issues depending on what is the default configuration in the package provided by their distribution.
 
 \todotext{The most common issue is - losing history from sessions because the last session overwrites the history file. Some people also expect the history to be shared between sessions which is nontrivial to set it up (in bash, zsh has an option)}
 
+
 \todotext{The most severe issue is a race condition that can cause bash to lose the entire shell history. There is no mechanism that ensures that two shell sessions will not write out shell history at the same time. People have reported losing their whole history because of this issue. When users shutdown their machine with multiple open terminals the chance of the race condition increases because all the shell sessions will be "killed" by the "system" at roughly the same time.}
 
-\todotext{Unlimited history - people expect}
-\todotext{unlimited search}
+\todotext{Unlimited history - people expect it}
+\todotext{unlimited search, some people experience their history being truncated on reboots}
 
 
 \todotext{history as a Full transcript of actions - people expect}
@@ -712,6 +719,7 @@ People expect shell history to handle multiple \textbf{simultaneous sessions} gr
 
 \subsubsection*{Basic/Standard shell history features/usage}
 \todo{Not sure if this is the right place - it might be}
+\todo{CONSIDER: This might get it's own subsection after all the common issues and feature requests/wishes}
 
 \todotext{TODO: Recalling recent history}
 
@@ -756,7 +764,7 @@ Some people would also like if there was a way to filter out history entries wit
 
 \redtext{We are going to cover the benefits and possibilities afforded by saving additional information to shell history in the later sections in detail.}
 
-\subsubsection*{Control over what gets saved to history}
+\subsubsection*{Control over what is saved to history}
 Sometimes people do not want certain command line entries to be saved to history. 
 
 It is very common to have the shell configured to not save duplicate entries to the history.  
@@ -779,39 +787,147 @@ It is worth noting that people sometimes want to delete history entries after th
 \todotext{TODO: A portion of questions we can find online is about features that would require the shell history to understand the contents of the submitted command line entries. This means that shell history would have to include at least a limited parsing of the shell. Examples of such features are expansion of aliases and transformation of relative paths to absolute ones. These expansions could make the history entries independent of set aliases and current working directory. }
 
 
-\subsection{Target users and typical workflows}
+\subsection{Target users \redtext{MOVED (and typical workflows)} }
 
-\todotext{TODO: introduce personas - HERE?!}
-
-\todotext{TODO: Experienced user}
-
-\todotext{TODO: Novice shell user}
+When designing any product, we need to make sure we know who the product is for. Shell history tools are no exception. To capture the target user-base we are modelling two typical users as personas. As the first persona we chose an experienced user because shell history tools are likely more for users that use shell extensively. As the second persona we chose a novice shell user; Designing tools for novice shell users can result in a product that is better for everyone. For example, it is especially important for novice users that the product is easy to install, comes with a good default configuration, and is easy to use for the first time; These characteristics are beneficial to everyone not just novice users. 
 
 
+\subsubsection*{Typical experienced shell user}
 
-\todotext{TODO: describe "use cases" - HERE?! - yes because we want to compare the standard history features to our solution in the end using these use cases }
+Experienced professional programmer \textit{Amy} develops, deploys, and operates back-end applications.
 
-\todotext{USECASE: fix a typo in a previous command - press arrow up, }
+She uses \verb|bash| and maintains her own shell configuration that she puts on her machines; This includes both common and personal configurations, options, and aliases. She does not change her configuration often but she likes to be able to configure her shell and other tools she uses.
+
+She often uses \verb|ssh| to log into remote machines; The remote machines are shared and have the default shell configuration. She keeps her shell configuration somewhat similar to the default one because she does not want to constantly switch between very different environments. 
+
+Her daily shell workflows include complex commands with many long arguments. Switches between many different projects. When coming back to a project she sometimes cannot remember what command line entries she was using. She is familiar with \verb|make| but she often forgets to create \textit{Makefiles} for typical tasks in projects.
+
+She makes use of interactive history features like reverse search and prefix search. However, she quite often uses \verb#history | grep 'pattern1' | grep 'pattern2'# to manually filter shell history because it is both more powerful and sometimes feels easier to use than reverse search. Manual filtering allows her to search by more than one pattern and to see many of the matching results. 
+
+
+\todotext{TODO: ADD challenges and benefits ? maybe}
+
+\subsubsection*{Typical novice shell user}
+
+Junior data analyst Mark has recently started his first job. He uses shell because he needs it for his job. 
+
+He is using \verb|zsh| with \verb|oh-my-zsh| \cite{toolsohmyzsh} because someone recommended it to him; Apart from that he does not have any custom shell configuration. 
+
+Since he does not have much experience with shells, he neither does understand the shell configuration files nor he feels confident editing them. If he discovered a new history tool he would prefer installation without the need to edit the shell configuration files. Additionally, he would expect any tools he installs to work out-of-the-box and not to require configuration. 
+
+There are shell history features he is not aware of like history expansion and prefix search. He uses arrow keys to get recently submitted command line entries and he presses \verb|CTRL-R| when looking for history entries further in the past. 
+
+\todotext{TODO: ADD challenges and benefits ? maybe}
+
+
+\subsection{Common shell history workflows}
+
+Now that we know who our target users are we can formulate common workflows for them. We do not specify the workflows for each of the target users separately; Instead, we comment on the difference between the users when necessary.
+
+Workflows we formulate are based on previous research \cite{greenberg1993computer}, the online discourse we discussed earlier, discussions with potential users, and our own experience with shell history. Additionally, we collected and examined shell usage and history of a few users; This helped us to confirm and formulate the workflows.
+
+\redtext{We grouped the workflows to several distinct categories; In each category we explain the  ...}
+\redtext{In this section, we discuss how the users can complete these workflows using standard shell history features. We also point out the limits and shortcomings of the standard history mechanisms. }
+
+%Additional configurations and tools will be discussed in later sections.
+
+
+\subsubsection*{Retrieving recent history entries}
+
+In this first category, we consider workflows that involve retrieving \textit{recent} history entries. In this context, recent means that the user remembers the command. \redtext{In all of these workflows the user also wants to retrieve the full history entry and execute it without any editing.}
+
+% \todotext{MAIN: recalling recent and semi-recent commands "as exact matches", "recent" ~ the user remembers the command}
+
+
+The first workflow is recall of a very recent history entry; In this workflow the user remembers the exact position of the command line entry. An example of such workflow is running the following sequence of commands: 
+\begin{verbatim}
+make build
+vim hello_world.c
+make build
+\end{verbatim}
+First, we build the project using \verb|make|. Then we edit the file using \verb|vim|. After that, we press \verb|ARROW_UP| twice and press \verb|ENTER| to execute the recalled history entry. 
+Consider if we used a graphical editor or if we ran the editor from a different terminal; In such case we would only have to press \verb|ARROW_UP| once but the workflow would essentially stay the same.
+
+When recalling very recent commands users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of history entries.
+
+
+
+\todotext{USECASE: recall a recent command - press arrow up 5-6 (3-8) times; }
+
+\todotext{We saw that even someone who claimed to not use arrow up repeatedly does so. It seems that history entry can be perceived as "recent" and people will use arrow up to recall it despite being 8 entries away. The behaviour we observed also suggests that people often remember the exact command line entry they executed earlier despite it not being very "recent" history wise.}
+
+
+
+\todotext{type prefix + press arrow up 2-3 times NOTE: recent in time vs. recent in command sequence}
+\todotext{similar, more effective way to do so. We noted earlier that it seems that users usually have a very good idea of what history entry they are looking for when recalling recent commands.  This means that it is reasonable to assume that the user remembers the command stub and could use it to recall the recent history entry. }
+
+
+\subsubsection*{Editing recalled commands}
+%\subsubsection*{Fixing recent mistakes} ???
+
+
+\todotext{USECASE: fix a typo in a previous command - press arrow up, edit }
 
 \todotext{USECASE: use: sudo !! to run a previous command with sudo}
 
-\todotext{USECASE: recall a recent command - press arrow up 5-6 (3-8) times; type prefix + press arrow up 2-3 times NOTE: recent in time vs. recent in command sequence}
+\todotext{USECASE: (edit) reuse a portion of a recent command - press arrow up like 5 times, edit }
 
-\todotext{USECASE: come back to a project and continue previous work on it}
+
+\subsubsection*{Searching with limited knowledge}
+\todotext{One difference here is that the history entries are no longer recent. This means that arrow up is not an effective way to retrieve them. But more importantly it means that the user no longer knows/remembers the whole command line entry they want to recall. This makes retrieving the history entry harder.}
+
+
+\todotext{USECASE: find a long curl command}
+
+TODO: Too many curl commands. Prefix search is no longer enough. User remembers bits of the command line entry. Reverse search suffers from similar disadvantages.
+Describe how if you remember two bits of info std. interactive options are no good
 
 \todotext{USECASE: find a long (w/ many arguments/options) curl request to github api}
 
-\todotext{USECASE: run a recent git command}
+
+\subsubsection*{Search with implicit context \redtext{TODO: better title}}
+% In these workflows the difference is
+Instead of relying on the knowledge of the user these workflows use available implicit contextual information.
+This workflow assumes that the user does not remember additional information that could be used.
+
+\todotext{USECASE: come back to a project and continue previous work on it}
+
 
 \todotext{USECASE: search for a command, there is multiple matching results, pick and run the latest one that evaluated with non-zero status}
 
+\subsubsection*{Delete specific entry from history}
+
+
+
+\subsubsection*{Explicit contextual search}
+\todotext{NOTE: Nobody actually wants this?}
+
+\todotext{USECASE: search history from remote host ???}
+
+\todotext{USECASE: search by directory + search by command ???}
+
 \todotext{USECASE: find a command using datetime, command(first word) }
 
-\todotext{USECASE: use case where we find something in history and want to find a similar command immediately: 1 use resh cli to find the first command, 2 execute, 3 arrow\_up, 4 ctrlR gives you similar results to what you found before}
 
-\todo{TODO: Provide a concrete example for all of the use cases !}
+\subsubsection*{History as a transcript}
+These are also less common but requested
 
-\blind[4]
+
+
+% see the full process how something was done, w/o deduplication
+\todotext{USECASE: Retrieve a transcript of command line usage around certain time}
+
+% pentester "script" recording
+% redteam blueteam
+\todotext{USECASE: Retrieve a transcript of command line usage between two dates ideally with UTC timestamps}
+
+
+
+
+% \subsubsection*{Repeating a previous search}
+
+% \todotext{USECASE: use case where we find something in history and want to find a similar command immediately: 1 use resh cli to find the first command, 2 execute, 3 arrow\_up, 4 ctrlR gives you similar results to what you found before}
+
 
 \todotext{TODO: conclusion of the chapter}
 
