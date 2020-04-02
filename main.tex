@@ -130,14 +130,19 @@ At this point we move on to design(ing) ...
 
 \end{introduction}
 
+\todo{GLOBAL TODOs}
+
+\todo{REPLACE: users -$>$ people (where suitable)}
+\todo{REPLACE "command line" -$>$ "command line entry" / "command line submission" / "history entry"}
+\todo{REPLACE "command" -$>$ "command stub" / "stub"}
+
 
 \chapter{Analysis}
 
 \todo{DEFINE "command line entry"/"history entry" is a full command entered/submitted by the user}
-\todo{DEFINE "stub" is the first word of the command line entry - usually an executable, a shell builtin, or an alias.}
+\todo{DEFINE "stub"/"command stub" is the first word of the command line entry - usually an executable, a shell builtin, or an alias.}
 
-\todo{REPLACE "command line" -$>$ "command line entry"}
-\todo{REPLACE "command" -$>$ "stub"}
+
 
 \todotext{TODO: describe layout/contents of the chapter}
 
@@ -664,6 +669,8 @@ For example, studying your shell usage could show us that you often use a specif
 
 Consider another example; You download and install a new history tool that is supposed to increase your productivity. It promises to predict what command line entry you are going to use next. It is activated when you press \verb|arrow_up|. There is an issue with such a tool; You are likely used to having access to recent history entries when you press \verb|arrow_up|. You probably have a strong expectation that \verb|arrow_up| gives you previous history entry; Chances are that sometimes you press \verb|arrow_up| and execute the retrieved history entry without even reading it. History tool that breaks this expectation will cause mistakes and ultimately you will be forced to either change your habits or uninstall the tool.  
 
+\todo{TODO: Either use ARROW\_UP everywhere or arrow\_up}
+
 \todotext{TODO: no usable research on how people use shell facilities (Greenberg has usage from csh with history expansion only)}
 \todotext{TODO: to get an idea of how people use shell history we explored and "initiated/participated" in online discourse}
 \blind 
@@ -791,6 +798,10 @@ It is worth noting that people sometimes want to delete history entries after th
 
 When designing any product, we need to make sure we know who the product is for. Shell history tools are no exception. To capture the target user-base we are modelling two typical users as personas. As the first persona we chose an experienced user because shell history tools are likely more for users that use shell extensively. As the second persona we chose a novice shell user; Designing tools for novice shell users can result in a product that is better for everyone. For example, it is especially important for novice users that the product is easy to install, comes with a good default configuration, and is easy to use for the first time; These characteristics are beneficial to everyone not just novice users. 
 
+\todo{TODO: User groups - find the common characteristics, describe the common characteristics}
+\todotext{ understand shell options, do they speak english?,  }
+
+\todo{TODO: personas should have concrete languages, editors they use, etc. }
 
 \subsubsection*{Typical experienced shell user}
 
@@ -809,7 +820,7 @@ She makes use of interactive history features like reverse search and prefix sea
 
 \subsubsection*{Typical novice shell user}
 
-Junior data analyst Mark has recently started his first job. He uses shell because he needs it for his job. 
+Junior data analyst \textit{Mark} has recently started his first job. He uses shell because he needs it for his job. 
 
 He is using \verb|zsh| with \verb|oh-my-zsh| \cite{toolsohmyzsh} because someone recommended it to him; Apart from that he does not have any custom shell configuration. 
 
@@ -829,48 +840,127 @@ Workflows we formulate are based on previous research \cite{greenberg1993compute
 \redtext{We grouped the workflows to several distinct categories; In each category we explain the  ...}
 \redtext{In this section, we discuss how the users can complete these workflows using standard shell history features. We also point out the limits and shortcomings of the standard history mechanisms. }
 
+\todo{TODO: explicit sorting key for workflows - from the most recent to the less recent ones}
+
+\todo{TODO: consider bullet points to introduce the individual workflows}
+
 %Additional configurations and tools will be discussed in later sections.
 
+\subsubsection*{Editing a single command line entry}
 
-\subsubsection*{Retrieving recent history entries}
+In this first workflow, the user submits a command line entry but is not satisfied with the result. To fix that, he retrieves the immediate previous history entry, modifies it and executes it again. We look at multiple example sequences of command line submissions for this workflow.
 
-In this first category, we consider workflows that involve retrieving \textit{recent} history entries. In this context, recent means that the user remembers the command. \redtext{In all of these workflows the user also wants to retrieve the full history entry and execute it without any editing.}
+\begin{verbatim}
+    wget https://pastebin.com/raw/EDELXNYp --silent
+    wget https://pastebin.com/raw/EDELXNYp --quiet
+\end{verbatim}
+In this example, the user is trying to download a file from \verb|pastebin| using \verb|wget|. The first command ends with a non-zero exit status because \verb|--silent| is not an option of \verb|wget|. He presses \verb|ARROW_UP| to retrieve the command line entry, fixes the mistake and presses \verb|ENTER| to submit the command line entry again. 
+
+Using \verb|ARROW_UP| is efficient in situations when we need to either edit the end of the command line entry or append to it. % Command line editing -> more efficiency
+The next example shows a different case.
+
+\begin{verbatim}
+    apt-get install zsh
+    sudo !!
+\end{verbatim}
+
+Here, the user wants to install \verb|zsh| package. The command fails because superuser permissions are needed to install packages to the system. Instead of using interactive history features, the user uses csh-style history expansion \verb|!!| which repeats the previous history entry. 
+
+By using \verb|!!| we can efficiently prepend or append to the previous command line entry. There are other csh-style history expansions but \verb|!!| is by far the most commonly used one. 
+
+So far, we only saw situations where the submitted command line ended with a non-zero exit status and then the user fixed the error. This is not always the case because not all errors result in a non-zero exit code; Some errors are logical and not all programs respect the convention of properly signaling errors. Additionally, users sometimes gradually change and develop a command line entry to make sure that each step of the process works as intended. This is shown in the example below.
+
+\begin{verbatim}
+    sort data.txt
+    sort data.txt | uniq -c
+    sort data.txt | uniq -c > data_processed.txt
+\end{verbatim}
+
+In this next example, we see how the user processes \verb|data.txt| file. In each step, he uses \verb|ARROW_UP| to retrieve the previous history entry and continues editing it. When he is satisfied with the result, he redirects the processed data into a file. 
+
+This example shows that there is not always an explicit error that could be detected by the shell to predict that the user will recall the previous history entry. It also shows that the editing process can be often continuous.
+
+We just saw multiple different situations in which people continue working on the same command. We also saw different approaches to retrieving previous history entries. It is worth noting that in all of these situations the user relies on the sequential property of history. 
+
+\subsubsection*{Retrieving recent history entries - \redtext{deprecated}}
+
+\todo{TODO: restructure - you can delete this intro, just give the surrounding text a quick read}
+In this second category, we consider workflows that involve retrieving \textit{recent} history entries. In this context, recent means that the user remembers the history entry they are looking for. \redtext{In all of these workflows the user also wants to retrieve the full history entry and execute it without any editing.}
+\todo{TODO: people do remember recent results vs. define recent as "people remember" }
 
 % \todotext{MAIN: recalling recent and semi-recent commands "as exact matches", "recent" ~ the user remembers the command}
 
+\subsubsection*{Blindly recalling very recent history entries}
 
-The first workflow is recall of a very recent history entry; In this workflow the user remembers the exact position of the command line entry. An example of such workflow is running the following sequence of commands: 
+This workflow is a recall of a very recent history entry; The user remembers the exact position of the history entry he wants to recall. An example of such workflow is running the following sequence of command line submissions: 
 \begin{verbatim}
-make build
-vim hello_world.c
-make build
+    make build
+    vim hello_world.c
+    make build
 \end{verbatim}
-First, we build the project using \verb|make|. Then we edit the file using \verb|vim|. After that, we press \verb|ARROW_UP| twice and press \verb|ENTER| to execute the recalled history entry. 
-Consider if we used a graphical editor or if we ran the editor from a different terminal; In such case we would only have to press \verb|ARROW_UP| once but the workflow would essentially stay the same.
+First, we use \verb|make| to build a project. Then we edit a file using \verb|vim|. After that, we press \verb|ARROW_UP| twice and press \verb|ENTER| to execute the recalled history entry -- \verb|make build|. 
 
-When recalling very recent commands users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of history entries.
+Consider, if we used a graphical editor or if we ran the editor from a different terminal; In such case, we would only have to press \verb|ARROW_UP| once but the workflow would essentially stay the same.
+
+When recalling very recent commands the users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of recent history entries.
+
+\subsubsection*{Retrieving recent history entries}
+The third workflow is a recall of history entry that is still recent but the user no longer remembers the exact position in the history list. This means that the user needs to read the history entries as they appear to see if the desired entry was retrieved. This is an example sequence of command line entries for this workflow:
+
+\begin{verbatim}
+    systemctl start nginx.service
+    systemctl status nginx.service
+    tail /var/log/nginx/error.log
+    nginx -t
+    vim /etc/nginx/nginx.conf
+    nginx -t
+    systemctl start nginx.service
+\end{verbatim}
+
+In this example, the user is trying to start an Nginx \cite{reese2008nginx} web server. At first, the server does not start and the command returns an error. The user quickly realizes that there is an syntactic error in the configuration file after checking it using \verb|nginx -t|. Then, the configuration is fixed using \verb|vim| and the syntax is checked again using \verb|nginx -t|. 
+
+At this point, the user presses \verb|ARROW_UP| five or six times\footnote{This depends of whether or not they have history deduplication turned on.} to retrieve a recently executed command line entry \verb|systemctl start nginx.service|. Every time they press \verb|ARROW_UP| a single result appears and they need to read it. There is no way to tell if the desired result is one press of a button away, three, or seven.
+
+% It seems that people experience the sunk cost fallacy\footnote{\redtext{TODO: describe?}} which combined with the lack of feedback from the system drives them to stick to the original plan -- pressing \verb|ARROW_UP|. 
+
+You might think that people would not press \verb|ARROW_UP| five or six times and would rather use other history mechanisms.
+The usage data we collected shows that even somebody who claimed to not press \verb|ARROW_UP| excessively actually does so quite often. Pressing \verb|ARROW_UP| five times is more common than you would expect and pressing it over ten times is rare but it still happens. 
+
+\todo{we could include reasons why people do this but I don't think it's necessary/important (see drafts in comments)}
+
+% 1-2 was the most common ... 5-6 quite common ... 8 - 10 rare  20 exceptions
+% WHY: sunk cost fallacy + lack of feedback from the system
+% WHY: people might not realize how far the entry is in the first place
+% WHY: people do not want to "abandon the effort they have already put in" because anytime the result could be there
+
+%It seems that in situations like this one people do remember the history entry well and perceive it as recent. This is why they chose to use  
+
+\paragraph{\redtext{TODO: next title, same workflow}}
+
+An efficient alternative way to fulfil the same workflow is to use history prefix search. To use prefix search the user needs to remember the first word or at least the first few characters of the command line entry; This is very likely since all the command line entries we are retrieving in this workflow are recent.
+
+We will use the example with Nginx to compare using prefix search with just pressing \verb|ARROW_UP|. When using prefix search, the user types in a prefix -- \verb|systemctl| -- and presses \verb|ARROW_UP| twice to get to the desired history entry. In contrast, when only using \verb|ARROW_UP| it took five or six presses to get to the history entry.
+
+This might not seem like an improvement because we need to type the prefix before we start pressing \verb|ARROW_UP|. However, we have to realize that going through multiple history entries and reading them one by one requires a significant amount of time and effort compared to typing. 
+    
+This is a good example of how the number of keystrokes is not the only thing we should be taking into account; Generally speaking, shell history should save the effort and time of its users. This means both the physical typing and the cognitive overhead required to retrieve the entries.
+
+\todotext{Is this good ending}
+
+% BAD?: Retrieving command line entries from history should be easy in terms of both physically typing and  Ultimately, the goal of history facilities is to save effort and time.
+  
+% REF(greenberg): Recurring inputs should be reentered more easily than the user's original entry, with the aim of reducing both physical tedium and the cognitive overhead of remembering past inputs. Reuse facilities should not be targeted only to experts, as they can help everyone.
 
 
+% Everyone knows about arrow up, not everyone knows about prefix search but quite a few people praise it and claim to use it extensively
 
-\todotext{USECASE: recall a recent command - press arrow up 5-6 (3-8) times; }
+% Some people praise and claim to heavily rely on history prefix search.
+%In contrast to using \verb|ARROW_UP| for stepping through history, 
 
-\todotext{We saw that even someone who claimed to not use arrow up repeatedly does so. It seems that history entry can be perceived as "recent" and people will use arrow up to recall it despite being 8 entries away. The behaviour we observed also suggests that people often remember the exact command line entry they executed earlier despite it not being very "recent" history wise.}
+% BAD: We did not see this in the data we collected but majority of our subjects did not know that prefix search exists or do not have it configured. We suspect that it is why ...
 
+\subsubsection*{Recalling a recent sequence of command line entries}
 
-
-\todotext{type prefix + press arrow up 2-3 times NOTE: recent in time vs. recent in command sequence}
-\todotext{similar, more effective way to do so. We noted earlier that it seems that users usually have a very good idea of what history entry they are looking for when recalling recent commands.  This means that it is reasonable to assume that the user remembers the command stub and could use it to recall the recent history entry. }
-
-
-\subsubsection*{Editing recalled commands}
-%\subsubsection*{Fixing recent mistakes} ???
-
-
-\todotext{USECASE: fix a typo in a previous command - press arrow up, edit }
-
-\todotext{USECASE: use: sudo !! to run a previous command with sudo}
-
-\todotext{USECASE: (edit) reuse a portion of a recent command - press arrow up like 5 times, edit }
 
 
 \subsubsection*{Searching with limited knowledge}
@@ -895,7 +985,6 @@ This workflow assumes that the user does not remember additional information tha
 
 \todotext{USECASE: search for a command, there is multiple matching results, pick and run the latest one that evaluated with non-zero status}
 
-\subsubsection*{Delete specific entry from history}
 
 
 
@@ -912,6 +1001,7 @@ This workflow assumes that the user does not remember additional information tha
 \subsubsection*{History as a transcript}
 These are also less common but requested
 
+\subsubsection*{Delete specific entry from history}
 
 
 % see the full process how something was done, w/o deduplication
