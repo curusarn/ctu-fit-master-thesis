@@ -857,6 +857,15 @@ Workflows we formulate are based on previous research \cite{greenberg1993compute
 
 \todo{TODO!: consider bullet points to introduce the individual workflows}
 
+\begin{itemize}
+    \item Editing a preceding history entry
+    \item Blindly recalling very recent history entries
+    \item Retrieving recent history entries
+    \item Editing recalled history entries
+    \item Repeating a sequence of history entries
+    \item Searching with limited knowledge
+    \item Searching with implicit context
+\end{itemize}
 
 %Additional configurations and tools will be discussed in later sections.
 
@@ -914,6 +923,7 @@ This second workflow is a retrieval and execution of a very recent history entry
 \end{verbatim}
 First, we use \verb|make| to build a project. Then we edit a file using \verb|vim|. After that, we press \verb|ARROW_UP| twice and press \verb|ENTER| to execute the recalled history entry -- \verb|make build|. 
 
+\todo{can be up to 3? arrow up's}
 Consider, if we used a graphical editor or if we ran the editor from a different terminal; In such case, we would only have to press \verb|ARROW_UP| once but the workflow would essentially stay the same.
 
 When recalling very recent commands the users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of recent history entries.
@@ -1020,17 +1030,16 @@ Now, we want to repeat the whole process of generating the graph and view the re
 We need four key presses every time because with each executed command line entry we are pushing all the history entries further back in the history. We see that using \verb|ARROW_UP| to repeat a block of history entries is quite inefficient.  
 
 There is another standard history mechanism we could use to repeat a block of history entries; 
-Executing \verb|fc -4 -1| opens an editor with last four history entries and then, closing the editor executes the commands. This, however, is quite cumbersome in practice and not many people seem to use it. 
+Executing \verb|fc -4 -1| opens an editor with last four history entries and then, closing the editor executes the commands.  This, however, is quite cumbersome in practice and not many people seem to use it. %\todo{\verb||!-4 works in a similar way}
 
 Repeating a sequence of history entries is not the most common workflow. However, it shows us the limits and inefficiencies of standard shell history.
 
 
 \subsubsection*{Searching with limited knowledge}
 
-In all the workflows we discussed so far, the user wanted to recall a fairly recent history entry. Now, we move on to workflows where the user searches for history entries that are older. When people search for older history entries they usually only remember a limited amount of information about the desired history entry. 
+In all the workflows we discussed so far, the user wanted to recall a fairly recent history entry. Now, we move on to workflows where the user searches for history entries that are older. In these workflows, the memory of the user is often a limiting factor; Both the knowledge of shell history and the desired command line entry is limited.
 
-Below, we see an example for this workflow; The upper part are relevant history entries and at the bottom we see the command line entry the user wants to find. %We chose to format the example this way because the full sequentiality of the history is no longer important when searching for older history entries. 
-% Keep in mind that the user does not have the line in front of them like we do nor he does remembers the full command line entry.  
+Below, we see an example for such workflow; The upper part are relevant history entries and at the bottom we see the command line entry the user wants to find. 
 
 %This means that simply pressing \verb|ARROW_UP| is no longer an effective way to retrieve them.
 % \redtext{We are going to look at multiple examples of workflow where the user searches for an older. We will discuss how the workflow changes when the user remembers less and less information about the desired history entry. The first example follows.}
@@ -1044,12 +1053,12 @@ Below, we see an example for this workflow; The upper part are relevant history 
 
 \begin{verbatim}
 # relevant history entries:
-    cd git/thumbnail-api
+    cd git/thumbnail_api
     ssh root@thumbnail-api.dev.example.com
     scp root@thumbnail-api.dev.example.com:/log/thumbnail/1.log
     git commit -m "improve api logging"
     ...
-    cd git/thumbnail-worker
+    cd git/thumbnail_worker
     ssh root@thumbnail-worker-1.dev.example.com
     ssh root@thumbnail-worker-2.dev.example.com
     ssh root@thumbnail-worker-3.dev.example.com
@@ -1059,7 +1068,9 @@ Below, we see an example for this workflow; The upper part are relevant history 
     ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
 
-In the example above, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He does not remember the full command line entry he is searching for.
+In the example above, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. 
+
+If the user saw the full example in front of him as we do now it would be quite easy to choose a good searching strategy. However, the user does not see nor he remembers all the relevant information. He will need to make use of his limited memory to find the desired command line entry. 
 
 A common way to search shell history is reverse search; The user initiates reverse search by pressing \verb|CTRL+R| and types in the query \verb|thumbnail|. Resulting prompt is shown below.\footnote{The search result and the prompt should be on the same line; We moved them to separate lines because they would not fit the page otherwise.}
 % Reverse search displays a single most recent history entry that matches the query  
@@ -1069,34 +1080,78 @@ A common way to search shell history is reverse search; The user initiates rever
     ssh root@thumbnail-worker-3.dev.example.com
 \end{verbatim}
 
-Here, the user sees that there are other history entries that match the query \verb|thumbnail|. He will make the query more specific by typing \verb|-api|.
+Here, we see that the \verb|thumbnail| query matched a history entry that is not very relevant. The user makes the query more specific by typing \verb|-api|.
 
 \begin{verbatim}
 (reverse-i-search)`thumbnail-api': 
     scp root@thumbnail-api.dev.example.com:/log/thumbnail/1.log
 \end{verbatim}
 
-Now, reverse search still does not show the desired history entry but it shows an entry with the correct server URL. The user thinks that the query is specific enough and presses \verb|CTRL+R| to show the next matching history entry.
+Now, reverse search still does not show the desired history entry but it shows an entry that is much closer to what the user is looking for. The user thinks that the query is specific enough and presses \verb|CTRL+R| to show the next matching history entry.
 
 \begin{verbatim}
 (reverse-i-search)`thumbnail-api':
     ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
 
-The next result is the desired history entry. We just saw an example of using reverse search that was relatively smooth and straight forward; Unluckily this is not always the case. Consider, if the user started with a less specific query such as \verb|ssh|.
+The next result is the desired history entry. This was a pretty efficient but also a quite idealistic reverse search example. It worked out so well because the user was able to provide a specific enough query. We should look at a more realistic situation where the user struggles to provide the query. %We will use the same shell history and desired command line entry as in the previous case. (same sentence as the start of the ne)
+\paragraph{\redtext{TODO: title "Struggling with reverse search"}}
+
+In this example, we are using the same shell history and desired command line entry as in the previous case. Again, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He presses \verb|CTRL+R| and starts searching using \verb|ssh| as a query; It is actually very natural and quite common to use the beginning of the line as a query in reverse search.
 
 \begin{verbatim}
 (reverse-i-search)`ssh': ssh 192.168.2.105
 \end{verbatim}
 
-This gives the user a very generic \verb|ssh| command. Extending the query to make it more specific is much harder in this situation; The user will not be able to extend the query, unless he remembers he was logging in under \verb|root|. The only way to make the query more specific is to get rid of it and start over. 
+The most recent matched history entry does not look very promising. The user tries to extend the query to \verb|ssh thumbnail|.
 
-% The \verb|ssh| query is a good one; The user is certain that it is present on the desired history entry. 
+\begin{verbatim}
+(failed reverse-i-search)`ssh thumb': ssh 192.168.2.105
+\end{verbatim}
+
+Here, we see how the user struggles to make the query more specific; Extending the query requires a knowledge of details about the desired command line entry. 
+The user sees that the search has failed and so he aborts it by pressing \verb|CTRL+C|. He starts over by pressing \verb|CTRL+R|, typing \verb|thumbnail|, and hoping for better results.
+
+% Shell history should be helping people to reconstruct history entries from pieces. Should people remember details about the history entries in order to be able to retrieve them?
+
+% It is worth noting that there could be explicit \verb|failed reverse-i-search| is preferable to ...
+% there could be other unrelated history entries matching the query; This false promise would likely lead to more time wasted searching.
+
+\begin{verbatim}
+(reverse-i-search)`thumbnail':
+    ssh root@thumbnail-worker-3.dev.example.com
+\end{verbatim}
+
+This result looks better than the generic history entry from before. However, it is still far from what we are looking for. The user should extend the query to make it more specific. 
+
+In the previous example, we assumed that the user remembers enough to extend the query to \verb|thumbnail-api|; That is a bold assumption. What if the user does not remember that words \verb|thumbnail| and \verb|api| are adjacent or that they are delimited by a dash symbol? In practice, it is often hard to come up with a query that does not match many other history entries. 
+
+To go through the user repeatedly presses \verb|CTRL+R| to display the next result. At first, the user presses \verb|CTRL+R| slowly to have enough time to read the results. After about three keypresses he becomes impatient and speeds up. This does not leave enough time to properly read the results and he presses \verb|CTRL+R| one too many times.
+
+\begin{verbatim}
+(reverse-i-search)`thumbnail': cd git/thumbnail_api
+\end{verbatim}
+
+The user knows that pressing \verb|CTRL+S| \textit{should} bring back the previous result. However, he also knows that pressing \verb|CTRL+S| freezes all input coming to his terminal; This is the default\footnote{Default configuration on many popular distributions has CTRL+S bound to generate XOFF -- the software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
+
+At this point, the user gets annoyed because the only option is to start over. He aborts the search, presses \verb|CTRL+R|, and types in \verb|thumbnail|. Then he presses \verb|CTRL+R| five times; This time he is more careful to not go too far again.
+
+
+
+
+% The user once again struggles to extend the query
+% -> The user will press Ctrl+R repeatedly instead of making the qeury more specific
+
+
+
+
+
+
 
 
 % This is not ideal because \verb|ssh| 
 
-\todo{I don't like this}
+\todo{TODO: Rewrite}
 People generally do not like to start over. To avoid deleting the query we could repeatedly press \verb|CTRL+R| until we find the desired history entry. This is however not without its own downsides and limits.
 
 \todo{MOVE some of this up to previous chapters? make it shorter here or move it altogether}
@@ -1169,7 +1224,10 @@ In this workflow we consider situations where the user remembers even less ...
     # <dozens or hundreds of command line entries>
     
     sudo dd if=~/Downloads/manjaro-kde-19.0-200224-linux54.iso \
-        of=/dev/sdc bs=1M status=progress
+        of=/dev/sdc bs=4M status=progress
+        
+    sudo dd if=~/manjaro.iso of=/dev/sdc bs=4M status=progress
+    
 \end{verbatim}
 \todo{CONSIDER: shortening the iso path}
 
