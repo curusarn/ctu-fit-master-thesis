@@ -1095,7 +1095,7 @@ Now, reverse search still does not show the desired history entry but it shows a
 \end{verbatim}
 
 The next result is the desired history entry. This was a pretty efficient but also a quite idealistic reverse search example. It worked out so well because the user was able to provide a specific enough query. We should look at a more realistic situation where the user struggles to provide the query. %We will use the same shell history and desired command line entry as in the previous case. (same sentence as the start of the ne)
-\paragraph{\redtext{TODO: title "Struggling with reverse search"}}
+\paragraph{\redtext{TODO: title "Struggling with / Limits of ... reverse search"}}
 
 In this example, we are using the same shell history and desired command line entry as in the previous case. Again, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He presses \verb|CTRL+R| and starts searching using \verb|ssh| as a query; It is actually very natural and quite common to use the beginning of the line as a query in reverse search.
 
@@ -1109,7 +1109,8 @@ The most recent matched history entry does not look very promising. The user tri
 (failed reverse-i-search)`ssh thumb': ssh 192.168.2.105
 \end{verbatim}
 
-Here, we see how the user struggles to make the query more specific; Extending the query requires a knowledge of details about the desired command line entry. 
+Here, we see how the user struggles to make the query more specific; Extending the query requires knowledge of the details of the desired command line entry. The user does not remember that he should be logging in under \verb|root|. % It is exactly details like this one that we hope to retrieve from shell history so that we do not need to remember them. 
+
 The user sees that the search has failed and so he aborts it by pressing \verb|CTRL+C|. He starts over by pressing \verb|CTRL+R|, typing \verb|thumbnail|, and hoping for better results.
 
 % Shell history should be helping people to reconstruct history entries from pieces. Should people remember details about the history entries in order to be able to retrieve them?
@@ -1122,11 +1123,12 @@ The user sees that the search has failed and so he aborts it by pressing \verb|C
     ssh root@thumbnail-worker-3.dev.example.com
 \end{verbatim}
 
-This result looks better than the generic history entry from before. However, it is still far from what we are looking for. The user should extend the query to make it more specific. 
+This result is an improvement over the previous one. However, it is still far from what we are looking for. The user should extend the query to make it more specific. 
 
-In the previous example, we assumed that the user remembers enough to extend the query to \verb|thumbnail-api|; That is a bold assumption. What if the user does not remember that words \verb|thumbnail| and \verb|api| are adjacent or that they are delimited by a dash symbol? In practice, it is often hard to come up with a query that does not match many other history entries. 
+Previously, we assumed that the user remembers enough to extend the query to \verb|thumbnail-api|; That is a bold assumption. What if the user does not remember that words \verb|thumbnail| and \verb|api| are adjacent or that they are delimited by a dash symbol? In practice, it is hard to come up with a query that only matches the desired history entry; Oftentimes the query matches many other history entries which forces us to go through multiple search results.
 
-To go through the user repeatedly presses \verb|CTRL+R| to display the next result. At first, the user presses \verb|CTRL+R| slowly to have enough time to read the results. After about three keypresses he becomes impatient and speeds up. This does not leave enough time to properly read the results and he presses \verb|CTRL+R| one too many times.
+
+The user is in a similar situation. He presses \verb|CTRL+R| repeatedly to display the search results one by one. At first, the user presses \verb|CTRL+R| slowly to have enough time to read the results. After about three key presses he becomes impatient and speeds up. This does not leave enough time to properly read each of the results which causes him to press \verb|CTRL+R| one too many times.
 
 \begin{verbatim}
 (reverse-i-search)`thumbnail': cd git/thumbnail_api
@@ -1134,35 +1136,50 @@ To go through the user repeatedly presses \verb|CTRL+R| to display the next resu
 
 The user knows that pressing \verb|CTRL+S| \textit{should} bring back the previous result. However, he also knows that pressing \verb|CTRL+S| freezes all input coming to his terminal; This is the default\footnote{Default configuration on many popular distributions has CTRL+S bound to generate XOFF -- the software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
 
-At this point, the user gets annoyed because the only option is to start over. He aborts the search, presses \verb|CTRL+R|, and types in \verb|thumbnail|. Then he presses \verb|CTRL+R| five times; This time he is more careful to not go too far again.
+At this point, the user gets annoyed because the only option is to start over. He aborts the search, presses \verb|CTRL+R|, and types in the query \verb|thumbnail|. Then, it takes five presses of \verb|CTRL+R| to get to the desired result; This time he is more careful to not go too far again.
 
 
+\paragraph{\redtext{TODO: title: why reverse search sucks}}
+
+As we just saw, the reverse search is not always an effective way to search shell history. There are two fundamental issues with it. \todo{SEE comments}
+% The first issue is that reverse search only accepts a single query. This limits the expressiveness of the search and disrupts the workflow of the user. 
+% ***This is just not very useful if you remember multiple different parts of the command line entry.
+% Ad. expressiveness: ssh, thumbnail, and api are all good queries, the user is certain that they match the desired history entry but they are not specific enough individually. Put them together and they match the desired history entry and nothing else.
+% Ad. workflow: Once the user types in ssh as a query and finds out it is not specific enough, they are forced to throw it away and try a different one. Continuously adding more information = single workflow. Being forced to delete already entered information = breaking the workflow.
+
+% The second issue is that it only shows one result. This amplifies the the first issue because if you could see multiple results easily you would not need such a specific query anymore. Having more results displayed at once would allow the user to skim the page. 
+
+% to design, we can argue that single-result approach works great on arrow_up for quick access 
+%            then we start to see some disadvantages when people use arrow_up to recall not-so-recent entries
+%            finally the single-result (+single-query) approach completely breaks down when used in reverse search
+
+Reverse search is one of a very few available ways to search shell history which unfortunately makes it very common. 
+When we analyze reverse search we find out that it is a peculiar combination of features that bring the worst out one another.
 
 
-% The user once again struggles to extend the query
-% -> The user will press Ctrl+R repeatedly instead of making the qeury more specific
+% EXTRA ISSUE: once reverse search fails you there is no way back
 
 
+\paragraph{\redtext{TODO title: Manual history filtering}}
 
+Reverse search is quite common but there are other ways to search history. The alternative that solves the issues 
 
-
-
-
-
-% This is not ideal because \verb|ssh| 
-
-\todo{TODO: Rewrite}
-People generally do not like to start over. To avoid deleting the query we could repeatedly press \verb|CTRL+R| until we find the desired history entry. This is however not without its own downsides and limits.
-
-\todo{MOVE some of this up to previous chapters? make it shorter here or move it altogether}
-\redtext{start}
-When pressing \verb|CTRL+R| repeatedly we are forced to read the history entries one by one which is quite inefficient. Additionally, pressing \verb|CTRL+R| too many times can be very punishing because it is not always possible to "go back" to previous history entries; Keybinding \verb|CTRL+S| should allow you to "go back" while in reverse search. However, by default\footnote{This is true for default configurations of bash supplied in many popular distributions.}, it will freeze all input coming to your terminal making it seemingly unresponsive. This is a good example of how common default configuration can be extremely unfriendly to new users. 
-\redtext{end}
-
-\todo{Somehow break this long section HERE}
-
+Now, we once again consider a different way to complete the same workflow. This time, the user does not use any interactive history mechanisms to search this history. Instead, he uses \verb|history| built-in to print the shell history and then \verb|grep| to filter the results. 
+We are using the very same example we used with reverse search.
 
 \begin{verbatim}
+# relevant history entries:
+    cd git/thumbnail_api
+    ssh root@thumbnail-api.dev.example.com
+    scp root@thumbnail-api.dev.example.com:/log/thumbnail/1.log
+    git commit -m "improve api logging"
+    ...
+    cd git/thumbnail_worker
+    ssh root@thumbnail-worker-1.dev.example.com
+    ssh root@thumbnail-worker-2.dev.example.com
+    ssh root@thumbnail-worker-3.dev.example.com
+    ...
+    ssh 192.168.2.105
 # desired command line entry:
     ssh root@thumbnail-api.dev.example.com
 # searching the history:
@@ -1170,25 +1187,25 @@ When pressing \verb|CTRL+R| repeatedly we are forced to read the history entries
     history | grep ssh | grep thumbnail
     history | grep ssh | grep thumbnail | grep api
 \end{verbatim}
+\todo{CONSIDER removing "relevant history entries" from this example based on how it ends up laid out on the page}
+
+Once again the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. 
+This time he uses \verb|history| built-in to print the shell history chained together with the \verb|grep| command to filter the history entries.
+
+First he types \verb#history | grep ssh#; This prints out five \verb|ssh| commands from the example above plus all other \verb|ssh| commands from the rest of the shell history. The user could already look through the results and find the desired command line entry.
+
+The user decides to further filter the results; He presses \verb|ARROW_UP| to retrieve the previous command line entry and types \verb#| grep thumbnail#. The number of filtered results drops to four. 
+
+Finally, the user could once again filter the results. Pressing \verb|ARROW_UP| and typing \verb#| grep api# produces only single result -- the desired command line entry.
 
 
+We see that manual filtering has clear advantages over reverse search. First of all, we do not need a very specific query because we are able to quickly scan many simultaneously displayed history entries. 
+
+Additionally, chaining multiple queries together allows us to easily filter the results. Unlike with reverse search we do not have to decide between queries -- we can use all of them. This results in a very flexible workflow that does not needlessly restrict the user.
 
 
-
-% The other option is making the query more specific; This is not always easy. Consider the example above; Query \verb|ssh| matches five history entries, \verb|thumbnail| matches seven, and \verb|api| matches four. 
-
-% A better query would be \verb|thumbnail-api| but this opens the opportunity for mistakes such as \verb|thumbnail_api|. We see that even when we see the history entries it is not easy to come up with a good query. 
-
-
-
-
-
-
-
-
-PROBLEM: Too many results: we need more specific query
-NOTE: The user only remembers: curl to github + they could probably remember some of the options ...
-PROBLEM2: reverse search supports one continuous query - BUT the user remembers parts of the command, not a continuous query
+%%%
+%%%
 
 EXAMPLE: A long curl to github: history | grep
 PROS: flexible and powerful way to search
