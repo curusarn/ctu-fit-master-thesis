@@ -1029,8 +1029,12 @@ Now, we want to repeat the whole process of generating the graph and view the re
 
 We need four key presses every time because with each executed command line entry we are pushing all the history entries further back in the history. We see that using \verb|ARROW_UP| to repeat a block of history entries is quite inefficient.  
 
-There is another standard history mechanism we could use to repeat a block of history entries; 
-Executing \verb|fc -4 -1| opens an editor with last four history entries and then, closing the editor executes the commands.  This, however, is quite cumbersome in practice and not many people seem to use it. %\todo{\verb||!-4 works in a similar way}
+There is other standard history mechanism we could use to repeat a block of history entries; 
+Executing \verb|fc -4 -1| opens an editor with last four history entries and then, closing the editor executes the commands. This, however, is quite cumbersome in practice and not many people seem to use it. 
+
+%Alternatively, we could use history expansion \verb|!-4| to recall and execute the fourth previous history entry; However, history expansion is not saved to 
+\todo{Consider mentioning history expansion (see comment)}
+%\verb|!-4| works in a similar way
 
 Repeating a sequence of history entries is not the most common workflow. However, it shows us the limits and inefficiencies of standard shell history.
 
@@ -1087,17 +1091,17 @@ Here, we see that the \verb|thumbnail| query matched a history entry that is not
     scp root@thumbnail-api.dev.example.com:/log/thumbnail/1.log
 \end{verbatim}
 
-Now, reverse search still does not show the desired history entry but it shows an entry that is much closer to what the user is looking for. The user thinks that the query is specific enough and presses \verb|CTRL+R| to show the next matching history entry.
+The reverse search still does not show the desired history entry but it shows an entry that is much closer to what the user is looking for. The user thinks that the query is specific enough and presses \verb|CTRL+R| to show the next search result.
 
 \begin{verbatim}
 (reverse-i-search)`thumbnail-api':
     ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
 
-The next result is the desired history entry. This was a pretty efficient but also a quite idealistic reverse search example. It worked out so well because the user was able to provide a specific enough query. We should look at a more realistic situation where the user struggles to provide the query. %We will use the same shell history and desired command line entry as in the previous case. (same sentence as the start of the ne)
+The next result is the desired history entry. This was a pretty efficient but also a quite idealistic reverse search example. It worked out so well because the user was able to provide a specific enough query -- \verb|thumbnail-api|. We should look at a more realistic situation where the user struggles to come up with such query. %We will use the same shell history and desired command line entry as in the previous case. (same sentence as the start of the ne)
 \paragraph{\redtext{TODO: title "Struggling with / Limits of ... reverse search"}}
 
-In this example, we are using the same shell history and desired command line entry as in the previous case. Again, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He presses \verb|CTRL+R| and starts searching using \verb|ssh| as a query; It is actually very natural and quite common to use the beginning of the line as a query in reverse search.
+In this example, we are using the same shell history and desired command line entry as in the previous example. Again, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He presses \verb|CTRL+R| and starts searching using \verb|ssh| as a query; It is actually very natural and quite common to use the beginning of the line as a query in reverse search.
 
 \begin{verbatim}
 (reverse-i-search)`ssh': ssh 192.168.2.105
@@ -1106,10 +1110,10 @@ In this example, we are using the same shell history and desired command line en
 The most recent matched history entry does not look very promising. The user tries to extend the query to \verb|ssh thumbnail|.
 
 \begin{verbatim}
-(failed reverse-i-search)`ssh thumb': ssh 192.168.2.105
+(failed reverse-i-search)`ssh thumbnail': ssh 192.168.2.105
 \end{verbatim}
 
-Here, we see how the user struggles to make the query more specific; Extending the query requires knowledge of the details of the desired command line entry. The user does not remember that he should be logging in under \verb|root|. % It is exactly details like this one that we hope to retrieve from shell history so that we do not need to remember them. 
+Here, we see how the user struggles to make the query more specific; Extending the query requires knowledge of the details of the desired command line entry. The user does not remember that he should be logging in under \verb|root|.  % It is exactly details like this one that we hope to retrieve from shell history so that we do not need to remember them. 
 
 The user sees that the search has failed and so he aborts it by pressing \verb|CTRL+C|. He starts over by pressing \verb|CTRL+R|, typing \verb|thumbnail|, and hoping for better results.
 
@@ -1141,7 +1145,18 @@ At this point, the user gets annoyed because the only option is to start over. H
 
 \paragraph{\redtext{TODO: title: why reverse search sucks}}
 
-As we just saw, the reverse search is not always an effective way to search shell history. There are two fundamental issues with it. \todo{SEE comments}
+As we just saw, the reverse search is not always an effective way to search the shell history. It heavily relies on the ability of the user to form a single continuous query; A single query that is specific enough to match the desired history entry without matching many other history entries. 
+
+This drawback is further amplified by the reverse search only displaying a single result at a time. Displaying multiple results at a time would make it easier to find the desired history entry in cases when there are many matching results. 
+
+Despite these downsides, the reverse search is a quite popular way to search the shell history. Why do people use it given the disadvantages we discussed? The reverse search is not without its flaws but it is still the most powerful interactive way to search the shell history. 
+
+If the reverse search is as bad as we claim are there other alternatives that people choose to use instead? Another very popular method people use is manual history filtering. Manual filtering searches the history non-interactively; This brings its own set of advantages and disadvantages which we cover in the next section.
+
+
+\redtext{MOVE this vvv to a bit later}
+%There are two fundamental issues with it. 
+\todo{SEE comments}
 % The first issue is that reverse search only accepts a single query. This limits the expressiveness of the search and disrupts the workflow of the user. 
 % ***This is just not very useful if you remember multiple different parts of the command line entry.
 % Ad. expressiveness: ssh, thumbnail, and api are all good queries, the user is certain that they match the desired history entry but they are not specific enough individually. Put them together and they match the desired history entry and nothing else.
@@ -1153,8 +1168,8 @@ As we just saw, the reverse search is not always an effective way to search shel
 %            then we start to see some disadvantages when people use arrow_up to recall not-so-recent entries
 %            finally the single-result (+single-query) approach completely breaks down when used in reverse search
 
-Reverse search is one of a very few available ways to search shell history which unfortunately makes it very common. 
-When we analyze reverse search we find out that it is a peculiar combination of features that bring the worst out one another.
+% EDGE: Reverse search is one of a very few available ways to search shell history which unfortunately makes it very common. 
+% EDGE: When we analyze reverse search we find out that it is a peculiar combination of features that bring the worst out of one another.
 
 
 % EXTRA ISSUE: once reverse search fails you there is no way back
@@ -1162,10 +1177,8 @@ When we analyze reverse search we find out that it is a peculiar combination of 
 
 \paragraph{\redtext{TODO title: Manual history filtering}}
 
-Reverse search is quite common but there are other ways to search history. The alternative that solves the issues 
+As mentioned before, manual filtering is a popular non-interactive way to search the shell history. It can be used to fulfil similar workflows as the reverse search. To properly compare the two methods we will use the same example as before; You can see the same relevant history entries with the same desired history entry below.
 
-Now, we once again consider a different way to complete the same workflow. This time, the user does not use any interactive history mechanisms to search this history. Instead, he uses \verb|history| built-in to print the shell history and then \verb|grep| to filter the results. 
-We are using the very same example we used with reverse search.
 
 \begin{verbatim}
 # relevant history entries:
@@ -1182,33 +1195,51 @@ We are using the very same example we used with reverse search.
     ssh 192.168.2.105
 # desired command line entry:
     ssh root@thumbnail-api.dev.example.com
-# searching the history:
-    history | grep ssh
-    history | grep ssh | grep thumbnail
-    history | grep ssh | grep thumbnail | grep api
 \end{verbatim}
 \todo{CONSIDER removing "relevant history entries" from this example based on how it ends up laid out on the page}
 
-Once again the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. 
-This time he uses \verb|history| built-in to print the shell history chained together with the \verb|grep| command to filter the history entries.
+As in the previous examples, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He uses \verb|history| built-in to print the shell history together with the \verb|grep| command to filter the history entries.
 
-First he types \verb#history | grep ssh#; This prints out five \verb|ssh| commands from the example above plus all other \verb|ssh| commands from the rest of the shell history. The user could already look through the results and find the desired command line entry.
+First, he types \verb#history | grep ssh#; The output could look something like this.
 
-The user decides to further filter the results; He presses \verb|ARROW_UP| to retrieve the previous command line entry and types \verb#| grep thumbnail#. The number of filtered results drops to four. 
+\begin{verbatim}
+$ history | grep ssh
+...    ...
+421    ssh root@thumbnail-api.dev.example.com
+450    ssh root@thumbnail-worker-1.dev.example.com
+451    ssh root@thumbnail-worker-2.dev.example.com
+452    ssh root@thumbnail-worker-3.dev.example.com
+489    ssh 192.168.2.105
+\end{verbatim}
 
-Finally, the user could once again filter the results. Pressing \verb|ARROW_UP| and typing \verb#| grep api# produces only single result -- the desired command line entry.
+
+Using manual filtering displays all five matching history entries at the same time. The user can skim trough the results looking for the desired history entry. 
+After he finds the result, he can either copy and paste it using a mouse or he can use history expansion.
+
+The user found the desired history in the list and uses history expansion to execute it; He types \verb|!421| and presses \verb|ENTER|. This seems pretty quick and efficient. What if we cannot not spot the desired history entry in the list of results?
+
+In such case, nothing prevents us from further filtering the results. Pressing  \verb|ARROW_UP| retrieves the previous command line entry and typing \verb#| grep thumbnail# adds another query. We can repeat this until we are happy with the filtered results.
+
+\begin{verbatim}
+$ history | grep ssh | grep thumbnail | grep api
+421    ssh root@thumbnail-api.dev.example.com
+\end{verbatim}
 
 
-We see that manual filtering has clear advantages over reverse search. First of all, we do not need a very specific query because we are able to quickly scan many simultaneously displayed history entries. 
+We see that manual filtering has clear advantages over reverse search. 
+First of all, we do not need a very specific query because we are able to quickly scan many simultaneously displayed history entries. 
+The \verb|ssh| query that was not specific enough in reverse search gave us some useful results when filtering manually.
 
-Additionally, chaining multiple queries together allows us to easily filter the results. Unlike with reverse search we do not have to decide between queries -- we can use all of them. This results in a very flexible workflow that does not needlessly restrict the user.
-
+Additionally, in situation when the query is not enough, it is easy to combine multiple queries together. This makes manual filtering much more powerful than the reverse search. 
+When using the reverse search we had to choose between the queries. Here we can use all of them; This results in a very flexible workflow that does not needlessly restrict the user.
 
 %%%
 %%%
 
-EXAMPLE: A long curl to github: history | grep
-PROS: flexible and powerful way to search
+
+%%% HERE, START HERE
+
+
 CON1: non-interactive: extra keystrokes to write (instead of pressing say Ctrl+R)
 CON2: requires previous knowledge, we saw other examples of workflows with history mechanisms that not everyone knows of, but this the first one where it is the only options because the alternatives are not just less efficient - they won't find the result at all (in a significant number of situations)
 this is an history mechanism that requires previous knowledge -$>$ it is unfriendly to new users and familiar to experienced users (double edged sword)
@@ -1224,27 +1255,32 @@ SUMMARY: By using the shell history in this workflow, the user not only saved hi
 %\todotext{USECASE: find a long (w/ many arguments/options) curl request to github api}
 
 
-\subsubsection*{Search with implicit context \redtext{TODO: better title}}
-% In these workflows the difference is
-In the previous workflows the user remembered at least parts of the command
-In this workflow we consider situations where the user remembers even less ... 
+\subsubsection*{Searching with implicit context \redtext{TODO: better title}}
+% GOOD vvv
+In the previous workflows we saw that searching history heavily relies on the memory of the user. When the user does not remember enough the efficiency of the standard history searching mechanisms is reduced.
+
+Now, we consider situations where it is possible to at least partially replace the knowledge of the user by other information; In following examples, we will see how we could improve the shell history by using additional information such as exit status or current working directory.
+
 
 
 \todotext{USECASE: search for a command, there is multiple matching results, pick and run the latest one that evaluated with non-zero status}
 
-\begin{verbatim}
-    dd if=~/Downloads/manjaro-kde-19.0-200224-linux54.iso \
-        of=/dev/sdc bs=4M status=progress oflag=sync
-    sudo dd if=~/Downloads/manjaro-kde-19.0-200224-linux54.iso \
-        of=/dev/sdc bs=4M status=progress oflag=sync
+
+% dd if=~/Downloads/manjaro-kde-19.0-200224-linux54.iso \
+%       of=/dev/sdc bs=4M status=progress oflag=sync
+% sudo dd if=~/Downloads/manjaro-kde-19.0-200224-linux54.iso \
+%       of=/dev/sdc bs=4M status=progress oflag=sync
     
-    # <dozens or hundreds of command line entries>
+% # <dozens or hundreds of command line entries>
     
-    sudo dd if=~/Downloads/manjaro-kde-19.0-200224-linux54.iso \
+% sudo dd if=~/Downloads/manjaro-kde-19.0-200224-linux54.iso \
         of=/dev/sdc bs=4M status=progress
-        
+\begin{verbatim}
+
+# relevant history entries:        
+    sudo dd if=~/ubuntu.iso of=/dev/sdc bs=4M status=progress
+    dd if=~/manjaro.iso of=/dev/sdc bs=4M status=progress
     sudo dd if=~/manjaro.iso of=/dev/sdc bs=4M status=progress
-    
 \end{verbatim}
 \todo{CONSIDER: shortening the iso path}
 
@@ -1260,20 +1296,6 @@ In this workflow we consider situations where the user remembers even less ...
 Instead of relying on the knowledge of the user these workflows use available implicit contextual information.
 This workflow assumes that the user does not remember additional information that could be used.
 
-
-
-
-
-
-
-\subsubsection*{Explicit contextual search}
-\todotext{NOTE: Nobody actually wants this?}
-
-\todotext{USECASE: search history from remote host ???}
-
-\todotext{USECASE: search by directory + search by command ???}
-
-\todotext{USECASE: find a command using datetime, command(first word) }
 
 
 \subsubsection*{History as a transcript}
