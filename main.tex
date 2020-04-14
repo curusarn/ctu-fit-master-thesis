@@ -25,7 +25,7 @@
 \usepackage{todonotes} 
 
 \newcommand{\todotext}[1]{\textcolor{red}{\textbf{[[#1]]}}}
-\newcommand{\redtext}[1]{\textcolor{red}{[[#1]]}}
+\newcommand{\redtext}[1]{\textcolor{red}{[[#1]]}} 
 \definecolor{mygray}{gray}{0.6}
 \newcommand{\blind}[1][1]{\textcolor{mygray}{\Blindtext[#1][1]}}
 
@@ -51,6 +51,9 @@
 
 \newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
 \newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
+
+% LB
+% \setlength{\parskip}{0em}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
@@ -194,12 +197,10 @@ There is a \verb|history| command which prints out recent history records with t
 \subsection{History features of Tenex C shell}
 Tenex C shell (Tcsh) is an enhanced version of the C shell released in 1983\todo{REF}; It offers command line editing and programmable tab completion\cite{dubois1995tcshusing}. Since Tcsh is a version of C shell, it does support all the previously described features of C shell. The history holds 100 previous command lines by default and it also contains datetime of the command line execution.
 
-
 Tcsh offers command line editing; This means that the user can manipulate the contents of the command line by using various built-in functions. A few examples of such functions are: \verb|delete-word|, \verb|expand-glob|, and \verb|history-search-backward|. All built-in functions can be bound to arbitrary key combinations. Additionally, Tcsh features emacs and vi editing modes which come with default keybindings usual for the respective editors. When describing the default keybindings for Tcsh in this section we are only considering the emacs mode.
 
 A portion of built-in functions allows the user to reuse command lines from the shell history. Functions \verb|up-history| and \verb|down-history| allow the user to step through the history; Default keybindings are \verb|CTRL-P| and \verb|arrow_up| for \verb|up-history|; and \verb|CTRL-N| and \verb|arrow_down| for  \verb|down-history| \cite{tcshman}. This is something you are likely already used to in your modern shell.
 
-  
 % BAD ALT: Pressing \verb|CTRL-P| invokes \verb|up-history| function which replaces the current command line contents with previous command line from history. Pressing \verb|CTRL-P| repeatedly continues up through the history. Pressing \verb|CTRL-N| invokes \verb|down-history| function which steps through the history in the other direction. These two functions are also often bound to \verb|arrow_up| and \verb|arrow_down| keys. 
 
 Besides stepping through history, Tcsh features prefix search. The functions \verb|history-search-backward| \todo{make sure this doesn't overflow :( } and \verb|history-search-forward| use the command line contents before the cursor as a prefix to search the history in the desired direction. The default keybindings for these functions are a little weird; \todo{TODO: Pressing ESC an then x is just a way of pressing ALT-x without having ALT. }
@@ -1370,10 +1371,9 @@ This information is stored in the shell history but it is not easy to retrieve. 
 
 
 \subsubsection*{History as a transcript}
-These are also less common but requested
+%These are also less common but requested
 
 \subsubsection*{Delete specific entry from history}
-
 
 % see the full process how something was done, w/o deduplication
 \todotext{USECASE: Retrieve a transcript of command line usage around certain time}
@@ -1392,7 +1392,6 @@ These are also less common but requested
 
 \todotext{TODO: conclusion of the chapter}
 
-\blind
 
 \section{Existing history tools and common history configurations}
 \todo{chapter with various possible solutions, inspirations, etc.}
@@ -1413,19 +1412,19 @@ These are also less common but requested
 \todotext{TODO: This kind of issue is tough one to deal with; People may be hesitant to even use new history tools because of this issue. We should be aware of this issue and consider how could shell history work across multiple devices.}
 
 % MOVE/BAD vvv
-\todotext{TODO: common configuration options and what problems are they solving}
+%\todotext{TODO: common configuration options and what problems are they solving}
 
-\todotext{-$>$ issues caused by running simultaneous sessions - SO full of questions, semi tricky config, PROMPT-COMMAND, histappend option }
+%\todotext{-$>$ issues caused by running simultaneous sessions - SO full of questions, semi tricky config, PROMPT-COMMAND, histappend option }
 
-\todotext{TODO: per directory history}
+%\todotext{TODO: per directory history}
 
-\todotext{TODO: per date + session history}
+%\todotext{TODO: per date + session history}
 
-\todotext{TODO: more configurations ...}
+%\todotext{TODO: more configurations ...}
 
-\todotext{TODO: configuration management projects e.g.: oh-my-zsh}
+%\todotext{TODO: configuration management projects e.g.: oh-my-zsh}
 
-\todotext{TODO: many people avoid custom configuration because they move between many devices (ssh into servers)}
+%\todotext{TODO: many people avoid custom configuration because they move between many devices (ssh into servers)}
 % end MOVE/BAD ...
 
 Generally, people create and use custom configuration to solve issues they face and to improve their command line experience. Some problems cannot be solved by configuration which leads people to write new tools. Many of the configurations and tools people create are personal experiments; These are usually too opinionated and not polished enough to be used by other people. In contrast, some tools grow popular because they are useful to many people. 
@@ -1458,6 +1457,9 @@ Unfortunately there is not native nor ad-hoc support for autosuggestions in Bash
 
 \subsection{History features of (Python) Read-eval-print loop}
 
+python in blender
+
+
 \todo{I don't have this in python REPL anymore!!! Did they switch to gnu readline ???}
 
 
@@ -1479,6 +1481,8 @@ Some of the people who use hstr describe it as life changing.
   \tmpframe{\includegraphics[width=\linewidth]{figures/misc/hstr-v2-30.png}}
   \caption{Hstr screenshot \todotext{TODO: title}}
 \end{figure}
+
+\todo{light there screenshot}
 
 \subsection{Fuzzy history search}
 
