@@ -21,17 +21,24 @@
 \usepackage{dirtree} %directory tree visualisation
 
 % ADDED BY ME
-\usepackage{blindtext} % lorem ipsum
+%\usepackage{blindtext} % lorem ipsum
+%\definecolor{mygray}{gray}{0.6}
+%\newcommand{\blind}[1][1]{\textcolor{mygray}{\Blindtext[#1][1]}}
+
+\newcommand{\blind}[1][1]{}
+
+% ALSO ADDED BY ME
 \usepackage{todonotes} 
+
 
 \newcommand{\todotext}[1]{\textcolor{red}{\textbf{[[#1]]}}}
 \newcommand{\redtext}[1]{\textcolor{red}{[[#1]]}} 
-\definecolor{mygray}{gray}{0.6}
-\newcommand{\blind}[1][1]{\textcolor{mygray}{\Blindtext[#1][1]}}
+
 
 \setlength{\fboxsep}{0.005pt}
 \newcommand{\tmpframe}[1]{\fbox{#1}}
 %\renewcommand{\tmpframe}[1]{#1}
+
 
 \let\myCite\cite
 \renewcommand\cite{\unskip~\myCite}
@@ -41,7 +48,7 @@
 % \usepackage{spverbatim} % verb and verbatim with line breaks - doesn't break what I need
 
 \newcommand\hatx{\^{}}
-
+\newcommand{\hatxxx}{\hatx\hatx\hatx}
 
 
 % list of acronyms
@@ -133,6 +140,12 @@ At this point we move on to design(ing) ...
 
 \end{introduction}
 
+
+% \begin{verbatim}
+% ____5___10___15___20___25___30___35___40___45___50___55___60__64
+% \end{verbatim}
+% The page is 64 verbatim characters wide
+
 \todo{GLOBAL TODOs}
 
 \todo{REPLACE: users -$>$ people (where suitable)}
@@ -142,6 +155,8 @@ At this point we move on to design(ing) ...
 \todo{REPLACE "bash" -$>$ "Bash"}
 \todo{REPLACE "zsh" -$>$ "Zsh"}
 \todo{REPLACE other shells -$>$ Capitalize}
+\todo{CHECK if verbatims are not split between pages in a weird way}
+
 \todo{SPELLCHECK: grammarly}
 \todo{SPELLCHECK: ask Sue}
 
@@ -816,26 +831,29 @@ When designing any product, we need to make sure we know who the product is for.
 
 \subsubsection*{Typical experienced shell user}
 
-Experienced professional programmer \textit{Peter} develops, deploys, and operates back-end applications.
+Experienced professional programmer \textit{Peter} develops, deploys, and operates back-end applications. Main languages he uses at work are C and C++. He has years of experience with developing on and for the Linux operating system. He is proficient in Bash and he written a few small shell scripts to increase his productivity.
 
-She uses \verb|bash| and maintains her own shell configuration that she puts on her machines; This includes both common and personal configurations, options, and aliases. She does not change her configuration often but she likes to be able to configure her shell and other tools she uses.
+His editor of choice is Vim; He has a sizable Vim configuration with multiple Vim plugins he collected over the years.
 
-She often uses \verb|ssh| to log into remote machines; The remote machines are shared and have the default shell configuration. She keeps her shell configuration somewhat similar to the default one because she does not want to constantly switch between very different environments. 
+The shell he uses is Zsh with Oh-my-zsh \cite{toolsohmyzsh} shell configuration framework. On top of that he maintains a set of his own custom options and aliases. He puts the resulting configurations on his machines. He does not change his configuration often but he likes to be able to configure his shell and other tools he uses.
 
-Her daily shell workflows include complex commands with many long arguments. Switches between many different projects. When coming back to a project she sometimes cannot remember what command line entries she was using. She is familiar with \verb|make| but she often forgets to create \textit{Makefiles} for typical tasks in projects.
+He often uses \verb|ssh| to log into remote machines; The remote machines are shared and have the default shell configuration. He keeps his shell and editor configuration somewhat similar to the default one because he does not want to constantly switch between very different environments. 
 
-She makes use of interactive history features like reverse search and prefix search. However, she quite often uses \verb#history | grep 'pattern1' | grep 'pattern2'# to manually filter shell history because it is both more powerful and sometimes feels easier to use than reverse search. Manual filtering allows her to search by more than one pattern and to see many of the matching results. 
+His daily shell workflows include complex commands with many long arguments. Switches between many different projects. When coming back to a project he sometimes cannot remember what command line entries he was using. He is familiar with Make but he often forgets to create Makefiles for typical tasks in projects.
 
+He makes use of interactive history features like reverse search and prefix search. However, he quite often uses \verb#history | grep 'pattern1' | grep# \verb#'pattern2'# to manually filter shell history because it is both more powerful and sometimes feels easier to use than reverse search. Manual filtering allows him to search by more than one pattern and to see many of the matching results. 
 
 \todotext{TODO: ADD challenges and benefits ? maybe}
 
 \subsubsection*{Typical novice shell user}
 
-Junior data analyst \textit{Mark} has recently started his first job. He uses shell because he needs it for his job. 
+Junior data analyst \textit{Mark} has recently started his first job. He uses shell because he needs it for his job. The primary language he uses is Python. 
 
-He is using \verb|zsh| with \verb|oh-my-zsh| \cite{toolsohmyzsh} because someone recommended it to him; Apart from that he does not have any custom shell configuration. 
+The editor he uses is Visual Studio Code because it was recommended to him by a coworker. He likes that it suggests extensions to install based on files he is working with.
 
-Since he does not have much experience with shells, he neither does understand the shell configuration files nor he feels confident editing them. If he discovered a new history tool he would prefer installation without the need to edit the shell configuration files. Additionally, he would expect any tools he installs to work out-of-the-box and not to require configuration. 
+He is using Bash with the default configuration provided by Ubuntu distribution; Apart from that he does not have any custom shell configuration. 
+
+Since he does not have much experience with shells, he neither does understand the shell configuration files nor he feels confident editing them. If he discovered or someone recommended a new shell tool to him he would prefer an installation without the need to edit the shell configuration files. Additionally, he expects any programs and tools he installs to work out-of-the-box and not to require much configuration. 
 
 There are shell history features he is not aware of like history expansion and prefix search. He uses arrow keys to get recently submitted command line entries and he presses \verb|CTRL-R| when looking for history entries further in the past. 
 
@@ -999,6 +1017,7 @@ In the precious section, we saw a workflow where the user retrieved a recent his
     curl --data "value=test" http://test.example.com:8080/submit
 \end{verbatim}
 
+
 Here, the user is using \verb|curl| to test a server endpoint running locally at \verb|localhost:3000/submit|. \todo{Check overflow} After being done with the testing they commit the changes, tag the version as a pre-release\footnote{Here "rc" in "v2.4.0-rc.1" version stands for release candidate which is sometimes used to mark pre-release versions.}, and pushes both commits and tags to the upstream. This triggers a CI pipeline that deploys the new version to testing environment. The user wants to test that the endpoint also works there.
 
 At this point, the user presses \verb|ARROW_UP| six times to get to the desired history entry. Alternatively, he could use prefix search which would be more efficient.
@@ -1030,7 +1049,8 @@ Consider a following example.
 
 In this example, we are editing the \verb|generate_dot.c| file in another window. In this terminal, we compile a source file \verb|generate_dot.c|, generate a graph in the DOT\cite{graphvizthedotlanguage} language, run Graphviz\cite{ellson2001graphviz} command \verb|dot| to generate an image, and finally use image viewer \verb|feh|\cite{toolsfeh} to display the image.
 
-After observing the resulting image and we edit the source file \verb|generate_dot.c| in another window.
+% ALT (too long): After observing the resulting image, we edit the source file \verb|generate_dot.c| in another window.
+After observing the image, we edit the source file \verb|generate_dot.c| in another window.
 Now, we want to repeat the whole process of generating the graph and view the resulting image. To retrieve the \verb|gcc| history entry, we press \verb|ARROW_UP| four times. Retrieving the next \verb|./generate_dot.out| entry also takes four presses of \verb|ARROW_UP|. Similarly, we need four key presses for each of \verb|dot| and \verb|feh| history entries. 
 
 We need four key presses every time because with each executed command line entry we are pushing all the history entries further back in the history. We see that using \verb|ARROW_UP| to repeat a block of history entries is quite inefficient.  
@@ -1201,9 +1221,8 @@ As mentioned before, manual filtering is a popular non-interactive way to search
 # desired command line entry:
     ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
-\todo{CONSIDER removing "relevant history entries" from this example based on how it ends up laid out on the page}
 
-As in the previous examples, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He uses \verb|history| built-in to print the shell history together with the \verb|grep| command to filter the history entries.
+As in the previous examples, the user wants to remotely login to the \verb|thumbnail| \verb|api| server in development environment using \verb|ssh|. He uses the \verb|history| built-in to print the shell history together with the \verb|grep| command to filter the history entries.
 
 First, he types \verb#history | grep ssh#; The output could look something like this.
 
@@ -1323,9 +1342,9 @@ In situations like this one, it could be useful if the history entries that orig
     git push --tags
 \end{verbatim}
 
-Here, we see a section of shell history related to a specific project. The user executed all of these command line entries a long time ago in the \verb|~/git/image_server/| directory. He did not work on the \verb|image_server| project since. This means that he does not remember these history entries and his history is filled with many other command line entries he executed since.
+Here, we see a section of shell history related to a specific project. The user executed all of the command line entries above a long time ago in the \verb|~/git/image_server/| directory. He did not work on the \verb|image_server| project since. This means that he does not remember these history entries and his history is filled with many other command line entries he executed since.
 
-The user comes back to the project by typing and executing \verb|cd ~/git/image_server|\todo{Overflow}. He wants to continue working on the project. He knows that he needs to edit some code, build the project, test it, and release a new version. However, he does not remember concrete command line entries for these tasks. 
+The user comes back to the project by typing and executing \verb|cd ~/git/| \verb|image_server|\todo{CHECK: verb overflow -$>$ verb split}. He wants to continue working on the project. He knows that he needs to edit some code, build the project, test it, and release a new version. However, he does not remember concrete command line entries for these tasks. 
 
 Some of the command line entries he needs are easy to remember because they are generic; Examples of such entries are \verb|git pull| which pulls new changes from upstream and \verb|make build| which build the project. However, some of the tasks require knowledge specific to this project. For example, it might take some effort to find out that running tests is done using \verb|./script/run_tests.sh|. Similarly, it is not obvious that \verb|VERSION| environment variable should be set when running \verb|make release|.
 
@@ -1439,14 +1458,21 @@ In the following sections, we will examine various history tools and configurati
 \subsection{History autosuggestions}
 
 \todo{section Order-sensitive text}
-First, important history feature we discuss are autosuggestions. As you type on the command line autosuggestions suggest a single history entry that starts with characters you already typed. The suggested text is displayed in grey as shown in \redtext{TODO: REF}. 
+First, important history feature we discuss are autosuggestions. As you type on the command line autosuggestions suggest a single history entry that starts with characters you already typed. The suggested text is displayed in grey as shown in figure \ref{fish-autosuggestions} where the user just typed \verb|ssh|.  
 
-\todotext{IMAGE - SCREENSHOT of FISH autosuggestions}
 
-This history feature is very quick and convenient to use. You can use the shell as you would normally with the option to accept the suggestion whenever it matches what you want to type. Autosuggestions can replace neither \verb|ARROW_UP| nor proper history search; However, they work well in combination with other history mechanisms.
+\begin{figure}[h!]
+  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fish-autosuggestions-screenshot.png}}
+  \caption{Fish shell autosuggestions}
+  \label{fish-autosuggestions}
+\end{figure}
 
-Autosuggestions also have some interesting properties compared to \verb|ARROW_UP|.\todo{Overflow}
-When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries\footnote{We described a specific workflow showing this in previous section \redtext{REF}.}.  This is not the case with autosuggestions. The displayed suggestion can be the most recent matching history entry but it also does not have to be. Autosuggestions can use more experimental and more advanced recommendation techniques.
+\todo{CHECK \hatxxx Is this resolution enough?}
+
+This history feature is very quick and convenient to use. You can use the shell as you would normally with the option to accept the suggestion whenever it matches what you want to type. Autosuggestions can replace neither \verb|ARROW_UP| nor proper history search; However, they work well in combination with these and other history mechanisms.
+
+Autosuggestions also have some interesting properties compared to stepping through history using \verb|ARROW_UP|.
+When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries\footnote{We described a specific workflow showing this in previous section \redtext{REF: workflow blind recall}.}.  This is not the case with autosuggestions. The displayed suggestion can be the most recent matching history entry but it also does not have to be. Autosuggestions can use more experimental and more advanced recommendation techniques.
 
 Autosuggestions were originally designed and developed as part of the Fish\cite{fishdocs} shell; These are context-sensitive suggestions that take current directory into account. Upon command line execution Fish checks if any parameter is a valid path and marks that in the shell history. Later history entries are suggested only if all the marked parameters are valid paths\cite{toolsfishissueautosuggestions}.
 
@@ -1455,72 +1481,136 @@ There is also an implementation of autosuggestions available for Zsh\cite{toolsz
 Unfortunately there is not native nor ad-hoc support for autosuggestions in Bash. In addition, based on our experience with Bash and its line-editing library Readline\cite{ramey2001gnureadline} implementing autosuggestions for Bash is likely impossible.
 
 
-\subsection{History features of (Python) Read-eval-print loop}
+\subsection{Forward in history}
 
-python in blender
+In standard shell history, we can access the previously executed history entries by pressing \verb|ARROW_UP|. Pressing \verb|ARROW_DOWN| can be used to get back to the original prompt.
+As we saw in the \redtext{REF: section Sequences workflow}, this behavior is quite inefficient when we want to retrieve a sequence of history entries. % instead of a single entry. 
+
+Forward in history feature allows you to efficiently repeat sequences of command line entries. 
+When you execute a command line entry and press \verb|ARROW_UP|, you get preceding history entries. In contrast, \verb|ARROW_DOWN| can give you access to following history entries.
+
+How does the history system know the future? First of all, the system needs to record full non-deduplicated sequential history. Every command line entry in this full history is a part of a sequence. This means that there are specific preceding and following history entries for every command line submission. Whenever you retrieve a command line entry, the history entries that follow it in the history are available via \verb|ARROW_DOWN|.
+
+% Pressing \verb|ARROW_DOWN| gives you quick access to the history entries that follow the history entry you just executed. 
+
+Forward in history feature exists in Python console in Blender \cite{tools-blender-docs-python-console}. This makes a lot of sense because every cycle and condition in Python console is a sequence. Naturally, using the Python console often includes  workflows which require sequence repeating.
+
+Arguably, using shell involves less sequence repeating than using a Python console in Blender. However, as we saw earlier \redtext{REF: section Sequences workflow}, it is still a relevant workflow which is not well supported by any of the standard shell history mechanisms.  
 
 
-\todo{I don't have this in python REPL anymore!!! Did they switch to gnu readline ???}
+% DO NOT INCLUDE: Additionally, in Blender, Python history starts clean for each project, the history wraps, commands are not always added to the end of the history, and it is easy to dump the whole history and use it as a script.
 
 
-\subsection{Multi-query multi-result history search \redtext{TODO: better title?}}
+\subsection{Multi-query multi-result interactive history search}
 
-\redtext{Actually write this vvv}
-When we talked about reverse search we identified two issues with it. First, it only uses a single query for searching. And second, it only displays a single result.
+When we talked about history reverse search we identified two issues with it. First, it only allows using a single query for searching. Second, it only displays a single result.
+Searching history manually does not have these issues; However, since it is a non-interactive history mechanism it does require additional typing. 
 
-Enter Hstr. Hstr is an interactive history searching tool that addresses both of these issues. Plus it does not require the extra typing like manual history filtering. It is intended to fully replace the reverse search.
+Hstr\cite{toolshstr} is an interactive history searching tool that addresses both of issues we identified with reverse search. Unlike manual history filtering, it does not require the extra typing. Hstr is designed to be bound to \verb|CTRL-R| and to fully replace the reverse search.
 
-When launched it displays a fullscreen app as shown in the figure. You type a query at the top and below you see a page of matching history results. Each word of the query you typed is used as a separate keyword when searching, by default.
+When launched it displays a full screen terminal app as shown in the figure \ref{hstr-screenshot}. You type a query at the top and a page of matching history results is displayed below. In the default "keywords" matching mode, each word of the query is used as a separate searching term. 
+In addition to the default "keywords" matching mode, there are also "exact" and "regexp" matching modes. 
 
-The app also includes a few options such as exact search, regex search. The keyword search is the default and the most convenient mode. 
+Hstr is quite popular\footnote{Hstr is hosted on GitHub where it has over two thousand "stars" and over eight thousand downloads. } on GitHub where it is hosted. Some of the people who use Hstr describe it as life-changing.
 
-Hstr is very popular.
-Some of the people who use hstr describe it as life changing.
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/misc/hstr-v2-30.png}}
-  \caption{Hstr screenshot \todotext{TODO: title}}
+\begin{figure}[]
+  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/hstr-screenshot.png}}
+  \caption{Screenshot of Hstr\todotext{TODO: title, TODO: make a better screenshot}}
+  \label{hstr-screenshot}
 \end{figure}
 
-\todo{light there screenshot}
+
+\begin{figure} \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/hstr-screenshot-100cols.png}}  \caption{Example Hstr screenshot 100 \todotext{TODO: REMOVE}} \end{figure}
+
+\begin{figure}   \tmpframe{\includegraphics[width=\linewidth]{figures/misc/resh-cli-screenshot.png}}   \caption{Example Resh cli screenshot 87 \todotext{TODO: REMOVE}} \end{figure}
 
 \subsection{Fuzzy history search}
 
-Similarly to Hstr, fuzzy search also addresses the issues of the reverse search.
+Fzf\cite{tools-fzf} is a popular\footnote{Fzf has over twenty eight thousand "stars" on GitHub.} general-purpose command-line fuzzy finder. The documentation of the project recommends several ways that can be used to interactively search shell history.
 
-Fzf is a multipurpose fuzzy finder. It is a very popular way to search history.
+Searching history using Fzf addresses the issues of the history reverse search. 
+Like Hstr, Fzf can display a full page of results from history. 
 
-As Hstr, It can display a full page of results from history.
+Fuzzy search allows Fzf to retrieve both exactly and approximately matching history entries. Exact and close matches are returned first and additional matches are returned after. 
 
-Instead of just taking each word of the query as a separate keyword. Fuzzy search takes it a step further. It gives you the more exact matches first but if there are no proper matches, it returns even the results that do not properly resemble the query.
+This essentially provides a functionality of multi-query search. In addition, fuzzy search can match the desired history result even when you make typos in the query. Unlike "keywords" matching, fuzzy matching is tolerant to mistakes and typos; Naturally, this is very appealing to users. 
 
-This is an effective way to return meaningful results even in cases when you make typos.
+Fuzzy search is a commonly requested feature in various history tools. Some people who are already using Fzf cannot imagine using history tools without fuzzy search.
 
-Again, Fzf is very popular.
-As with Hstr, many people cannot imagine switching away from fzf. 
+\begin{figure}[]
+  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fzf-fh-screenshot.png}}
+  \caption{Searching history interactively using Fzf}
+\end{figure}
+
+%\subsection{Per directory history}
+
+%The idea behind per directory history is that your history is grouped based on directories. In practice, this means that each directory has a separate history file. 
+%Since this is reasonably easy to set up, we can find many mentions, configurations, and even smaller projects that do save history to a separate file for each directory.
 
 
+%Different smaller projects
+%People do this even when it means not being able to reverse search the entire history.
 
-\subsection{Bashhub}
+%% https://github.com/jimhester/per-directory-history  123 gh stars
+%provides switching (keybinding) between global and directory history
 
-\todotext{TODO: bashhub - contextual cloud shell history}
+
+\subsection{Contextual shell history in the cloud}
+
+
+Bashhub\cite{toolsbashhubclient} saves your shell history to the cloud and allows you to search it from all of your machines.
+
+Apart from the command line entry, Bashhub records and saves additional context. Each history record contains following:
+\begin{itemize}
+    %\setlength\itemsep{0em}
+    \item command line entry
+    \item exit status
+    \item present working directory
+    \item host
+    \item time of execution
+    \item ID of the session
+    \item ID of the record
+\end{itemize}
+
+The Bashhub history search uses pattern matching\footnote{The pattern matching is implemented using SQL "LIKE" operator.} to search the submitted command line entries. The search can be restricted to current directory and to current host.
+
+
+All searching is server-side; This means that every time you search your history using Bashhub it needs to send a requests to a remote server.
+These requests take time so there is no interactive "search as you type" functionality. Instead, you always have to type out the full query, execute the search command, and then wait\footnote{This takes about three seconds on my system.} for the results. Below, you can see an example of search that is restricted to the current directory. 
+
+\begin{verbatim}
+    bh -d "curl git"
+\end{verbatim}
+
+An obvious disadvantage of server-side search is that it does not work offline.
+
+
+Another disadvantage is that the server-side search functionality requires 
+server-side access to your history in open form (non-encrypted)
+
+This design makes client side encryption impossible
+To add insult to injury the server is closed source and the author of Bashub is running the official instance
+
+% %%%%%%
+
+ The server is provided by the author of the project.
+Your history is saved on a remote server provided by the Bashhub maintainer. 
+This means that you can access your history from all of your machines. 
+
+
 \todotext{TODO: bashhub-server - new }
+There is an additional open source implementation of Bashhub server available.
+This makes it possible to self-host instead of trusting the someone with your shell history.
 
-PROS:
 
-sync
+% bashhub library
+\redtext{Mention https://github.com/rcaloras/bash-preexec ??? I don't think so}
 
-some querying
-
-CONS:
-
-Issues with performance - python
-
-Issues with trust - closed source
 
 \subsection{Mcfly}
 
 \todotext{TODO: mcfly - contextual NN powered history search}
+
 
 PROS:
 
@@ -1538,7 +1628,10 @@ no zsh
 
 \todotext{TODO: rash - python again, explicit search by context is a nice to have but not really a workflow }
 
+
 \todotext{TODO: Other less notable shell history tools - underdeveloped, non-interactive, ...}
+% https://github.com/larkery/zsh-histdb  608 gh stars +it is a oh my zsh plugin
+
 
 %%%
 these tools usually store the history in a SQLite database. This makes sense because the history is inherently relational. However, this can potentially limit the ability to use regex or fuzzy searching. This must not be underestimated given how popular and powerful fuzzy searching is. 
@@ -1589,6 +1682,24 @@ these tools usually store the history in a SQLite database. This makes sense bec
 \todotext{TODO: intro}
 
 \blind
+
+\subsection{Forward in history}
+
+% SOLID CONTENT
+
+The \verb|ARROW_DOWN| should serve history entries following the most recently recalled entry
+
+it doesn't matter how it was recalled
+
+if the last entry was not recalled from history, the "algorithm" could match the last matching entry from history. (E.g. the sequence starts with a command that is short so the user did not recall it but he still wants to access to successive hisotry entries)
+
+if there is are no matching history entries then \verb|ARROW_DOWN| does nothing
+
+Full non-deduplicated sequential history is required so that the system can figure out the sequences and serve them to the user. % thats a given ?
+
+To be able to make a full use of this feature, the user should be able to select and recall individual submissions of the same command line entry. This does not mean that all history mechanisms should show duplicate entries. However, if there was a way to retrieve individual history submissions it would greatly synergize with this feature.
+
+The behavior of \verb|ARROW_UP| is preserved - we are not changing the default shell history experience.
 
 \subsection{Standard history features}
 
