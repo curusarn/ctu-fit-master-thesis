@@ -1515,7 +1515,7 @@ Hstr is quite popular\footnote{Hstr is hosted on GitHub where it has over two th
 
 \begin{figure}[]
   \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/hstr-screenshot.png}}
-  \caption{Screenshot of Hstr\todotext{TODO: title, TODO: make a better screenshot}}
+  \caption{Hstr interactive history search\todotext{TODO: title, TODO: make a better screenshot}}
   \label{hstr-screenshot}
 \end{figure}
 
@@ -1537,7 +1537,7 @@ This essentially provides a functionality of multi-query search. In addition, fu
 
 Fuzzy search is a commonly requested feature in various history tools. Some people who are already using Fzf cannot imagine using history tools without fuzzy search.
 
-\begin{figure}[]
+\begin{figure}
   \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fzf-fh-screenshot.png}}
   \caption{Searching history interactively using Fzf}
 \end{figure}
@@ -1576,53 +1576,66 @@ The Bashhub history search uses pattern matching\footnote{The pattern matching i
 
 
 All searching is server-side; This means that every time you search your history using Bashhub it needs to send a requests to a remote server.
-These requests take time so there is no interactive "search as you type" functionality. Instead, you always have to type out the full query, execute the search command, and then wait\footnote{This takes about three seconds on my system.} for the results. Below, you can see an example of search that is restricted to the current directory. 
+These requests take time so there is no interactive "search as you type" functionality. Instead, you always have to type out the full query, execute the search command, and then wait\footnote{Bashub server response takes about three seconds on my system.} for the results. Below, you can see an example of search command that is restricted to the current directory. 
 
 \begin{verbatim}
     bh -d "curl git"
 \end{verbatim}
 
-An obvious disadvantage of server-side search is that it does not work offline.
+An obvious disadvantage of server-side search is that it does not work offline. 
+When you use Bashhub, your history is saved on the remote server and the server needs to be able to search it. This means that the history is on the server, at least in memory, in an unencrypted form. Adding client side encryption would break the server-side search.
 
+By default, the remote server is an instance maintained by the project author. The official server implementation is closed source. This means that you need to trust the author of the project with access to your shell history. 
 
-Another disadvantage is that the server-side search functionality requires 
-server-side access to your history in open form (non-encrypted)
+Recently\footnote{Bashhub-server was written in February 2020.} a new open source implementation\cite{toolsbashhubserver} of the Bashhub server has appeared. This addresses the privacy and security issues by making it possible to run and use your own instance of the server.
 
-This design makes client side encryption impossible
-To add insult to injury the server is closed source and the author of Bashub is running the official instance
+\redtext{Bashhub is somewhat popular on GitHub\footnote{Bashhub has 744 "stars" on GitHub.}
+Bashhub is not a viable replacement for standard reverse search and manual history searching.}
 
-% %%%%%%
-
- The server is provided by the author of the project.
-Your history is saved on a remote server provided by the Bashhub maintainer. 
-This means that you can access your history from all of your machines. 
-
-
-\todotext{TODO: bashhub-server - new }
-There is an additional open source implementation of Bashhub server available.
-This makes it possible to self-host instead of trusting the someone with your shell history.
+%ALT sample: There is an additional open source implementation of Bashhub server available.
+%ALT sample: This makes it possible to self-host instead of trusting the someone with your shell history.
 
 
 % bashhub library
-\redtext{Mention https://github.com/rcaloras/bash-preexec ??? I don't think so}
+\redtext{Mention https://github.com/rcaloras/bash-preexec library ??? I don't think so}
+
+\subsection{Contextual history search powered by a neural network}
+
+\todotext{TODO: This is a draft vvv}
+
+McFly\cite{toolsmcfly} is a tool that records your shell history with context. 
+
+Then it tries to predict the next command line entry based on current context using a small neural network.
+
+McFly predicts history entries based on following contextual information:
+\begin{itemize}
+    \item present working directory
+    \item previous command line entries
+    \item how often you run the command line entry
+    \item the last time you ran the command line entry
+    \item if you selected the command line entry in McFly before
+    \item exit status
+\end{itemize}
+
+Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replace the standard reverse search. Pressing \verb|CTRL-R| launches McFly full screen terminal app. When the app is launched it displays a list of ten predicted history entries. The list of history entries is updated as you type. McFly only recommends history entries that exactly match the typed query including spaces.
+
+\begin{figure}[]
+  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/mcfly-screenshot.png}}
+  \caption{McFly interactive history search \redtext{TODO: better screenshot with more history and hopefully better colors}}
+\end{figure}
+
+When trying out this tool we found its behavior to be unpredictable; Not knowing why specific results are being shown made the tool less useful. 
+
+Like reverse search, it only uses a single query for searching; This makes it hard to retrieve in situations when we are unable to think of a better query\footnote{We described such situation earlier in \redtext{REF: reverse search workflow}}. 
 
 
-\subsection{Mcfly}
+McFly is popular on GitHub.
+\footnote{McFly has sixteen hundred "stars" on GitHub.}
 
-\todotext{TODO: mcfly - contextual NN powered history search}
 
+\todo{DELETE this section vvv}
 
-PROS:
-
-perf
-
-CONS:
-
-blackbox
-
-no zsh
-
-\subsection{Other contextual history tools and their issues}
+\subsection{Contextual history saved in a SQLite}
 
 \todotext{TODO: advanced-shell-history - contextual history with smart querying - too buggy to be useful}
 
@@ -1644,6 +1657,8 @@ these tools usually store the history in a SQLite database. This makes sense bec
 
 
 \section{Available contextual information}
+
+
 
 
 % meh, I'm not sure about this structure
