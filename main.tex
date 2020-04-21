@@ -38,6 +38,8 @@
 \setlength{\fboxsep}{0.005pt}
 \newcommand{\tmpframe}[1]{\fbox{#1}}
 %\renewcommand{\tmpframe}[1]{#1}
+\newcommand{\permanentframe}[1]{\fbox{#1}}
+\newcommand{\noframe}[1]{#1}
 
 
 \let\myCite\cite
@@ -111,7 +113,7 @@ Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on 
 \todo{TODO: polish the argument why is this work relevant \hatx\hatx\hatx}
 
 \todotext{TODO: what is the shell history good for}
-\todotext{TODO: why could contextual history improve the history offerings}
+\todotext{TODO: why could contextual history improve the history offerings}https://www.overleaf.com/project/5d0cfdef69f8f06780064608
 
 The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in Zsh and only when it is enabled.\cite{zshdocs}}. 
 
@@ -1462,12 +1464,11 @@ First, important history feature we discuss are autosuggestions. As you type on 
 
 
 \begin{figure}[h!]
-  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fish-autosuggestions-screenshot.png}}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/xterm-fish-autosuggestions.pdf}}
   \caption{Fish shell autosuggestions}
   \label{fish-autosuggestions}
 \end{figure}
 
-\todo{CHECK \hatxxx Is this resolution enough?}
 
 This history feature is very quick and convenient to use. You can use the shell as you would normally with the option to accept the suggestion whenever it matches what you want to type. Autosuggestions can replace neither \verb|ARROW_UP| nor proper history search; However, they work well in combination with these and other history mechanisms.
 
@@ -1514,15 +1515,11 @@ In addition to the default "keywords" matching mode, there are also "exact" and 
 Hstr is quite popular\footnote{Hstr is hosted on GitHub where it has over two thousand "stars" and over eight thousand downloads. } on GitHub where it is hosted. Some of the people who use Hstr describe it as life-changing.
 
 \begin{figure}[]
-  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/hstr-screenshot.png}}
-  \caption{Hstr interactive history search\todotext{TODO: title, TODO: make a better screenshot}}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-hstr.pdf}}
+  \caption{Hstr interactive history search}
   \label{hstr-screenshot}
 \end{figure}
 
-
-\begin{figure} \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/hstr-screenshot-100cols.png}}  \caption{Example Hstr screenshot 100 \todotext{TODO: REMOVE}} \end{figure}
-
-\begin{figure}   \tmpframe{\includegraphics[width=\linewidth]{figures/misc/resh-cli-screenshot.png}}   \caption{Example Resh cli screenshot 87 \todotext{TODO: REMOVE}} \end{figure}
 
 \subsection{Fuzzy history search}
 
@@ -1537,10 +1534,13 @@ This essentially provides a functionality of multi-query search. In addition, fu
 
 Fuzzy search is a commonly requested feature in various history tools. Some people who are already using Fzf cannot imagine using history tools without fuzzy search.
 
+% \begin{figure}\tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fzf-fh-screenshot.png}}\caption{Searching history interactively using Fzf}\end{figure}
+
 \begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fzf-fh-screenshot.png}}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-fzf.pdf}}
   \caption{Searching history interactively using Fzf}
 \end{figure}
+
 
 %\subsection{Per directory history}
 
@@ -1576,7 +1576,8 @@ The Bashhub history search uses pattern matching\footnote{The pattern matching i
 
 
 All searching is server-side; This means that every time you search your history using Bashhub it needs to send a requests to a remote server.
-These requests take time so there is no interactive "search as you type" functionality. Instead, you always have to type out the full query, execute the search command, and then wait\footnote{Bashub server response takes about three seconds on my system.} for the results. Below, you can see an example of search command that is restricted to the current directory. 
+These requests take time so there is no interactive "search as you type" functionality. Instead, you always have to type out the full query, execute the search command, and then wait%\footnote{Bashub server response takes about three seconds on my system.} other 
+for the results. Below, you can see an example of search command that is restricted to the current directory. 
 
 \begin{verbatim}
     bh -d "curl git"
@@ -1585,9 +1586,9 @@ These requests take time so there is no interactive "search as you type" functio
 An obvious disadvantage of server-side search is that it does not work offline. 
 When you use Bashhub, your history is saved on the remote server and the server needs to be able to search it. This means that the history is on the server, at least in memory, in an unencrypted form. Adding client side encryption would break the server-side search.
 
-By default, the remote server is an instance maintained by the project author. The official server implementation is closed source. This means that you need to trust the author of the project with access to your shell history. 
+By default, the remote server is an instance maintained by the project author. The official server implementation is closed source. This means that you need to trust the author of the project with the access to your shell history. 
 
-Recently\footnote{Bashhub-server was written in February 2020.} a new open source implementation\cite{toolsbashhubserver} of the Bashhub server has appeared. This addresses the privacy and security issues by making it possible to run and use your own instance of the server.
+Recently\footnote{Open source implementation of Bashhub server was written in February 2020.} a new open source implementation\cite{toolsbashhubserver} of the Bashhub server has appeared. This addresses the privacy and security issues by making it possible to run and use your own instance of the server.
 
 \redtext{Bashhub is somewhat popular on GitHub\footnote{Bashhub has 744 "stars" on GitHub.}
 Bashhub is not a viable replacement for standard reverse search and manual history searching.}
@@ -1619,9 +1620,14 @@ McFly predicts history entries based on following contextual information:
 
 Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replace the standard reverse search. Pressing \verb|CTRL-R| launches McFly full screen terminal app. When the app is launched it displays a list of ten predicted history entries. The list of history entries is updated as you type. McFly only recommends history entries that exactly match the typed query including spaces.
 
-\begin{figure}[]
-  \tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/mcfly-screenshot.png}}
-  \caption{McFly interactive history search \redtext{TODO: better screenshot with more history and hopefully better colors}}
+\begin{figure}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-short.pdf}}
+  \caption{McFly interactive history search (cropped)}
+\end{figure}
+
+\begin{figure}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-full.pdf}}
+  \caption{McFly interactive history search \redtext{REMOVE}}
 \end{figure}
 
 When trying out this tool we found its behavior to be unpredictable; Not knowing why specific results are being shown made the tool less useful. 
