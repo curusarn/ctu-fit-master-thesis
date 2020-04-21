@@ -164,7 +164,9 @@ At this point we move on to design(ing) ...
 
 \todo{CONSISTENCY: CTRl-P vs CTRL+P}
 
-\todo{TRY: some package for verbatim in footnotes}
+
+% every \permanentframe shout have 0.995 img size
+
 
 
 \chapter{Analysis}
@@ -1604,11 +1606,7 @@ Bashhub is not a viable replacement for standard reverse search and manual histo
 
 \todotext{TODO: This is a draft vvv}
 
-McFly\cite{toolsmcfly} is a tool that records your shell history with context. 
-
-Then it tries to predict the next command line entry based on current context using a small neural network.
-
-McFly predicts history entries based on following contextual information:
+McFly\cite{toolsmcfly} is a tool that tries to predict your next command line entry using a small neural network. It predicts the next command line entry based on following contextual information:
 \begin{itemize}
     \item present working directory
     \item previous command line entries
@@ -1618,34 +1616,35 @@ McFly predicts history entries based on following contextual information:
     \item exit status
 \end{itemize}
 
-Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replace the standard reverse search. Pressing \verb|CTRL-R| launches McFly full screen terminal app. When the app is launched it displays a list of ten predicted history entries. The list of history entries is updated as you type. McFly only recommends history entries that exactly match the typed query including spaces.
+Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replace the standard reverse search. Pressing \verb|CTRL-R| launches McFly full screen terminal app shown in figure \ref{tools-mcfly}. At first, the app displays a list of ten predicted history entries. The list of history entries is updated as you type to only show results that exactly match the typed query. The list always contains ten results or less which is a curious design decision. 
 
-\begin{figure}
+
+\begin{figure}[h]
   \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-short.pdf}}
   \caption{McFly interactive history search (cropped)}
+  \label{tools-mcfly}
 \end{figure}
+
+
+When trying to use McFly we found its behavior to be unpredictable; Not knowing why specific results are being shown made the tool less useful. 
+
+McFly also shares some problems with reverse search, it only uses a single query for searching; This can make it hard to find what you need in situations when you are unable to think of a better query\footnote{We already described such situation in \redtext{REF: reverse search workflow}}. 
+
+McFly is popular on GitHub.\footnote{McFly has about sixteen hundred "stars" on GitHub.}
 
 \begin{figure}
   \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-full.pdf}}
-  \caption{McFly interactive history search \redtext{REMOVE}}
+  \caption{McFly interactive history search \redtext{REMOVE IMAGE}}
 \end{figure}
-
-When trying out this tool we found its behavior to be unpredictable; Not knowing why specific results are being shown made the tool less useful. 
-
-Like reverse search, it only uses a single query for searching; This makes it hard to retrieve in situations when we are unable to think of a better query\footnote{We described such situation earlier in \redtext{REF: reverse search workflow}}. 
-
-
-McFly is popular on GitHub.
-\footnote{McFly has sixteen hundred "stars" on GitHub.}
 
 
 \todo{DELETE this section vvv}
 
 \subsection{Contextual history saved in a SQLite}
 
-\todotext{TODO: advanced-shell-history - contextual history with smart querying - too buggy to be useful}
 
-\todotext{TODO: rash - python again, explicit search by context is a nice to have but not really a workflow }
+\redtext{TODO: advanced-shell-history - contextual history with smart querying - too buggy to be useful - non-interactive}
+
 
 
 \todotext{TODO: Other less notable shell history tools - underdeveloped, non-interactive, ...}
@@ -1656,32 +1655,126 @@ McFly is popular on GitHub.
 these tools usually store the history in a SQLite database. This makes sense because the history is inherently relational. However, this can potentially limit the ability to use regex or fuzzy searching. This must not be underestimated given how popular and powerful fuzzy searching is. 
 % is this desing? ^^^
 
-\blind[4]
 
-\todotext{TODO: short conclusion about history tools, configurations, etc.}
+\paragraph{}
+
+\redtext{TODO: short conclusion about history tools, configurations, etc.}
 
 
+%\redtext{Explicit searching by context sounds like a useful feature obvious feature for tools that record history with context. 
+%While this feature is easy to implement and it sounds useful it does not really bring much value. }
+
+
+\redtext{Hstr and Fzf are a major improvement over standard history reverse search. Bashhub and McFly use context but they do not match the benefits provided by Hstr or Fzf. }
+
+There are some tools that did not warrant a separate section. 
+
+These tools provided features like explicit history search.
+%\redtext{There are other contextual history tools. Usually, they save some basic context like directory and exit status to a SQLite database. The main feature of these tools is the ability to explicitly search history by context. }
+
+\redtext{All of these contextual tools show us that it is not easy to use context in a meaningful way. We should carefully examine the available context and consider how it can be useful to the user.}
 
 \section{Available contextual information}
 
+% rewrite
+
+In previous section we talked about existing history tools. We saw that contextual history tools are not automatically more useful than tools that do not work with additional context. 
+
+Useful history tools address real workflows and provide value to the user.
+In this section, we explore available contextual information. We will break it down into individual parts and discuss how they relate to shell usage and history usage.
+
+\todo{write this vvv}
+\subsection{Exit status}
+
+Penalize errors, not all non-zero exit codes are errors - e.g. user might be done with an application and terminate/kill/? in with Ctrl C. Counter-example is killing a command to change it and resubmit.
+Various commands return non-zero exit statuses for different reasons.
+
+Exit status could be used to penalize history records so that the user sees successful entries first.
+
+There is an additional varialble pipestatus - it is an array or exit statuses
+Error in the middle of a pipeline is still an error. Non-zero exit status anywhere in the pipeline could still penalize the record.
+
+%PIPESTATUS (bash)
+%An array variable (see Arrays) containing a list of exit status values from the processes in the most-recently-executed foreground pipeline (which may contain only a single command).
+
+%pipestatus <S> <Z> (zsh)
+%An array containing the exit statuses returned by all commands in the last pipeline.
+
+\subsection{Directory (based workflow)}
+
+The shell usage is different in different direcotries
+
+Many standard tools are directory dependant - Makefile, Vagrantfile, Dockerfile, ...
+
+Directories often hold projects which are often associated with specific workflows and commands /command line entries.
+
+This is very related to git which is also directory sensitive
+
+If git is the significant factor we could take "git dir root" and "git origin" as additional context.
+
+"git root dir" will be same for all directories/paths in the repo
+"git origin" will be same even for the same project cloned to two different locations or even devices (assuming the history is shared between machines)
 
 
+Since so many tools already use directory as a context
 
-% meh, I'm not sure about this structure
+\subsection{Relationships between commands}
 
-\todotext{TODO: intro}
+An important piece of context
 
-\subsection{Directly available contextual information}
+Command line entries are not executed "individually"
+They have preceding and following cmd line entries
 
-\blind[2]
+There are short term dependencies between commands (as we saw in analysis earlier)
+There are relationships in form of sessions where command line entries 
 
-\subsection{Derivable contextual information}
+Our data shown big differences between how people use sessions - some people create new terminals for a few commands and then close them, others keep them open for a long time and reuse them. commands from simultaneous terminal sessions seem to be often/sometimes related.
+ 
+It is unclear what is the best approach to using the context about relationships between commands to provide value to the user.
+This is future work / beyond scope of this thesis
 
-\blind[2]
+There is some simple relationships that we can/should use.
+The simplest relation ship is a sequence of history entries.
+There is an advantage of having a history that works as a full transcript you can refer to to see what you were doing. (Not an auditing tool)
+Providing the user with means to access sequential context for the history entry could work in some situations.
+Consider the workflow \redtext{ref: recallign a seqence} but instead of repeating an immediate sequence, we want to repeat it after a while.
 
-\subsection{Usage of history features as a context}
+Having a time (with timezone) of the command and a full session transcript.
 
-\blind[2]
+\subsection{System, env, comaptibility - command portability}
+
+this all starts making a lot of sense if you start syncing your history
+
+Host
+Os
+distro
+shell
+
+shell configuration
+aliases
+variables ?
+
+paths (absolute vs relative)
+
+installed programs
+
+Understanding the command line entry is hard
+Modifying the command line entry is hard
+
+Understanding limited parts of the command is doable
+Recreating the context of the command is doable
+-$>$ Bundling the context with the command is doable
+
+Imagine a command with relative paths and two approaches: 1) you modify the paths to be absolute and then somehow offer the modified command to the user 2) you detect the presence of relative paths and offer an option to change to the directory on recall
+
+\subsection{Usage of history mechanisms}
+
+First of all we want to record this to enable more research
+
+Second, this is important according to \cite{greenberg1993computer}
+E.g. History entries recalled using Ctrl R are more likely to be recalled using Ctrl R again
+
+
 
 \todotext{TODO: conclusion of the section}
 
@@ -1689,6 +1782,7 @@ these tools usually store the history in a SQLite database. This makes sense bec
 
 \chapter{Design}
 \todotext{TODO: intro describe contents of the chapter}
+\todo{Write down design guidelines for reference}
 
 \blind
 \todo{order of design chapters can change}
@@ -1699,6 +1793,18 @@ these tools usually store the history in a SQLite database. This makes sense bec
 \blind[2]
 
 \section{Interactive history features} % front-end
+
+% notes
+
+arrow up
+
+arrow down
+
+autosuggestions
+
+prefix search
+
+ctrl R search
 
 \todotext{TODO: intro}
 
