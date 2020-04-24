@@ -864,7 +864,7 @@ There are shell history features he is not aware of like history expansion and p
 \todotext{TODO: ADD challenges and benefits ? maybe}
 
 
-\subsection{Common shell history workflows}
+\section{Common shell history workflows}
 
 Now that we know who our target users are we can formulate common workflows for them. We do not specify the workflows for each of the target users separately; Instead, we comment on the difference between the users when necessary. \todo{we only ever make comments about the experience level of the users}
 
@@ -897,7 +897,7 @@ Workflows we formulate are based on previous research \cite{greenberg1993compute
 
 %Additional configurations and tools will be discussed in later sections.
 
-\subsubsection*{Editing a preceding history entry}
+\subsection{Editing a preceding history entry}
 
 In this first workflow, the user submits a command line entry but is not satisfied with the result. To fix that, he retrieves the immediately preceding history entry, modifies it and executes it again. We will look at multiple example sequences of command line submissions for this workflow.
 
@@ -941,7 +941,7 @@ We just saw multiple different situations in which people continue working on th
 
 % \todotext{MAIN: recalling recent and semi-recent commands "as exact matches", "recent" ~ the user remembers the command}
 
-\subsubsection*{Blindly recalling very recent history entries}
+\subsection{Blindly recalling very recent history entries}
 
 This second workflow is a retrieval and execution of a very recent history entry; The user remembers the exact position of the history entry he wants to recall. An example of such workflow is running the following sequence of command line submissions.
 \begin{verbatim}
@@ -956,7 +956,7 @@ Consider, if we used a graphical editor or if we ran the editor from a different
 
 When recalling very recent commands the users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of recent history entries.
 
-\subsubsection*{Retrieving recent history entries}
+\subsection{Retrieving recent history entries}
 The third workflow is a recall of history entry that is still recent but the user no longer remembers the exact position in the history list. This means that the user needs to read the history entries as they appear to see if the desired entry was retrieved. This is an example sequence of command line entries for this workflow.
 
 \begin{verbatim}
@@ -1007,7 +1007,7 @@ This is a good example of how the number of keystrokes is not the only thing we 
 % NOTE: maybe this^ belongs earlier? (but maybe not)
 
 
-\subsubsection*{Editing recalled history entries}
+\subsection{Editing recalled history entries}
 
 In the precious section, we saw a workflow where the user retrieved a recent history entry and executed it again as is. Now, we are going to look at a similar workflow where the user retrieves a history entry, edits it and then executes it again. Workflows with editing are a little less common than the ones with direct execution according to the usage data we collected. An example of a workflow with editing follows.
 
@@ -1033,7 +1033,7 @@ This seems a little tedious but it is still more efficient than typing the whole
 This workflow shows us how people edit history entries after they retrieve them. We see that standard history mechanisms make it possible to edit history entries after retrieval. Reverse search, which we did not see in any workflow yet, is not an exception. This is a useful property that we should include in our designs as well. 
 
 \todo{Is this the right order?}
-\subsubsection*{Repeating a sequence of history entries}
+\subsection{Repeating a sequence of history entries}
 
 In this workflow, the user has executed a sequence of command line entries and wants to retrieve and repeat all the command line entries in the sequence. 
 Consider a following example.
@@ -1069,7 +1069,7 @@ Executing \verb|fc -4 -1| opens an editor with last four history entries and the
 Repeating a sequence of history entries is not the most common workflow. However, it shows us the limits and inefficiencies of standard shell history.
 
 
-\subsubsection*{Searching with limited knowledge}
+\subsection{Searching with limited knowledge}
 
 In all the workflows we discussed so far, the user wanted to recall a fairly recent history entry. Now, we move on to workflows where the user searches for history entries that are older. In these workflows, the memory of the user is often a limiting factor; Both the knowledge of shell history and the desired command line entry is limited.
 
@@ -1129,7 +1129,7 @@ The reverse search still does not show the desired history entry but it shows an
 \end{verbatim}
 
 The next result is the desired history entry. This was a pretty efficient but also a quite idealistic reverse search example. It worked out so well because the user was able to provide a specific enough query -- \verb|thumbnail-api|. We should look at a more realistic situation where the user struggles to come up with such query. %We will use the same shell history and desired command line entry as in the previous case. (same sentence as the start of the ne)
-\paragraph{\redtext{TODO: title "Struggling with / Limits of ... reverse search"}}
+\paragraph{\redtext{TODO: title} Limits of history reverse search}
 
 In this example, we are using the same shell history and desired command line entry as in the previous example. Again, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He presses \verb|CTRL+R| and starts searching using \verb|ssh| as a query; It is actually very natural and quite common to use the beginning of the line as a query in reverse search.
 
@@ -1204,7 +1204,7 @@ If the reverse search is as bad as we claim are there other alternatives that pe
 % EXTRA ISSUE: once reverse search fails you there is no way back
 
 
-\paragraph{\redtext{TODO title: Manual history filtering}}
+\paragraph{\redtext{TODO title}Manual history filtering}
 
 As mentioned before, manual filtering is a popular non-interactive way to search the shell history. It can be used to fulfil similar workflows as the reverse search. To properly compare the two methods we will use the same example as before; You can see the same relevant history entries with the same desired history entry below.
 
@@ -1285,7 +1285,7 @@ This makes it more appealing to experienced shell users because they use what th
 % SUMMARY: By using the shell history in this workflow, the user not only saved himself some typing but also remembering of the command line entries. Recreating old history entries from scratch often takes a lot of effort because it is not just a matter of typing. The saved effort by history during this workflow is significant. This also means that people are generally willing to spend more effort searching for the desired history entry because of the effort they would have to "spend" otherwise.
 
 
-\subsubsection*{Searching with implicit context \redtext{TODO: better title}}
+\subsection{Searching with implicit context \redtext{TODO: better title}}
 % GOOD vvv
 In the previous workflows we saw that searching history heavily relies on the memory of the user. When the user does not remember enough the efficiency of the standard history searching mechanisms is reduced.
 
@@ -1324,7 +1324,7 @@ In situations like this one, it could be useful if the history entries that orig
 %Reordering is non-invasive - not all entries with non-zero status are worthless so we want to keep them
 
 
-\paragraph{\redtext{Directory sensitive history (todo title)}}
+\paragraph{\redtext{TODO: title} Directory sensitive history}
 
 
 %# history from ~/git/image_server directory:
@@ -1452,7 +1452,7 @@ This information is stored in the shell history but it is not easy to retrieve. 
 
 Generally, people create and use custom configuration to solve issues they face and to improve their command line experience. Some problems cannot be solved by configuration which leads people to write new tools. Many of the configurations and tools people create are personal experiments; These are usually too opinionated and not polished enough to be used by other people. In contrast, some tools grow popular because they are useful to many people. 
 
-In the following sections, we will examine various history tools and configurations that are related to issues and workflows we described in previous chapters. We are going focus on popular tools and common configurations. Additionally, we will cover less common tools and configurations that bring interesting features and solutions which cannot be found elsewhere. Apart from history tools and configurations we will also look at history features of other programs such as the Fish shell and the Python REPL. 
+In the following sections, we will examine various history tools and configurations that are related to issues and workflows we described in previous chapters. We are going focus on popular tools and common configurations. Additionally, we will cover less common tools and configurations that bring interesting features and solutions which cannot be found elsewhere. Apart from history tools and configurations we will also look at history features of other programs such as the Fish shell and the Python console in Blender. 
 
 \todo{TODO: ORDER of subsections}
 % order by "workflows" start with immediate features and move on to regular serach and then to context search
@@ -1630,12 +1630,9 @@ When trying to use McFly we found its behavior to be unpredictable; Not knowing 
 
 McFly also shares some problems with reverse search, it only uses a single query for searching; This can make it hard to find what you need in situations when you are unable to think of a better query\footnote{We already described such situation in \redtext{REF: reverse search workflow}}. 
 
-McFly is popular on GitHub.\footnote{McFly has about sixteen hundred "stars" on GitHub.}
+\redtext{McFly is popular on GitHub.\footnote{McFly has about sixteen hundred "stars" on GitHub.}}
 
-\begin{figure}
-  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-full.pdf}}
-  \caption{McFly interactive history search \redtext{REMOVE IMAGE}}
-\end{figure}
+%\begin{figure} \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-full.pdf}}  \caption{McFly interactive history search \redtext{REMOVE IMAGE}} \end{figure}
 
 
 \todo{DELETE this section vvv}
@@ -1681,44 +1678,54 @@ These tools provided features like explicit history search.
 In previous section we talked about existing history tools. We saw that contextual history tools are not automatically more useful than tools that do not work with additional context. 
 
 Useful history tools address real workflows and provide value to the user.
-In this section, we explore available contextual information. We will break it down into individual parts and discuss how they relate to shell usage and history usage.
+In this section, we explore available contextual information. We will discuss how different parts of the context relate to shell usage and history usage. We do this to identify the usefulness of different parts of available contextual information. 
 
 \todo{write this vvv}
-\subsection{Exit status}
+\subsection{Exit status and pipestatus}
 
-Penalize errors, not all non-zero exit codes are errors - e.g. user might be done with an application and terminate/kill/? in with Ctrl C. Counter-example is killing a command to change it and resubmit.
-Various commands return non-zero exit statuses for different reasons.
+Zero exit status is interpreted by the shell as success; In contrast, non-zero status indicates failure.\cite{bashman} People often immediately edit and resubmit command line entries that returned an error. However, people probably rarely want to repeat older command line entries that failed. Does this mean that we can use exit status to filter out errors and only serve successful history entries to the user?
 
-Exit status could be used to penalize history records so that the user sees successful entries first.
+Not really, exit status does not directly map to success and failure. Programs can fail without returning an error. Some programs return non-zero exit status without actually failing\footnote{For example, GNU Grep returns one when no lines were matched and two to indicate errors.\cite{man-grep}}. 
+Additionally, even history entries that are technically errors can be useful to the user. For example, the user might interrupt a program using \verb|CTRL-C| after it has fulfilled its purpose.
+% We could ADD: logical errors
 
-There is an additional varialble pipestatus - it is an array or exit statuses
-Error in the middle of a pipeline is still an error. Non-zero exit status anywhere in the pipeline could still penalize the record.
+Generally, it is reasonable to assume that people retrieve history entries with zero exit status more often than the ones with errors. However, given the caveats described above, we should excercise this assumption conservatively. Removing history entries based on exit status would prevent the user from retrieving them. To preserve this ability we can display all history entries but prioritize the successful ones.
 
+
+In addition to exit status, there is \verb|$pipestatus| shell variable. Pipestatus gives us additional information about exit status of commands in a pipeline; Pipeline is a sequence of commands connected by shell pipes. Pipestatus is an array of exit statuses of individual commands that make up the pipeline.\cite{bashman}\cite{zshdocs} Pipelines that return zero exit status can still contain failed commands\footnote{\redtext{pipefail (both bash and zsh)}}. One failed command in the pipeline should still penalize the history entry.
+ 
 %PIPESTATUS (bash)
 %An array variable (see Arrays) containing a list of exit status values from the processes in the most-recently-executed foreground pipeline (which may contain only a single command).
 
 %pipestatus <S> <Z> (zsh)
 %An array containing the exit statuses returned by all commands in the last pipeline.
 
-\subsection{Directory (based workflow)}
+\subsection{Directory and git related context}
 
-The shell usage is different in different direcotries
+Directories provide an explicit context; People change into different directories to complete different tasks. It is often more comfortable to change directories instead of using longer paths as arguments. Many standard tools encourage the user to use specific directories for specific tasks. 
 
-Many standard tools are directory dependant - Makefile, Vagrantfile, Dockerfile, ...
+For example, Makefile, Vagrantfile, and Dockerfile are all designed to be used from within their directory\cite{man-make}\cite{docs-vagrantfile}\cite{docs-dockerfile}. 
+Directories often hold projects which are usually associated with specific workflows and command line entries.
 
-Directories often hold projects which are often associated with specific workflows and commands /command line entries.
+Many projects use Git or other version control system; This almost forces the user to use command line entries specific to the project in the version control repository. 
 
-This is very related to git which is also directory sensitive
 
-If git is the significant factor we could take "git dir root" and "git origin" as additional context.
+Making the history sensitive to present working directory could definitely bring value to many people.
+However, we do not have to stop there. Directories and Git repositories are closely related but they are not quite equivalent. Luckily Git provides some context we can use. 
+%The goal is to differentiate between history entries executed inside and outside the Git repository. 
 
+Git directory root
+Git remote (origin)
+take "git dir root" and "git origin" as additional context.
 "git root dir" will be same for all directories/paths in the repo
 "git origin" will be same even for the same project cloned to two different locations or even devices (assuming the history is shared between machines)
 
 
-Since so many tools already use directory as a context
+If Git is a significant enough factor this additional context will bring value
+%we could use context that is directly related to Git.  
 
-\subsection{Relationships between commands}
+
+\subsection{Sequential relationships, sessions, and time}
 
 An important piece of context
 
@@ -1741,7 +1748,7 @@ Consider the workflow \redtext{ref: recallign a seqence} but instead of repeatin
 
 Having a time (with timezone) of the command and a full session transcript.
 
-\subsection{System, env, comaptibility - command portability}
+\subsection{Host/system and its context/properties}
 
 this all starts making a lot of sense if you start syncing your history
 
@@ -1774,7 +1781,7 @@ First of all we want to record this to enable more research
 Second, this is important according to \cite{greenberg1993computer}
 E.g. History entries recalled using Ctrl R are more likely to be recalled using Ctrl R again
 
-
+Recording this context can enable future research to study not just how people use shell but also how they use shell history.
 
 \todotext{TODO: conclusion of the section}
 
