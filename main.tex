@@ -1674,7 +1674,7 @@ These tools provided features like explicit history search.
 
 \redtext{All of these contextual tools show us that it is not easy to use context in a meaningful way. We should carefully examine the available context and consider how it can be useful to the user.}
 
-\section{Available contextual information}
+\section{Usefulness of contextual information}
 
 % rewrite
 
@@ -1696,7 +1696,7 @@ Additionally, even history entries that are technically errors can be useful to 
 Generally, it is reasonable to assume that people retrieve history entries with zero exit status more often than the ones with errors. However, given the caveats described above, we should excercise this assumption conservatively. Removing history entries based on exit status would prevent the user from retrieving them. To preserve this ability we can display all history entries but prioritize the successful ones.
 
 
-In addition to exit status, there is \verb|$pipestatus| shell variable. Pipestatus gives us additional information about exit status of commands in a pipeline; Pipeline is a sequence of commands connected by shell pipes. Pipestatus is an array of exit statuses of individual commands that make up the pipeline.\cite{bashman}\cite{zshdocs} Pipelines that return zero exit status can still contain failed commands\footnote{\redtext{pipefail (both bash and zsh)}}. One failed command in the pipeline should still penalize the history entry.
+In addition to exit status, there is \verb|$pipestatus| shell variable. Pipestatus gives us additional information about exit status of commands in a pipeline; Pipeline is a sequence of commands connected by shell pipes. Pipestatus is an array of exit statuses of individual commands that make up the pipeline.\cite{bashman}\cite{zshdocs} Pipelines that return zero exit status can still contain failed commands\footnote{\redtext{pipefail (both bash and zsh)}}. History entries with even one failed command in the pipeline can be treated as unsuccessful.
  
 %PIPESTATUS (bash)
 %An array variable (see Arrays) containing a list of exit status values from the processes in the most-recently-executed foreground pipeline (which may contain only a single command).
@@ -1718,7 +1718,7 @@ We should make it easy to access the history entries from the present working di
 However, we do not have to stop there. Directories and Git repositories are closely related but they are not quite equivalent. Git provides some more context we can use. 
 %The goal is to differentiate between history entries executed inside and outside the Git repository. 
 Root of the Git repository allows us to group all history entries from the Git repository.
-Git remotes\footnote{Remotes are remote repositories tracked by Git. Origin is the default remote.} can be used to identify the repository even across different machines or when it is moved. 
+Git remotes\footnote{Remotes are remote repositories tracked by Git. Origin is the default remote.} can be used to identify the repository even across different machines or when it is moved to a different directory. 
 
 
 
@@ -1727,60 +1727,60 @@ Git remotes\footnote{Remotes are remote repositories tracked by Git. Origin is t
 
 % In this section, we cover a part of context that is not well understood yet. captur
 
-Most command line entries are executed in relation to other command line entries.
-Each history entry is a part of a sequence; It has preceding and following command line entries. 
+Many command line entries are not executed individually; They are a part of longer sequences and tasks. %Each entry is a part of a sequence; It has preceding and following command line entries. 
 
 In previous analysis\redtext{REF: dependencies between commands }, we saw that there are sequential dependencies between command stubs; These dependencies represent workflows that users recognize and remember.
 
 Apart from immediate sequential dependencies, each command belongs to a terminal session\footnote{\redtext{???} Terminal session consists of all history entries entered into the same terminal. Terminal sessions are equivalent the shell sessions in the majority of cases.}. Our data shows big differences between how people use sessions; Some people often create new terminals even for a few command line entries and then close them. Others keep terminals open for a long time and reuse them for different tasks.
 Additionally, people very often switch back and forth between multiple open terminals. Command line entries from simultaneous terminal sessions are usually different but all related to the same task.
- 
-It is unclear how to use this complex contextual information about relationships between commands to provide value to the user. It is beyond the scope of this work to study the relationships between history entries and between sessions.
+
+These relationships between history entries and sessions are definitely interesting and possibly useful. To illustrate, imagine you type a command line entry that you already executed five times in the past. Maybe it is related to a specific task and to complete it you will need similar commands as before. Situations like this one show us the potential usefulness of session and history entry relationships.
+
+However, it is not obvious if these relationships are general enough to be useful in the average case. It is unclear how to use this complex contextual information to provide value to the user. It is beyond the scope of this work to study the relationships between history entries and between sessions.
 
 
-However, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\redtext{REF: sequential workflow}. 
+Nevertheless, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\redtext{REF: sequential workflow}. 
+Since sequences of history entries are directly related to a workflow we identified earlier\redtext{REF: sequential workflow} we should use the sequential property in our design. 
 
-
-Having access to a full transcript of your actions also has its value. It gives you the ability to refer back to what you were doing earlier. A transcript of command line entries should also obviously include the time of execution of the individual history entries.
+One more use for sequences of command line entries is recording them as a full non-deduplicated transcript. Having a full transcript of your actions gives you the ability to refer back to what you were doing earlier. A transcript of command line entries should also include the time of execution for the individual entries.
 % NOT an auditing tool
 
-\subsection{Host and its context}
+%Having access to a full sequential history\footnote{Standard shell history is often deduplicated. Full sequential history is a shell history that is not deduplicated.} that represents a transcript of your actions also has its value.
 
-this all starts making a lot of sense if you start syncing your history
+\subsection{Host and portability of history entries between devices}
 
-Host
+Imagine that you have your shell history synchronized between multiple devices.
+Each of the devices is at least a little bit different so it is a good idea to be able to tell them apart. The \verb|$HOST| environment variable is a good identifier of the device. We can use the host to prioritize the history from the current device and to explicitly show the user which host is the specific history entry coming from.
 
-offer history from current host first but make it still easy to get history for current directory/git from all hosts
+Since each device can be different we should look at the possible differences that are relevant to the shell history. Different operating systems\footnote{We are only considering Unix-like systems in this work.} use different package managers to install software. For example, Debian-based distributions use Apt, Arch-based distributions use Pacman, and on MacOS people use Homebrew. Commands for one package manager will not work with others.
 
-Os
-distro
-shell
+Many history entries are valid in both Bash and Zsh but not all history entries. Shell configuration might differ between devices which could cause some history entries to not work on all devices properly. A good example are specific shell aliases that the user added to one of their devices.
 
-Not all commands are compatible - different distros use different package managers
-not all shell commands are compatible
+% installed software
 
-for example there could be simple rules that penalize package manager history entries on incompatible distros
+We just described why some history entries will not work when executed from a different device. Some history entries might not work even when executed on the same device but out of the original context. Examples of this are variables and relative paths; Variables that were set at the time of execution can cause history entries to fail when retrieved and executed again. History entries with relative paths will only work in certain directories.
 
-To take this a step further / there is more host context that makes commands incompatible
+As we can see there are many reasons why history entries might not be portable. Most of the issues above can be detected using relevant contextual information. 
+We could detect and handle these portability issues individually. Or alternatively we could take a simpler approach and treat all history entries from other devices differently than ones from the current device. This could be effective because many of the portability issues are related to mixing shell history from different devices.
 
-shell configuration ??? what did I mean by this
-aliases
-variables ? - privacy issues ?
+\todo{NOTES related to compatibility - might be useful later in the design chapter}
 
-installed programs
+%However, only some of these portability issues have elegant solutions. For example, aliases can be detected and saved as part of the history entry. Upon retrieval the user can get an offer to set the alias or to even add it to the shell RC file\footnote{RC files for Bash and Zsh are ".bashrc" and ".zshrc" respectively.}. 
 
-paths (absolute vs relative) - is this related enough - not host specific but compatibility related
+%penalize
+%warn
+%bundle and restore
 
-Understanding the command line entry is hard  
-Modifying the command line entry is hard
+%We could use this information to detect and handle these situations. warn the user or even bundle and recreate the original context. 
 
-Understanding limited parts of the command is doable  
-Recreating the context of the command is doable  
--$>$ Bundling the context with the command is doable
+% Understanding the command line entry is hard  
+% Modifying the command line entry is hard
 
+% Understanding limited parts of the command is doable  
+% Recreating the context of the command is doable  
+% -$>$ Bundling the context with the command is doable
 
-
-Imagine a command with relative paths and two approaches: 1) you modify the paths to be absolute and then somehow offer the modified command to the user 2) you detect the presence of relative paths and offer an option to change to the directory on recall
+% Imagine a command with relative paths and two approaches: 1) you modify the paths to be absolute and then somehow offer the modified command to the user 2) you detect the presence of relative paths and offer an option to change to the directory on recall
 
 \subsection{Usage of history mechanisms}
 
