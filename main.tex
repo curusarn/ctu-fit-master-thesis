@@ -823,6 +823,9 @@ It is worth noting that people sometimes want to delete history entries after th
 
 \todotext{TODO: A portion of questions we can find online is about features that would require the shell history to understand the contents of the submitted command line entries. This means that shell history would have to include at least a limited parsing of the shell. Examples of such features are expansion of aliases and transformation of relative paths to absolute ones. These expansions could make the history entries independent of set aliases and current working directory. }
 
+\subsubsection*{ADDED: Full transcript}
+\todotext{People sometimes with to have a full transcript of their actions - but history is deduplicated}
+
 
 \subsection{Target users \redtext{MOVED (and typical workflows)} }
 
@@ -1678,9 +1681,10 @@ These tools provided features like explicit history search.
 In previous section we talked about existing history tools. We saw that contextual history tools are not automatically more useful than tools that do not work with additional context. 
 
 Useful history tools address real workflows and provide value to the user.
-In this section, we explore available contextual information. We will discuss how different parts of the context relate to shell usage and history usage. We do this to identify the usefulness of different parts of available contextual information. 
+In this section, we explore available contextual information. We will discuss how different parts of the context relate to shell usage and history usage. %We do this to identify the usefulness of different parts of available contextual information. 
 
-\todo{write this vvv}
+\redtext{IDEA: a bulleted list of the 5 following sections}
+
 \subsection{Exit status and pipestatus}
 
 Zero exit status is interpreted by the shell as success; In contrast, non-zero status indicates failure.\cite{bashman} People often immediately edit and resubmit command line entries that returned an error. However, people probably rarely want to repeat older command line entries that failed. Does this mean that we can use exit status to filter out errors and only serve successful history entries to the user?
@@ -1700,77 +1704,81 @@ In addition to exit status, there is \verb|$pipestatus| shell variable. Pipestat
 %pipestatus <S> <Z> (zsh)
 %An array containing the exit statuses returned by all commands in the last pipeline.
 
-\subsection{Directory and git related context}
+\subsection{Directory and Git related context}
 
-Directories provide an explicit context; People change into different directories to complete different tasks. It is often more comfortable to change directories instead of using longer paths as arguments. Many standard tools encourage the user to use specific directories for specific tasks. 
+Directories provide explicit context; People change into different directories to complete different tasks. It is often more comfortable to change directories instead of using longer paths as arguments. 
 
+Many standard tools encourage the user to use specific directories for specific tasks. 
 For example, Makefile, Vagrantfile, and Dockerfile are all designed to be used from within their directory\cite{man-make}\cite{docs-vagrantfile}\cite{docs-dockerfile}. 
-Directories often hold projects which are usually associated with specific workflows and command line entries.
 
-Many projects use Git or other version control system; This almost forces the user to use command line entries specific to the project in the version control repository. 
+Directories often hold projects that are associated with specific workflows and command line entries. 
+These projects often use Git or other version control system; This almost forces the user to use command line entries specific to the project inside the version control repository. 
 
-
-Making the history sensitive to present working directory could definitely bring value to many people.
-However, we do not have to stop there. Directories and Git repositories are closely related but they are not quite equivalent. Luckily Git provides some context we can use. 
+We should make it easy to access the history entries from the present working directory.
+However, we do not have to stop there. Directories and Git repositories are closely related but they are not quite equivalent. Git provides some more context we can use. 
 %The goal is to differentiate between history entries executed inside and outside the Git repository. 
-
-Git directory root
-Git remote (origin)
-take "git dir root" and "git origin" as additional context.
-"git root dir" will be same for all directories/paths in the repo
-"git origin" will be same even for the same project cloned to two different locations or even devices (assuming the history is shared between machines)
+Root of the Git repository allows us to group all history entries from the Git repository.
+Git remotes\footnote{Remotes are remote repositories tracked by Git. Origin is the default remote.} can be used to identify the repository even across different machines or when it is moved. 
 
 
-If Git is a significant enough factor this additional context will bring value
-%we could use context that is directly related to Git.  
 
 
 \subsection{Sequential relationships, sessions, and time}
 
-An important piece of context
+% In this section, we cover a part of context that is not well understood yet. captur
 
-Command line entries are not executed "individually"
-They have preceding and following cmd line entries
+Most command line entries are executed in relation to other command line entries.
+Each history entry is a part of a sequence; It has preceding and following command line entries. 
 
-There are short term dependencies between commands (as we saw in analysis earlier)
-There are relationships in form of sessions where command line entries 
+In previous analysis\redtext{REF: dependencies between commands }, we saw that there are sequential dependencies between command stubs; These dependencies represent workflows that users recognize and remember.
 
-Our data shown big differences between how people use sessions - some people create new terminals for a few commands and then close them, others keep them open for a long time and reuse them. commands from simultaneous terminal sessions seem to be often/sometimes related.
+Apart from immediate sequential dependencies, each command belongs to a terminal session\footnote{\redtext{???} Terminal session consists of all history entries entered into the same terminal. Terminal sessions are equivalent the shell sessions in the majority of cases.}. Our data shows big differences between how people use sessions; Some people often create new terminals even for a few command line entries and then close them. Others keep terminals open for a long time and reuse them for different tasks.
+Additionally, people very often switch back and forth between multiple open terminals. Command line entries from simultaneous terminal sessions are usually different but all related to the same task.
  
-It is unclear what is the best approach to using the context about relationships between commands to provide value to the user.
-This is future work / beyond scope of this thesis
+It is unclear how to use this complex contextual information about relationships between commands to provide value to the user. It is beyond the scope of this work to study the relationships between history entries and between sessions.
 
-There is some simple relationships that we can/should use.
-The simplest relation ship is a sequence of history entries.
-There is an advantage of having a history that works as a full transcript you can refer to to see what you were doing. (Not an auditing tool)
-Providing the user with means to access sequential context for the history entry could work in some situations.
-Consider the workflow \redtext{ref: recallign a seqence} but instead of repeating an immediate sequence, we want to repeat it after a while.
 
-Having a time (with timezone) of the command and a full session transcript.
+However, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\redtext{REF: sequential workflow}. 
 
-\subsection{Host/system and its context/properties}
+
+Having access to a full transcript of your actions also has its value. It gives you the ability to refer back to what you were doing earlier. A transcript of command line entries should also obviously include the time of execution of the individual history entries.
+% NOT an auditing tool
+
+\subsection{Host and its context}
 
 this all starts making a lot of sense if you start syncing your history
 
 Host
+
+offer history from current host first but make it still easy to get history for current directory/git from all hosts
+
 Os
 distro
 shell
 
-shell configuration
-aliases
-variables ?
+Not all commands are compatible - different distros use different package managers
+not all shell commands are compatible
 
-paths (absolute vs relative)
+for example there could be simple rules that penalize package manager history entries on incompatible distros
+
+To take this a step further / there is more host context that makes commands incompatible
+
+shell configuration ??? what did I mean by this
+aliases
+variables ? - privacy issues ?
 
 installed programs
 
-Understanding the command line entry is hard
+paths (absolute vs relative) - is this related enough - not host specific but compatibility related
+
+Understanding the command line entry is hard  
 Modifying the command line entry is hard
 
-Understanding limited parts of the command is doable
-Recreating the context of the command is doable
+Understanding limited parts of the command is doable  
+Recreating the context of the command is doable  
 -$>$ Bundling the context with the command is doable
+
+
 
 Imagine a command with relative paths and two approaches: 1) you modify the paths to be absolute and then somehow offer the modified command to the user 2) you detect the presence of relative paths and offer an option to change to the directory on recall
 
