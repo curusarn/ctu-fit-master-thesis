@@ -1036,7 +1036,7 @@ This seems a little tedious but it is still more efficient than typing the whole
 This workflow shows us how people edit history entries after they retrieve them. We see that standard history mechanisms make it possible to edit history entries after retrieval. Reverse search, which we did not see in any workflow yet, is not an exception. This is a useful property that we should include in our designs as well. 
 
 \todo{Is this the right order?}
-\subsection{Repeating a sequence of history entries}
+\subsection{Repeating a sequence of history entries}\label{workflow-repeating-a-sequence}
 
 In this workflow, the user has executed a sequence of command line entries and wants to retrieve and repeat all the command line entries in the sequence. 
 Consider a following example.
@@ -1490,7 +1490,7 @@ Unfortunately there is not native nor ad-hoc support for autosuggestions in Bash
 \subsection{Forward in history}
 
 In standard shell history, we can access the previously executed history entries by pressing \verb|ARROW_UP|. Pressing \verb|ARROW_DOWN| can be used to get back to the original prompt.
-As we saw in the \redtext{REF: section Sequences workflow}, this behavior is quite inefficient when we want to retrieve a sequence of history entries. % instead of a single entry. 
+As we saw in the section \ref{workflow-repeating-a-sequence}, this behavior is quite inefficient when we want to retrieve a sequence of history entries. % instead of a single entry. 
 
 Forward in history feature allows you to efficiently repeat sequences of command line entries. 
 When you execute a command line entry and press \verb|ARROW_UP|, you get preceding history entries. In contrast, \verb|ARROW_DOWN| can give you access to following history entries.
@@ -1501,7 +1501,7 @@ How does the history system know the future? First of all, the system needs to r
 
 Forward in history feature exists in Python console in Blender \cite{tools-blender-docs-python-console}. This makes a lot of sense because every cycle and condition in Python console is a sequence. Naturally, using the Python console often includes  workflows which require sequence repeating.
 
-Arguably, using shell involves less sequence repeating than using a Python console in Blender. However, as we saw earlier \redtext{REF: section Sequences workflow}, it is still a relevant workflow which is not well supported by any of the standard shell history mechanisms.  
+Arguably, using shell involves less sequence repeating than using a Python console in Blender. However, as we saw earlier in section \ref{workflow-repeating-a-sequence}, it is still a relevant workflow which is not well supported by any of the standard shell history mechanisms.  
 
 
 % DO NOT INCLUDE: Additionally, in Blender, Python history starts clean for each project, the history wraps, commands are not always added to the end of the history, and it is easy to dump the whole history and use it as a script.
@@ -1607,8 +1607,6 @@ Bashhub is not a viable replacement for standard reverse search and manual histo
 
 \subsection{Contextual history search powered by a neural network}
 
-\todotext{TODO: This is a draft vvv}
-
 McFly\cite{toolsmcfly} is a tool that tries to predict your next command line entry using a small neural network. It predicts the next command line entry based on following contextual information:
 \begin{itemize}
     \item present working directory
@@ -1706,7 +1704,7 @@ In addition to exit status, there is \verb|$pipestatus| shell variable. Pipestat
 
 \subsection{Directory and Git related context}
 
-Directories provide explicit context; People change into different directories to complete different tasks. It is often more comfortable to change directories instead of using longer paths as arguments. 
+Directories provide explicit context; People change into different directories to complete different tasks.\cite{greenberg1993computer} It is often more comfortable to change directories compared to using longer paths as arguments. 
 
 Many standard tools encourage the user to use specific directories for specific tasks. 
 For example, Makefile, Vagrantfile, and Dockerfile are all designed to be used from within their directory\cite{man-make}\cite{docs-vagrantfile}\cite{docs-dockerfile}. 
@@ -1727,7 +1725,7 @@ Git remotes\footnote{Remotes are remote repositories tracked by Git. Origin is t
 
 % In this section, we cover a part of context that is not well understood yet. captur
 
-Many command line entries are not executed individually; They are a part of longer sequences and tasks. %Each entry is a part of a sequence; It has preceding and following command line entries. 
+Command line entries are generally not executed individually; They are a part of longer sequences and tasks.\cite{greenberg1993computer} Each entry is related to its preceding and following command line entries. 
 
 In previous analysis\redtext{REF: dependencies between commands }, we saw that there are sequential dependencies between command stubs; These dependencies represent workflows that users recognize and remember.
 
@@ -1739,8 +1737,8 @@ These relationships between history entries and sessions are definitely interest
 However, it is not obvious if these relationships are general enough to be useful in the average case. It is unclear how to use this complex contextual information to provide value to the user. It is beyond the scope of this work to study the relationships between history entries and between sessions.
 
 
-Nevertheless, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\redtext{REF: sequential workflow}. 
-Since sequences of history entries are directly related to a workflow we identified earlier\redtext{REF: sequential workflow} we should use the sequential property in our design. 
+Nevertheless, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\redtext{REF: sequential workflow}. We should support such workflows.
+%Since sequences of history entries are directly related to a workflow we identified earlier\redtext{REF: sequential workflow} we should use the sequential property in our design. 
 
 One more use for sequences of command line entries is recording them as a full non-deduplicated transcript. Having a full transcript of your actions gives you the ability to refer back to what you were doing earlier. A transcript of command line entries should also include the time of execution for the individual entries.
 % NOT an auditing tool
@@ -1750,7 +1748,7 @@ One more use for sequences of command line entries is recording them as a full n
 \subsection{Host and portability of history entries between devices}
 
 Imagine that you have your shell history synchronized between multiple devices.
-Each of the devices is at least a little bit different so it is a good idea to be able to tell them apart. The \verb|$HOST| environment variable is a good identifier of the device. We can use the host to prioritize the history from the current device and to explicitly show the user which host is the specific history entry coming from.
+Each of the devices is at least a little bit different so it is a good idea to be able to tell them apart. The \verb|$HOST| environment variable is a good identifier of the device. 
 
 Since each device can be different we should look at the possible differences that are relevant to the shell history. Different operating systems\footnote{We are only considering Unix-like systems in this work.} use different package managers to install software. For example, Debian-based distributions use Apt, Arch-based distributions use Pacman, and on MacOS people use Homebrew. Commands for one package manager will not work with others.
 
@@ -1758,10 +1756,13 @@ Many history entries are valid in both Bash and Zsh but not all history entries.
 
 % installed software
 
-We just described why some history entries will not work when executed from a different device. Some history entries might not work even when executed on the same device but out of the original context. Examples of this are variables and relative paths; Variables that were set at the time of execution can cause history entries to fail when retrieved and executed again. History entries with relative paths will only work in certain directories.
+We just described why some history entries will not work when executed from a different device. Some history entries might not work even when executed on the same device but out of the original context. Examples of this are shell variables and relative paths; Variables that were set at the time of execution can cause history entries to fail when retrieved and executed again. History entries with relative paths will only work in certain directories.
 
 As we can see there are many reasons why history entries might not be portable. Most of the issues above can be detected using relevant contextual information. 
-We could detect and handle these portability issues individually. Or alternatively we could take a simpler approach and treat all history entries from other devices differently than ones from the current device. This could be effective because many of the portability issues are related to mixing shell history from different devices.
+We could detect and handle these portability issues individually. Or alternatively we could take a simpler approach; Prioritize history entries from the current device over those from other devices. This could be effective because many of the portability issues are related to mixing shell history from different devices. 
+
+
+%We can use the host to prioritize the history from the current device and to explicitly show the user which host is the specific history entry coming from.
 
 \todo{NOTES related to compatibility - might be useful later in the design chapter}
 
@@ -1784,14 +1785,18 @@ We could detect and handle these portability issues individually. Or alternative
 
 \subsection{Usage of history mechanisms}
 
-First of all we want to record this to enable more research
+So far we have only described context related to the the usage of shell and to the device. Now we look at context that is related to how people use shell history. 
 
-Second, this is important according to \cite{greenberg1993computer}
-E.g. History entries recalled using Ctrl R are more likely to be recalled using Ctrl R again
+The first step is to know which command line entries are typed and which are retrieved from history. Next, it would be useful to know which history mechanism was used to retrieve the entry. This information is useful because people tend to repeat themselves. 
+For example, when you retrieve a specific history entry using \verb|CTRL-R|, you are more likely to retrieve it using \verb|CTRL-R| again in the future. %This is supported by previous research; According to Greenberg, it should be it easy to retrieve history entries that were already retrieved earlier.\cite{greenberg1993computer}
 
-Recording this context can enable future research to study not just how people use shell but also how they use shell history.
 
-\todotext{TODO: conclusion of the section}
+A detailed transcript of user interactions with the history mechanisms would give us even more useful information. Consider a situation where the user presses \verb|ARROW_UP| ten times and then gives up and uses \verb|CTRL-R| to search the history instead. This is not an effective way to use history. However, it would be wrong to blame the user. If such situation happens a lot to many users we should look into if we can redesign \verb|ARROW_UP| to improve it.
+
+From the perspective of Human-centered design, the interaction between the user and the history system is everything. It is essential for informing design decisions and estimating usefulness of the system. Interactions can help us understand when the system works and when it does not.
+ 
+When exploring relevant research, we did not find anyone who recorded shell history with the history interactions of the user. Furthermore, we did not find any tools that are capable of recording the shell history with user interactions. We think that collecting a dataset of shell history with the user history interactions would enable future research. To move forward towards this goal we should record the history usage data as part of the history.
+
 
 
 
