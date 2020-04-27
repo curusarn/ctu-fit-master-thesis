@@ -1737,7 +1737,7 @@ These relationships between history entries and sessions are definitely interest
 However, it is not obvious if these relationships are general enough to be useful in the average case. It is unclear how to use this complex contextual information to provide value to the user. It is beyond the scope of this work to study the relationships between history entries and between sessions.
 
 
-Nevertheless, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\redtext{REF: sequential workflow}. We should support such workflows.
+Nevertheless, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\footnote{We saw such situation in section \ref{workflow-repeating-a-sequence} earlier}. We should support such workflows.
 %Since sequences of history entries are directly related to a workflow we identified earlier\redtext{REF: sequential workflow} we should use the sequential property in our design. 
 
 One more use for sequences of command line entries is recording them as a full non-deduplicated transcript. Having a full transcript of your actions gives you the ability to refer back to what you were doing earlier. A transcript of command line entries should also include the time of execution for the individual entries.
@@ -1793,7 +1793,7 @@ For example, when you retrieve a specific history entry using \verb|CTRL-R|, you
 
 A detailed transcript of user interactions with the history mechanisms would give us even more useful information. Consider a situation where the user presses \verb|ARROW_UP| ten times and then gives up and uses \verb|CTRL-R| to search the history instead. This is not an effective way to use history. However, it would be wrong to blame the user. If such situation happens a lot to many users we should look into if we can redesign \verb|ARROW_UP| to improve it.
 
-From the perspective of Human-centered design, the interaction between the user and the history system is everything. It is essential for informing design decisions and estimating usefulness of the system. Interactions can help us understand when the system works and when it does not.
+From the perspective of User-centered design, the interaction between the user and the history system is everything. It is essential for informing design decisions and estimating usefulness of the system. Interactions can help us understand when the system works and when it does not.
  
 When exploring relevant research, we did not find anyone who recorded shell history with the history interactions of the user. Furthermore, we did not find any tools that are capable of recording the shell history with user interactions. We think that collecting a dataset of shell history with the user history interactions would enable future research. To move forward towards this goal we should record the history usage data as part of the history.
 
@@ -1801,16 +1801,112 @@ When exploring relevant research, we did not find anyone who recorded shell hist
 
 
 \chapter{Design}
-\todotext{TODO: intro describe contents of the chapter}
-\todo{Write down design guidelines for reference}
 
-\blind
-\todo{order of design chapters can change}
-\section{Recording contextual history}
+\todotext{XXX: Guidelines to mention/cite in the text}
 
-\todotext{TODO: what to record}
+\todotext{Response times - usability}
 
-\blind[2]
+https://www.nngroup.com/articles/response-times-3-important-limits/
+
+0.1s - “system is reacting instantaneously” -$>$ prompt - recording
+
+1.0s - “user's flow of thought to stay uninterrupted” -$>$ cli app prototype maximum load time
+
+10s - ...
+\todotext{Visibility of system status}
+X1: Visibility of system status
+system should communicate its state -> highlights, all info displayed
+challenge with more underlying info
+
+\todotext{X4: Consistency and standards}
+
+\todotext{Discoverability}
+
+bad in shell
+
+related: recognition rather than recall, consistency and standards
+important for user experience, adoption, learning curve
+generally hard in shell (recall-based)
+-$>$ don’t break expectations (conform to standards)
+e.g. new keybinds are not a great idea
+make use of habits people could already have built while using std shell history features
+e.g. people use arrows to get recent commands and ctrl-R to get arbitrary commands
+
+
+\todotext{Minimal, simple}
+
+guideline from NNgroup
+
+“Overloading a reuse facility with complex functionality would not make it better.” greenberg
+
+
+
+
+
+\section{Standard history features}
+
+\begin{itemize}
+    \item INTRO: We discuss the most relevant standard history features that influence our design.
+    \item REASON: we need to respect what is already present - we don't want people to relearn, instead we want to leverage the habits people already have. Or at least not to break them.
+    \item GOAL1: explain which features we will leave alone because they work well (maybe mention which features we leave alone because they are not relevant enough)
+    \item GOAL2: explain which features need work - hint: Ctrl R
+    \item RESULT: it is clear which features we do not have to talk about anymore - from this point on focus on parts of the design that is important
+\end{itemize}
+
+
+\section{Matching the state of the art / main vision / ctrl-r}
+
+\begin{itemize}
+    \item INTRO: Here we state the core fuctionality that is based on the existing solutions.
+    \item NOTE STATE-OF-THE-ART: Hstr and fzf are by far the most popular projects - they also solve existing issues with std shell history (reverse search is by far the most lacking part of standard shell history)
+    \item GOAL1: explain that reverse search / ctrl-r is:
+    \subitem the most deficient std history feature, 
+    \subitem there is superior state of the art
+    \subitem it matches the workflows that can benefit from additional context
+    \item GOAL2: describe the vision for a contextual multi-query multi-result history search
+    \item RESULT: it is clear why Resh-cli is the most important part of the design
+\end{itemize}
+
+
+
+\section{Enhancing Resh-cli with context}
+
+\begin{itemize}
+    \item INTRO: Now we describe how we use the context to provide value to the user through the resh-cli
+    \item GOAL1: explain the challenges that come with context: (maybe just introduce the decisions instead of listing challenges)
+    \subitem cluttered UI
+    \subitem unpredictable search
+    \subitem fancy features that do not help enough
+    \subitem average case takes too much effort
+    
+    \item GOAL2: explain that there are different types of context that need to be combined in a predictable way: (maybe just introduce the design instead of listing everything)
+    \subitem UP history from current directories and git
+    \subitem UP previously recalled entries
+    \subitem SHOW device
+    \subitem DOWN exit status and pipestatus
+    \subitem DOWN (A BIT) other devices
+    \subitem SHOW datetime (last execution)
+    \subitem ACCESS surrounding history for a single entry (from multiple sessions)
+    \item DESIGN - we need to combine all above in a predictable transparent way
+    \subitem 
+\end{itemize}
+
+
+\todo{Intro people so they have the full picture -}
+\todo{Write down what was necessary to actually do and use it as a primary structure}
+
+\todo{Ctrl-R: Weighted sum with specific weights determined by experiments}
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Interactive history features} % front-end
 
