@@ -826,6 +826,7 @@ It is worth noting that people sometimes want to delete history entries after th
 \subsubsection*{ADDED: Full transcript}
 \todotext{People sometimes with to have a full transcript of their actions - but history is deduplicated}
 
+% Delete fron history
 
 \subsection{Target users \redtext{MOVED (and typical workflows)} }
 
@@ -1072,7 +1073,7 @@ Executing \verb|fc -4 -1| opens an editor with last four history entries and the
 Repeating a sequence of history entries is not the most common workflow. However, it shows us the limits and inefficiencies of standard shell history.
 
 
-\subsection{Searching with limited knowledge}
+\subsection{Searching with limited knowledge}\label{workflow-search-w-limited-knowledge}
 
 In all the workflows we discussed so far, the user wanted to recall a fairly recent history entry. Now, we move on to workflows where the user searches for history entries that are older. In these workflows, the memory of the user is often a limiting factor; Both the knowledge of shell history and the desired command line entry is limited.
 
@@ -1288,7 +1289,7 @@ This makes it more appealing to experienced shell users because they use what th
 % SUMMARY: By using the shell history in this workflow, the user not only saved himself some typing but also remembering of the command line entries. Recreating old history entries from scratch often takes a lot of effort because it is not just a matter of typing. The saved effort by history during this workflow is significant. This also means that people are generally willing to spend more effort searching for the desired history entry because of the effort they would have to "spend" otherwise.
 
 
-\subsection{Searching with implicit context \redtext{TODO: better title}}
+\subsection{Searching with implicit context \redtext{TODO: better title}}\label{workflow-search-w-implicit-context}
 % GOOD vvv
 In the previous workflows we saw that searching history heavily relies on the memory of the user. When the user does not remember enough the efficiency of the standard history searching mechanisms is reduced.
 
@@ -1520,7 +1521,7 @@ In addition to the default "keywords" matching mode, there are also "exact" and 
 Hstr is quite popular\footnote{Hstr is hosted on GitHub where it has over two thousand "stars" and over eight thousand downloads. } on GitHub where it is hosted. Some of the people who use Hstr describe it as life-changing.
 
 \begin{figure}[]
-  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-hstr.pdf}}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-hstr-std.pdf}}
   \caption{Hstr interactive history search}
   \label{hstr-screenshot}
 \end{figure}
@@ -1542,7 +1543,7 @@ Fuzzy search is a commonly requested feature in various history tools. Some peop
 % \begin{figure}\tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fzf-fh-screenshot.png}}\caption{Searching history interactively using Fzf}\end{figure}
 
 \begin{figure}
-  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-fzf.pdf}}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-fzf-std.pdf}}
   \caption{Searching history interactively using Fzf}
 \end{figure}
 
@@ -1621,7 +1622,7 @@ Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replac
 
 
 \begin{figure}[h]
-  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-short.pdf}}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-std-short.pdf}}
   \caption{McFly interactive history search (cropped)}
   \label{tools-mcfly}
 \end{figure}
@@ -1798,9 +1799,7 @@ From the perspective of User-centered design, the interaction between the user a
 When exploring relevant research, we did not find anyone who recorded shell history with the history interactions of the user. Furthermore, we did not find any tools that are capable of recording the shell history with user interactions. We think that collecting a dataset of shell history with the user history interactions would enable future research. To move forward towards this goal we should record the history usage data as part of the history.
 
 
-
-
-\chapter{Design}
+% DESIGN NOTES
 
 \todotext{XXX: Guidelines to mention/cite in the text}
 
@@ -1832,7 +1831,6 @@ e.g. new keybinds are not a great idea
 make use of habits people could already have built while using std shell history features
 e.g. people use arrows to get recent commands and ctrl-R to get arbitrary commands
 
-
 \todotext{Minimal, simple}
 
 guideline from NNgroup
@@ -1840,10 +1838,344 @@ guideline from NNgroup
 “Overloading a reuse facility with complex functionality would not make it better.” greenberg
 
 
+\chapter{Design}
+
+\section{Designing features}
+
+\subsection{Requirements}
+
+\begin{itemize}
+    \item Record shell history with context
+    \item Record user history interactions (essential for future research)
+    \item Allow unlimited history
+    \item Allow history sharing between sessions
+    \item Solve issues with reverse search (essential)
+    \item Use recorded context to provide enhanced history searching capabilities
+    \item Provide support for repeating sequences (nice to have)
+    \item Synchronize shell history (nice to have, ad-hoc)
+\end{itemize}
+
+
+\subsection{Core features}
+
+In this section, we introduce the core focus and features of the design. 
+These features address the most common workflows and the most significant shortcomings of standard history.
+We are differentiating between the core features and additional features because it is important to keep the scope of the project tight.% even when there are additional features that would work well with it.
+
+\subsubsection{Standard history features}
+
+Standard history features form the base that people are used to. We should not redesign and replace them unless we have a good reason to. We have no reason to change history expansion. Accessing recent history entries using \verb|ARROW_UP| works reasonably well in many situations. Furthermore, people expect \verb|ARROW_UP| to give them immediately previous history entries. Because of these reasons we do not redesign \verb|ARROW_UP|.
+In contrast, reverse search does not provide a good feature set to complete many workflows. Additionally, there are other tools available that provide features that solve the issues of reverse search. Because of this, redesigning and improving reverse search is the main focus of our design. 
+
+\subsubsection{Matching the state-of-the-art}
+
+Hstr and Fzf are existing tools that aim to replace reverse search and address the issues we identified; Reverse search only uses a single query for searching and displays a single result at a time. In contrast, both of the tools mentioned above allow using more than a single query for searching and show a full screen of history results.
+Our history system provides a full-screen terminal application as a replacement for reverse search. This application should match the improvements provided by Hstr and Fzf. 
+
+\subsubsection{Enhancing history searching with context}
+
+%In analysis, we have identified workflows which are directly related to context. 
+%Additionally, we described different ways how context relates to shell usage. 
+In addition to matching the state-of-the-art features, we want to use context to enhance the searching capabilities of our history searching application.
+We want to use context to make it easier to retrieve history that matches the current context. % todo: do not be as specific CUT here
+This means that history entries from current directory, git repository, and host should be prioritized.
+In contrast, history entries with errors should be penalized.
+The relevant context should be visible when it affects the order of results.
+However, the user interface should not be cluttered with irrelevant context. 
+
+\subsubsection{Recording user interactions}
+During working on this project we did encounter a lack of tools that can be used to record interactions between the user and the history system.
+User interactions are essential for understanding usage patterns and for informing design decisions.
+We want our tool to record user history interactions.
+This should enable more future research of how people use shell history.
+
+\subsection{Additional features}
+
+In this section, we cover features that are not the main focus of our design. These features are not be covered in detail but we make sure that they fit with the rest of the design. 
+
+\begin{itemize}
+    \item Forward history
+\end{itemize}
+
+\subsubsection{Forward history}
+
+Forward history is a feature we can find in Python console in Blender. We adopt this feature into our design because it allows the user to easily repeat sequences of history entries. Support for repeating sequences from history is poor in standard shell history.
+
+\subsubsection{Synchronizing history}
+
+Synchronizing history between multiple devices is and appealing feature. It enables history reuse between devices. The potential for reuse is further enhanced by using context to prioritize the search results.
+Synchronized history is also harder to lose because it is replicated across multiple devices. 
+
+%\subsubsection{Deleting history entries}
+
+
+% \subsubsection{Fuzzy searching}
+
+% Fuzzy searching is a popular feature that 
+
+
+\subsubsection{Autosuggestions}
+
+Autosuggestions are a very convenient and very fast history mechanism. Original Fish autosuggestions use basic context to determine what history entry should be displayed. Predicting the next command line entry based on context and suggesting the prediction to the user seems very reasonable.
+Researching and designing the prediction is beyond the scope of this work. However, it is a good topic for future work.
+
+
+\section{Architecture}
+
+In the previous sections, we listed all the features that we chose to include in the design. We chose a set of features that fits well together and should significantly improve the usefulness of shell history.
+
+Now, we design the architecture of our history system so that it can accommodate all the features. 
+Our history system consists of a daemon and many clients. The daemon runs in the background and clients are integrated into the shell and executed at appropriate times.  
+
+\subsection{Daemon}
+
+Daemon allows us to asynchronously preprocess the history data and serve it to the clients when it is needed. It is responsible for loading and saving history to the drive. Daemon gives us the option to easily share history between sessions. History synchronizations also falls into the responsibilities of the daemon.
+
+\subsection{Clients}
+
+There are multiple different clients which are executed at various times based on their purpose.
+One client records the shell history with context and send it to the daemon. Other clients handle interactions with the user; We cover these in detail in following section.
+
+\redtext{Add a schema for Frontend-backend vs. Client-Daemon}
+
+\section{Frontend}\label{frontend}
+
+In this section, we design the parts of that system that the user interacts with.
+The most important part of the design is the full-screen terminal history searching application. 
+
+\subsection{Use-cases / Workflows}
+
+Workflows we focus on are:
+\begin{itemize}
+    \item Searching with limited knowledge (section \ref{workflow-search-w-limited-knowledge})
+    \item Searching with implicit context (section \ref{workflow-search-w-implicit-context})
+    \item Repeating a sequence of history entries (section \ref{workflow-repeating-a-sequence})
+\end{itemize}
+
+\subsection{Full-screen history search application}
+
+\subsubsection{Layout of the application}
+
+Layout of the application is inspired by Hstr and Fzf. Wireframe in figure \ref{wireframe-normal} shows the layout of the default view of the application. There are four sections in the wireframe:
+
+\begin{itemize}
+    \item search input
+    \item master section with search results
+    \item details of the selected command
+    \item help 
+\end{itemize}
+
+The results in the master section are interactively updated as the user types into the search input.
+Command line entry and directory are always displayed but they are shortened to fit the screen. Other information is only displayed when relevant to not clutter the view and to save space. Near the bottom of the screen there are details for the currently selected command. These include various information about the command without any shortening.
+
+
+\begin{figure}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/design/xterm-wireframe-bw-normal.pdf}}
+  \caption{Wireframe of default view}
+  \label{wireframe-normal}
+\end{figure}
+
+The wireframe in figure \ref{wireframe-detail} shows the detail view. In this view the user can see the details and surrounding history entries for a single command line entry. Each command line entry can appear in history multiple times; The user can switch between these occurrences. The next occurrence is partially displayed to make it easier to list and compare the surrounding history entries.
+
+\begin{figure}
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/design/xterm-wireframe-bw-detail.pdf}}
+  \caption{Wireframe of detail view}
+  \label{wireframe-detail}
+\end{figure}
 
 
 
-\section{Standard history features}
+% \subsubsection{Modes (Context/RAW)} - added after user feedback
+
+\subsubsection{Key bindings}
+
+Since we are aiming to redesign and improve the reverse search we replace its key binding; Pressing \verb|CTRL-R| launches our search application instead of the reverse search. CTRL-S is intentionally left without function to avoid collisions with control flow key binding. % + other keys we want to avoid
+To not force the user to learn new key bindings we use similar key bindings as the reverse search. Typing searches and filters the results. % CUT HERE 
+Arrow keys (\verb|UP|/\verb|DOWN|) are used to select history entries. Pressing \verb|ENTER| executes the selected entry. Pressing \verb|ARROW_RIGHT| pastes the selected entry onto the command line to allow additional editing. The application can be closed with \verb|CTRL-C| or \verb|CTRL-D|.
+
+We chose new key bindings for features that are not present in the reverse search.
+Pressing \verb|CTRL-E| switches between the default and the detail view.
+Help can be toggled with \verb|CTRL-/| and details section can be toggled with \verb|CTRL-T|.
+
+\redtext{Shorten}
+
+\redtext{consistently take inspiration from emacs}
+
+\subsubsection{Design from 80x25 to fullscreen}
+
+Wireframes above both use standard 80x25 character terminal size. In larger terminals there is more space that can be used. Directories and command line entries stretch. A new column with time of execution appears on the left. The master section becomes longer and as a result more history entries fit in the terminal.   
+
+\subsubsection{Colors}
+
+Our application has a lot of information to display. 
+Colors will be used to highlight the information that influences the order of displayed results. To make it easier to differentiate between different types of information they will be highlighted using different colors. 
+Red color will be reserved for highlighting remote hosts and non-zero error status; This communicates to the user that these history entries might not work well.
+Currently selected history entry will be highlighted by inverting the foreground and background colors.
+
+\subsubsection{Customizability}
+
+\redtext{Defaults matter a lot because most people will not change them.}
+
+\subsection{Command line features}
+
+In this section, we design the behaviour of features that are available while on the command line. We introduce minor changes into the standard behaviour.
+
+\subsubsection{Prefix search}
+
+In our design, prefix history search is enabled by default. It is a useful feature that does not interfere with the standard stepping through history. 
+
+\subsubsection{Forward history}
+
+Normally when \verb|ARROW_DOWN| is only used after pressing \verb|ARROW_UP|. 
+When previous command was recalled from history, pressing \verb|ARROW_DOWN| gives you access to the next history entry in the sequence. To preserve the ability to hold \verb|ARROW_DOWN| to return from recent history to the original command line we introduce a delay. A delay in activation of forward history feature that happens when the user holds down \verb|ARROW_DOWN| while in recent history.
+
+% \subsection{Configuration}
+
+
+\section{Backend}
+
+In previous sections, we described the parts of the system user interacts with.
+Now we design the parts of the system that user does not directly interact with.
+% Some of these parts happen on the daemon and some in the clients.
+
+\subsection{Search algorithm}
+
+The terminal history searching application needs to server relevant entries to the user based on the typed query and current context. When searching, each history record is assigned a score based on how well it matches the query and the current context. After scoring all the entries they are sorted. % If two entries have the same score the recent one will come first. Finally, the most recent history entries with the highest scores are displayed to the user.
+
+% It is essential to strike a good balance between effects of the query and the context. 
+
+\subsubsection{Scoring metric}
+
+The score represents how well the history entry matches both the query and the current context. It is essential that the query is given more weight in the score then the context. Not doing so could lead to situations where the user types in a query but the displayed results match the context instead.
+
+\redtext{Add a formula for the search metric$:$ Score $=$ query-score $+$ context-score }
+
+\subsubsection{Matching the query}
+
+Each word of the query is matched against the command line entries separately. Each query word also independently contributes to the score. This means that as the user adds more words to the query, the influence of the context becomes less and less significant.
+
+\subsubsection{Matching the context}
+
+Some parts of the context increase the score and other parts influence it negatively.
+Matching current directory or current git repository increases the score.
+History entries from remote hosts get a small penalty to the score.
+Non-zero exit status implies a bigger penalty to the score. \redtext{Date should have an influence}
+
+\subsubsection{Scoring weights}
+
+Specific weights for the query and context scoring should be determined experimentally based on real life shell history.
+Each unique combination of context should result in a unique score value; This will group together the history entries with the same context instead of mixing them with others.
+\redtext{Example?}
+
+%\subsection{Open session tracking}
+
+%Features like forward in history need to quickly serve specific history entries to the user. This requires the necessary history records to be processed and held in memory. 
+%Data processing is the responsibility of the daemon. Daemon keeps track of open sessions and prepares the necessary history records for them.
+
+
+\subsection{Data representation}
+
+In this section, we discuss what data we need to handle and how should it be represented. 
+\subsubsection{Relational data}
+
+Contextual shell history is inherently relational; Each history record was executed at a given time, on a host, in a specific directory, etc. However, we need to calculate scores for all history entries not just the ones with matching context.
+
+\subsubsection{Stream of records}
+
+We represent the data as a stream of history records; Each records can be uniquely identified by combination of a session UUID and a sequential ID unique in the session. We do not generate UUID for each record because sequential ID provides additional information. 
+
+\subsubsection{Contents of a record}
+
+Each record contains following data:
+\begin{itemize}
+    \item session UUID
+    \item sequential record ID
+    \item time of execution
+    \item host
+    \item directory
+    \item git remote
+    \item exit status
+    \item command line entry
+    \item \redtext{user interactions}
+\end{itemize}
+
+\subsection{API}
+
+\begin{itemize}
+    \item shell / line editing library
+    \subitem key bindings
+    \item 
+\end{itemize}
+
+\redtext{It does not matter where exactly things happen as long as the user is not waiting}
+
+\section{Design testing}
+
+\redtext{Confirm that requirements match the features and that the features are possible in the current design.}
+
+\redtext{Test using guidelines}
+
+\redtext{test that the search algorithm returns reasonable results}
+
+
+\todotext{END -------------------------}
+
+\begin{itemize}
+
+    \item Replace reverse search (because it is inefficient)
+    \subitem Search using multiple queries
+    \subitem Show a full page of results
+    \subitem Use context to serve more relevant results
+    \subitem Display all context that influences the order of results (transparency, predictability)
+    % \subitem Allow searching without context (backward compatibility, full) - user feedback
+    \subitem Allow displaying details for individual command line entries
+    \item Keep standard history mechanisms that work well (or are not relevant to the usecases we discused)
+    \subitem Arrow up works reasonably well - don't change it
+    \subitem No reason to change history expansion
+    \subitem No reason to change manual history search
+    \item Additional features
+    \subitem 
+    \subitem 
+    
+\end{itemize}
+
+
+\section{REST / Requirements / High-level design / Intro}
+
+% Easy installation, learnability
+
+\paragraph{Some of the requirements that are implied by the analysis (aka why we want a daemon)}
+\begin{itemize}
+    \item record history in full (information we want for some workflows)
+    \item serve it both deduplicated and in full (different workflows have different needs)
+    \item determine "complex" context like git repo (non-instant processing)
+    \item record the interactions of the user with the history system
+    \item + responsiveness (async)
+\end{itemize}
+
+\paragraph{Deamon-client design - responsibilities}
+
+\begin{itemize}
+    \item daemon runs in the background
+    \item client is / clients are integrated into the shell %(client is not a single program; it's a number of different shell scripts and programs "hooked" into the shell)
+    \item daemon 
+    \subitem takes care of the processing
+    \subitem prepares and serves data to the client (e.g. holds prepared data for each session)
+    \subitem + keeps track of open sessions
+    \subitem loads and saves data to disk
+    \item client / clients
+    \subitem records the shell history w/ context from the shell and sends it to the daemon (we need to do this ourselves because std history is non-contextual)
+    \subitem handles interaction with the user - 
+    \subitem asks daemon for data 
+\end{itemize}
+
+
+\section{Interactive features} % front-end
+% ALT: \section{Design of the features / designing the user experience}
+
+Responsibility of the client(s)
+
+\subsection{Standard history features}
 
 \begin{itemize}
     \item INTRO: We discuss the most relevant standard history features that influence our design.
@@ -1854,7 +2186,7 @@ guideline from NNgroup
 \end{itemize}
 
 
-\section{Matching the state of the art / main vision / ctrl-r}
+\subsection{Matching the state of the art / main vision / ctrl-r}
 
 \begin{itemize}
     \item INTRO: Here we state the core fuctionality that is based on the existing solutions.
@@ -1869,7 +2201,7 @@ guideline from NNgroup
 
 
 
-\section{Enhancing Resh-cli with context}
+\subsection{Enhancing Resh-cli with context}
 
 \begin{itemize}
     \item INTRO: Now we describe how we use the context to provide value to the user through the resh-cli
@@ -1888,43 +2220,37 @@ guideline from NNgroup
     \subitem SHOW datetime (last execution)
     \subitem ACCESS surrounding history for a single entry (from multiple sessions)
     \item DESIGN - we need to combine all above in a predictable transparent way
-    \subitem 
+    \subitem single default contextual mode instead of many different modes and views (less mode switching, less confusion)
+    \subitem single "raw" / non-contextual mode for "backwards compatibility"
+    \subitem a detail view that shows all history entry context with preceding and following history entries
+    \item Default contextual view
+    \subitem visibility of system status - predictability
+    \subitem each history entry gets a score that is influenced by both the query and context
+    \subitem query should be the most important thing - context should be not able to "overpower" the query - people should be able to search whatever they need from whatever context they want
+    \subitem context that affects the result should be visible in the view
+    \item Non-contextual "raw" view
+    \subitem does not show context, does not use context, and only searches using the query
+    \item Detail view
+    \subitem Shows abbreviated data in full
+    \subitem Shows preceding and following history (for occurrences of the history entry)
 \end{itemize}
 
+\todo{IDEA: Status bar} 
+\todo{IDEA: Master-detail veiw}
+\todo{IDEA: Side scrolling (aka less)}
 
-\todo{Intro people so they have the full picture -}
-\todo{Write down what was necessary to actually do and use it as a primary structure}
+% notes - interactive hist features
 
-\todo{Ctrl-R: Weighted sum with specific weights determined by experiments}
-
-
-
-
-
-
-
-
+% arrow up
+% arrow down
+% autosuggestions
+% prefix search
+% ctrl R search
 
 
+\section{Additional and Possible features}
 
-
-\section{Interactive history features} % front-end
-
-% notes
-
-arrow up
-
-arrow down
-
-autosuggestions
-
-prefix search
-
-ctrl R search
-
-\todotext{TODO: intro}
-
-\blind
+%\todotext{TODO: intro: this section describes features that were considered during the design - for each feature we evaluate how well it would fit with the rest of the design.}
 
 \subsection{Forward in history}
 
@@ -1944,46 +2270,61 @@ To be able to make a full use of this feature, the user should be able to select
 
 The behavior of \verb|ARROW_UP| is preserved - we are not changing the default shell history experience.
 
-\subsection{Standard history features}
-
-\todotext{TODO: describe why it's important to respect the standard history features}
-
-\todotext{TODO: which history features are we keeping/enhancing/leaving intact}
-
-\blind[3]
-
-\todotext{TODO: conclusion for further design ?}
+\subsection{Fuzzy search}
 
 
 
-\subsection{Core ideas, principals, design decisions, and features}\todo{weird title}
+\subsection{Autosuggestions}
 
-\todotext{TODO: intro: ideas in this chapter are essential for this work / project}
-
-\todotext{TODO: features of the project - weird todo}
-
-\blind[3]
-
-\subsection{Possible features}
-
-\todotext{TODO: intro: this section describes features that were considered during the design - for each feature we evaluate how well it would fit with the rest of the design. Some of the features were explicitly suggested by users and some features are included for the sake of completeness (because they make sense).}
-
-\todo{TODO: list the features}
+Predictions, even unstable
 
 
-\section{Back-end}\todo{I don't like the title}
+\subsection{Deleting history entries}
 
-\blind
+\subsection{Explicit history search}
+
+\subsection{History sync}
+
+%\subsubsection{Remote history ?}
+
+
+\section{Daemon}
+
+\todotext{Provide some details about the daemon}
+
+\begin{itemize}
+    \item Data
+    \subitem Save every command
+    \subitem Relational data
+    \subitem Stream of records
+    \subitem Each record should have an ID (UUIDs for sesssions + Sequential IDs for entries)
+    
+    \item Data resiliency
+    
+    \item Daemon per-user
+    
+\end{itemize}
+
+
+
+
 
 \section{Testing the design}
+
 
 \todotext{TODO: explain why we want to test the design - intro}
 
 \todotext{TODO: principals, guidelines, etc. are we are using}
 
-\blind[3]
+Ease of use
+
+Learnability
+
+Etc.
 
 \chapter{Implementation}
+
+
 \todo{merge sections to have less of them}
 \todotext{describe layout/contents of the chapter}
 
