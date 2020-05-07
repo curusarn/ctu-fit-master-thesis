@@ -1840,133 +1840,218 @@ guideline from NNgroup
 
 \chapter{Design}
 
-\section{Designing features}
-
-\subsection{Requirements}
-
-\begin{itemize}
-    \item Record shell history with context
-    \item Record user history interactions (essential for future research)
-    \item Allow unlimited history
-    \item Allow history sharing between sessions
-    \item Solve issues with reverse search (essential)
-    \item Use recorded context to provide enhanced history searching capabilities
-    \item Provide support for repeating sequences (nice to have)
-    \item Synchronize shell history (nice to have, ad-hoc)
-\end{itemize}
-
-
-\subsection{Core features}
-
-In this section, we introduce the core focus and features of the design. 
-These features address the most common workflows and the most significant shortcomings of standard history.
-We are differentiating between the core features and additional features because it is important to keep the scope of the project tight.% even when there are additional features that would work well with it.
-
-\subsubsection{Standard history features}
-
-Standard history features form the base that people are used to. We should not redesign and replace them unless we have a good reason to. We have no reason to change history expansion. Accessing recent history entries using \verb|ARROW_UP| works reasonably well in many situations. Furthermore, people expect \verb|ARROW_UP| to give them immediately previous history entries. Because of these reasons we do not redesign \verb|ARROW_UP|.
-In contrast, reverse search does not provide a good feature set to complete many workflows. Additionally, there are other tools available that provide features that solve the issues of reverse search. Because of this, redesigning and improving reverse search is the main focus of our design. 
-
-\subsubsection{Matching the state-of-the-art}
-
-Hstr and Fzf are existing tools that aim to replace reverse search and address the issues we identified; Reverse search only uses a single query for searching and displays a single result at a time. In contrast, both of the tools mentioned above allow using more than a single query for searching and show a full screen of history results.
-Our history system provides a full-screen terminal application as a replacement for reverse search. This application should match the improvements provided by Hstr and Fzf. 
-
-\subsubsection{Enhancing history searching with context}
-
-%In analysis, we have identified workflows which are directly related to context. 
-%Additionally, we described different ways how context relates to shell usage. 
-In addition to matching the state-of-the-art features, we want to use context to enhance the searching capabilities of our history searching application.
-We want to use context to make it easier to retrieve history that matches the current context. % todo: do not be as specific CUT here
-This means that history entries from current directory, git repository, and host should be prioritized.
-In contrast, history entries with errors should be penalized.
-The relevant context should be visible when it affects the order of results.
-However, the user interface should not be cluttered with irrelevant context. 
-
 \subsubsection{Recording user interactions}
+
+\redtext{good text - bad place - maybe move up? - (this is "UP")}
+
 During working on this project we did encounter a lack of tools that can be used to record interactions between the user and the history system.
 User interactions are essential for understanding usage patterns and for informing design decisions.
 We want our tool to record user history interactions.
 This should enable more future research of how people use shell history.
 
-\subsection{Additional features}
+\redtext{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+}
 
-In this section, we cover features that are not the main focus of our design. These features are not be covered in detail but we make sure that they fit with the rest of the design. 
+
+\todotext{Write intro}
+In this chapter we design our history system
+
+before jumping into the design itself we want to point out a few pieces of information that motivate our decisions.
+
+
+People are used to standard history features
+
+we should not redesign them unless we have a good reason to
+
+furthermore, even when we redesign and replace history features we should leverage and build upon habits people already have.
+
+
+
+\section{Requirements and features}
+
+
+The requirements we selected based on the previous analysis are following:
 
 \begin{itemize}
-    \item Forward history
+    \item Record shell history with context and usage
+    \item Allow unlimited history
+    \item Allow history sharing between open sessions
+    \item Provide good out-of-the-box experience (too high-level?)
+    \item Respect existing habits of people (too high-level?)
+    \item Provide a replacement for reverse search
+    \subitem Solve the issues with standard reverse search
+    \subitem Match the improvements offered by Hstr and Fzf
+    \subitem Use recorded context to enhance history searching capabilities
+    \item Provide support for sequence repeating (forward in history)
+    \item Provide support for synchronization of shell history between devices
+    \item Provide support for contextual autosuggestions
 \end{itemize}
 
-\subsubsection{Forward history}
 
-Forward history is a feature we can find in Python console in Blender. We adopt this feature into our design because it allows the user to easily repeat sequences of history entries. Support for repeating sequences from history is poor in standard shell history.
 
-\subsubsection{Synchronizing history}
+\subsection{Basic features}
+
+Now, we describe the basic features of the design. These features might seem obvious but we point them out because they do contribute the resulting usefulness of the history system.
+
+History should be collected and recorded in a robust way; History should be unlimited, and using multiple simultaneous sessions must not result in missing history entries. All this has to work by default; No configuration should be necessary to achieve the basic functionality. 
+
+Default configuration should provide good out-of-the-box experience for the average target user. 
+Simultaneous sessions should be handled is a way that allows accessing history from other sessions.
+
+
+\subsection{Core features}
+
+The core focus of this design is providing a replacement for the standard reverse search. In this section, we explain why we chose this as the main focus of the design. We discuss how it relates to standard shell history features, existing state-of-the-art history tools, and possibilities of enhancing history searching with context.
+
+\todo{remove the paragraph titles?}
+
+% These features address the most common workflows and the most significant shortcomings of standard history.
+
+%We are differentiating between the core features and additional features because it is important to keep the scope of the project tight.
+% even when there are additional features that would work well with it.
+
+\paragraph{Standard history features}
+
+Standard history features form the base that people are used to. We should not redesign and replace them unless we have a good reason to.
+As we saw in analysis, standard reverse search does not provide a good feature set to complete many workflows. Furthermore, there are other tools available that provide features that solve the issues of reverse search. Because of this, we design a searching application that replaces and improves the reverse search.
+
+%For example, we have no reason to change history expansion. Accessing recent history entries using \verb|ARROW_UP| works reasonably well in many situations. Furthermore, people expect \verb|ARROW_UP| to give them immediately previous history entries. Because of these reasons we do not redesign \verb|ARROW_UP|.
+
+% In contrast
+
+\paragraph{Matching the state-of-the-art}
+
+Hstr\cite{toolshstr} and Fzf\cite{tools-fzf} are existing projects that replace reverse search and provide improved searching capabilities. 
+Standard reverse search only uses a single query for searching and displays a single result at a time. In contrast, both of the tools mentioned above allow using more than a single query for searching and show a full screen of history results. We use these tools as an inspiration. Our searching application should match the improvements provided by Hstr and Fzf. 
+
+\paragraph{Enhancing history searching with context}
+
+%In analysis, we have identified workflows which are directly related to context. 
+%Additionally, we described different ways how context relates to shell usage. 
+
+In addition to matching the state-of-the-art features, we want to use context to enhance the searching capabilities of our history system. Our searching application should make it easier to retrieve history that matches the current context. 
+% todo: do not be as specific CUT here
+
+
+%This means that history entries from current directory, git repository, and host should be prioritized.
+%In contrast, history entries with errors should be penalized.
+%The relevant context should be visible when it affects the order of results.
+%However, the user interface should not be cluttered with irrelevant context. 
+
+
+
+\subsection{Additional features}
+
+In this section, we cover features that are not the main focus of our design. These features are less important in comparison to providing a replacement for the reverse search. However, they are still valuable and we want to make sure they fit with with the rest of the design. 
+The chosen additional features are Forward in history, synchronizing history between devices, and Fish-like Autosuggestions.
+
+
+
+\paragraph{Forward in history}
+
+Forward in history is a feature we can find in Python console in Blender. We adopt this feature into our design because it allows the user to easily repeat sequences of history entries. Support for repeating sequences from history is poor in standard shell history.
+
+\paragraph{Synchronizing history}
 
 Synchronizing history between multiple devices is and appealing feature. It enables history reuse between devices. The potential for reuse is further enhanced by using context to prioritize the search results.
 Synchronized history is also harder to lose because it is replicated across multiple devices. 
 
-%\subsubsection{Deleting history entries}
+\paragraph{Autosuggestions}
 
-
-% \subsubsection{Fuzzy searching}
-
-% Fuzzy searching is a popular feature that 
-
-
-\subsubsection{Autosuggestions}
-
-Autosuggestions are a very convenient and very fast history mechanism. Original Fish autosuggestions use basic context to determine what history entry should be displayed. Predicting the next command line entry based on context and suggesting the prediction to the user seems very reasonable.
-Researching and designing the prediction is beyond the scope of this work. However, it is a good topic for future work.
-
+Autosuggestions are a very convenient and very fast history mechanism. Original Fish autosuggestions use context to determine what history entry should be displayed.
+We want to include a similar feature in our design.
 
 \section{Architecture}
 
 In the previous sections, we listed all the features that we chose to include in the design. We chose a set of features that fits well together and should significantly improve the usefulness of shell history.
 
 Now, we design the architecture of our history system so that it can accommodate all the features. 
-Our history system consists of a daemon and many clients. The daemon runs in the background and clients are integrated into the shell and executed at appropriate times.  
+Our history system consists of a daemon and multiple components. The daemon is always running in the background and components are integrated into the shell and activated at appropriate times. 
 
-\subsection{Daemon}
+%\paragraph{Daemon}
 
-Daemon allows us to asynchronously preprocess the history data and serve it to the clients when it is needed. It is responsible for loading and saving history to the drive. Daemon gives us the option to easily share history between sessions. History synchronizations also falls into the responsibilities of the daemon.
+Daemon allows us to asynchronously preprocess the history data and serve it to the components when it is needed. It is responsible for loading and saving history to the storage. Daemon gives us the option to easily share history between sessions. History synchronizations is initiated and controlled by the daemon.
 
-\subsection{Clients}
+%\paragraph{Components}
 
-There are multiple different clients which are executed at various times based on their purpose.
-One client records the shell history with context and send it to the daemon. Other clients handle interactions with the user; We cover these in detail in following section.
+There are multiple different components which are activated at various times based on their purpose. History collector records the shell history with context and sends it to the daemon. Autosuggestion and arrow keys handlers respond to the interactions with the user. Finally, the search application interacts with the user, communicates with the daemon and also does its own share of data processing.
 
-\redtext{Add a schema for Frontend-backend vs. Client-Daemon}
 
-\section{Frontend}\label{frontend}
+For the purpose of this design, we divide the system into two logical sections - frontend and backend. As you can see in the figure \ref{design-architecture-layers}, frontend is responsible for the interactions with the shell, terminal, and by extension the user. Backend is mostly about handling data. 
 
-In this section, we design the parts of that system that the user interacts with.
-The most important part of the design is the full-screen terminal history searching application. 
+\begin{figure}
+\centering
+  \tmpframe{\includegraphics[width=\linewidth]{figures/design/thesis-design-architecture-layers-v2.pdf}}
+  \caption{Schema of architecture and communication}
+  \label{design-architecture-layers}
+\end{figure}
 
-\subsection{Use-cases / Workflows}
+\section{Frontend}\label{design-frontend}
 
-Workflows we focus on are:
+In this section, we focus on and design the parts of that system that the user interacts with. 
+To relate this to our previous analysis, these are the specific workflows we are addressing in this section:
+
 \begin{itemize}
     \item Searching with limited knowledge (section \ref{workflow-search-w-limited-knowledge})
     \item Searching with implicit context (section \ref{workflow-search-w-implicit-context})
     \item Repeating a sequence of history entries (section \ref{workflow-repeating-a-sequence})
 \end{itemize}
 
-\subsection{Full-screen history search application}
+\subsection{Search application}
 
-\subsubsection{Layout of the application}
+The most important part of our design is the replacement for standard reverse search - a full-screen terminal history searching application. The application is inspired by Hstr and Fzf. 
 
-Layout of the application is inspired by Hstr and Fzf. Wireframe in figure \ref{wireframe-normal} shows the layout of the default view of the application. There are four sections in the wireframe:
+We start by designing the visual layout of the application.
+Wireframe in figure \ref{wireframe-normal} shows the layout of the default view of the application. There are three sections in the wireframe:
 
 \begin{itemize}
-    \item search input
-    \item master section with search results
-    \item details of the selected command
-    \item help 
+    \item Search input
+    \item Main section with search results
+    \item Status bar with details and help
 \end{itemize}
 
-The results in the master section are interactively updated as the user types into the search input.
-Command line entry and directory are always displayed but they are shortened to fit the screen. Other information is only displayed when relevant to not clutter the view and to save space. Near the bottom of the screen there are details for the currently selected command. These include various information about the command without any shortening.
+The search results in the main section are interactively updated as the user types into the search input. 
+
+
+\begin{table}[]
+\centering
+\begin{tabular}{lllll}
+\hline \hline
+Sample name             & \multicolumn{2}{c}{Recurrance rate} & \multicolumn{2}{c}{Range} \\
+                        & mean             & std dev          & minimum     & maximum     \\ \hline
+Novice Programers       & 80.4\%           & 7.2              & 64.7\%      & 91.7\%      \\
+Experienced Programmers & 74.4\%           & 9.7              & 51.4\%      & 90\%        \\
+Computer Scientists      & 67.7\%           & 8.2              & 46.4\%      & 82\%        \\
+Non-programmers         & 69.4\%           & 8.1              & 50\%        & 84.3\%      \\
+                        &                  &                  &             &             \\
+Total                   & 73.8\%           & 9.6              & 46.4\%      & 91.7\%      \\ \hline \hline 
+\end{tabular}
+\caption{The average recurrence rate of the four sample UNIX user groups from \cite{greenberg1993computer}}
+\label{tab:recurrence_rate}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lllll}
+\hline \hline
+context        & header       & visible                             \\\hline
+time/date      & TIME         & always                              \\ 
+host           & HOST:        & only for history from other hosts   \\ 
+directory      & DIRECTORY    & always                              \\ 
+git repository & FLAGS*       & only for history from this git repository \\ 
+exit status    & FLAGS*       & only non-zero exit status           \\ 
+command line   & COMMAND-LINE & always                              \\\hline \hline
+\end{tabular}
+\caption{Context and columns in the default view}
+\caption*{\footnotesize *git repository and exit column share the same header}
+\label{tab:design-columns}
+\end{table}
+
+
+Command line entry, directory, and time are always displayed but they are shortened to fit the screen. Other information is only displayed when relevant to not clutter the view and to save space.
+
+Near the bottom of the screen there are details for the currently selected command. These include various information about the command without any shortening.
 
 
 \begin{figure}
@@ -2016,7 +2101,7 @@ Currently selected history entry will be highlighted by inverting the foreground
 
 \redtext{Defaults matter a lot because most people will not change them.}
 
-\subsection{Command line features}
+\subsection{Arrow key handler}
 
 In this section, we design the behaviour of features that are available while on the command line. We introduce minor changes into the standard behaviour.
 
@@ -2029,8 +2114,20 @@ In our design, prefix history search is enabled by default. It is a useful featu
 Normally when \verb|ARROW_DOWN| is only used after pressing \verb|ARROW_UP|. 
 When previous command was recalled from history, pressing \verb|ARROW_DOWN| gives you access to the next history entry in the sequence. To preserve the ability to hold \verb|ARROW_DOWN| to return from recent history to the original command line we introduce a delay. A delay in activation of forward history feature that happens when the user holds down \verb|ARROW_DOWN| while in recent history.
 
-% \subsection{Configuration}
+\subsection{Autosuggestions handler}
 
+Do autosuggestions
+
+Based on the contextual
+
+
+\redtext{use later}
+Predicting the next command line entry based on context and suggesting the prediction to the user seems very reasonable.
+Researching and designing the prediction is beyond the scope of this work. However, it is a good topic for future work.
+
+\subsection{History collector}
+
+shit, I got nothing to say
 
 \section{Backend}
 
