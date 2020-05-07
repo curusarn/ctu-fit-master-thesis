@@ -1849,9 +1849,7 @@ User interactions are essential for understanding usage patterns and for informi
 We want our tool to record user history interactions.
 This should enable more future research of how people use shell history.
 
-\redtext{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-}
+\redtext{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nos}
 
 
 \todotext{Write intro}
@@ -1980,7 +1978,7 @@ There are multiple different components which are activated at various times bas
 
 For the purpose of this design, we divide the system into two logical sections - frontend and backend. As you can see in the figure \ref{design-architecture-layers}, frontend is responsible for the interactions with the shell, terminal, and by extension the user. Backend is mostly about handling data. 
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
   \tmpframe{\includegraphics[width=\linewidth]{figures/design/thesis-design-architecture-layers-v2.pdf}}
   \caption{Schema of architecture and communication}
@@ -2011,47 +2009,28 @@ Wireframe in figure \ref{wireframe-normal} shows the layout of the default view 
     \item Status bar with details and help
 \end{itemize}
 
-The search results in the main section are interactively updated as the user types into the search input. 
+The search results in the main section are interactively updated as the user types into the search input. Table \ref{tab:design-columns} shows which context is always visible and which is only displayed when relevant. Git repository and exit status both share the same column ("FLAGS").  
 
-
-\begin{table}[]
-\centering
-\begin{tabular}{lllll}
-\hline \hline
-Sample name             & \multicolumn{2}{c}{Recurrance rate} & \multicolumn{2}{c}{Range} \\
-                        & mean             & std dev          & minimum     & maximum     \\ \hline
-Novice Programers       & 80.4\%           & 7.2              & 64.7\%      & 91.7\%      \\
-Experienced Programmers & 74.4\%           & 9.7              & 51.4\%      & 90\%        \\
-Computer Scientists      & 67.7\%           & 8.2              & 46.4\%      & 82\%        \\
-Non-programmers         & 69.4\%           & 8.1              & 50\%        & 84.3\%      \\
-                        &                  &                  &             &             \\
-Total                   & 73.8\%           & 9.6              & 46.4\%      & 91.7\%      \\ \hline \hline 
-\end{tabular}
-\caption{The average recurrence rate of the four sample UNIX user groups from \cite{greenberg1993computer}}
-\label{tab:recurrence_rate}
-\end{table}
 
 \begin{table}[h]
 \centering
 \begin{tabular}{lllll}
 \hline \hline
-context        & header       & visible                             \\\hline
+Context        & Header       & When visible                        \\\hline
 time/date      & TIME         & always                              \\ 
 host           & HOST:        & only for history from other hosts   \\ 
 directory      & DIRECTORY    & always                              \\ 
-git repository & FLAGS*       & only for history from this git repository \\ 
-exit status    & FLAGS*       & only non-zero exit status           \\ 
+git repository & FLAGS        & only for history from this git repo \\ 
+exit status    & FLAGS        & only non-zero exit status           \\ 
 command line   & COMMAND-LINE & always                              \\\hline \hline
 \end{tabular}
 \caption{Context and columns in the default view}
-\caption*{\footnotesize *git repository and exit column share the same header}
 \label{tab:design-columns}
 \end{table}
 
+Host and directory also share a single column but they do have a separate headers. Columns are being dynamically resized to fit the data and to not waste space. Command line entry, host, and directory are shortened to fit the screen if necessary. 
 
-Command line entry, directory, and time are always displayed but they are shortened to fit the screen. Other information is only displayed when relevant to not clutter the view and to save space.
-
-Near the bottom of the screen there are details for the currently selected command. These include various information about the command without any shortening.
+Near the bottom of the screen there is status bar with details about the currently selected command and help. These details are displayed without any shortening and the status bar is expanded to fit them. Under the command details, there is help that shows key bindings and other information.
 
 
 \begin{figure}
@@ -2060,7 +2039,7 @@ Near the bottom of the screen there are details for the currently selected comma
   \label{wireframe-normal}
 \end{figure}
 
-The wireframe in figure \ref{wireframe-detail} shows the detail view. In this view the user can see the details and surrounding history entries for a single command line entry. Each command line entry can appear in history multiple times; The user can switch between these occurrences. The next occurrence is partially displayed to make it easier to list and compare the surrounding history entries.
+The wireframe in figure \ref{wireframe-detail} shows the detail view. In this view the user can see the details and surrounding history entries for a single command line entry. Each command line entry can appear in history multiple times; The user can switch between these occurrences. The next occurrence is partially displayed to make it easier to compare the surrounding history entries.
 
 \begin{figure}
   \permanentframe{\includegraphics[width=0.995\linewidth]{figures/design/xterm-wireframe-bw-detail.pdf}}
@@ -2069,65 +2048,68 @@ The wireframe in figure \ref{wireframe-detail} shows the detail view. In this vi
 \end{figure}
 
 
-
 % \subsubsection{Modes (Context/RAW)} - added after user feedback
 
-\subsubsection{Key bindings}
+\paragraph{Key bindings}
+When designing key bindings, it is essential to respect existing key bindings and to leverage what are the users already used to.
+We want to avoid collisions with flow control keybindings so we do not use \verb|CTRL-S| and \verb|CTRL-Q|. Additionally, we do not reuse standard job control key bindings \verb|CTRL-Z|. 
+Since we are replacing the reverse search, we are following many of its key bindings. This is the list of keybindings for our history search application:
 
-Since we are aiming to redesign and improve the reverse search we replace its key binding; Pressing \verb|CTRL-R| launches our search application instead of the reverse search. CTRL-S is intentionally left without function to avoid collisions with control flow key binding. % + other keys we want to avoid
-To not force the user to learn new key bindings we use similar key bindings as the reverse search. Typing searches and filters the results. % CUT HERE 
-Arrow keys (\verb|UP|/\verb|DOWN|) are used to select history entries. Pressing \verb|ENTER| executes the selected entry. Pressing \verb|ARROW_RIGHT| pastes the selected entry onto the command line to allow additional editing. The application can be closed with \verb|CTRL-C| or \verb|CTRL-D|.
+\begin{itemize}
+    \item \verb|CTRL-R| to launch the search application from the command line
+    \item Type to search
+    \item \verb|ARROW_UP|/\verb|ARROW_DOWN| to select 
+    \item \verb|ARROW_RIGHT| to paste the selected entry to the command line for editing
+    \item \verb|ENTER| to execute the selected entry
+    \item \verb|CTRL-X| to show detail view for the selected entry
+    \item \verb|CTRL-C|/\verb|CTRL-D| to quit
+    \item \verb|CTRL-G| to abort and paste the current search query on to the command line
+\end{itemize}
 
-We chose new key bindings for features that are not present in the reverse search.
-Pressing \verb|CTRL-E| switches between the default and the detail view.
-Help can be toggled with \verb|CTRL-/| and details section can be toggled with \verb|CTRL-T|.
 
-\redtext{Shorten}
+\paragraph{Design from 80x25 to fullscreen}
 
-\redtext{consistently take inspiration from emacs}
+Both wireframes above both use the standard 80x25 character terminal size. In larger terminals there is more space that can be used. Columns with hosts, directories, and command line entries stretch to make use of the extra space. The main section with search result becomes longer and as a result more history entries fit in the terminal.   
 
-\subsubsection{Design from 80x25 to fullscreen}
-
-Wireframes above both use standard 80x25 character terminal size. In larger terminals there is more space that can be used. Directories and command line entries stretch. A new column with time of execution appears on the left. The master section becomes longer and as a result more history entries fit in the terminal.   
-
-\subsubsection{Colors}
+\paragraph{Colors}
 
 Our application has a lot of information to display. 
-Colors will be used to highlight the information that influences the order of displayed results. To make it easier to differentiate between different types of information they will be highlighted using different colors. 
-Red color will be reserved for highlighting remote hosts and non-zero error status; This communicates to the user that these history entries might not work well.
-Currently selected history entry will be highlighted by inverting the foreground and background colors.
+Colors are used to highlight the information that influences the order of displayed results. To make it easier to differentiate between different types of information they are highlighted using different colors. 
+Red color is reserved for highlighting remote hosts and non-zero error status; This communicates to the user that these history entries might not work well.
+Currently selected history entry is highlighted by inverting the foreground and background colors.
 
-\subsubsection{Customizability}
-
-\redtext{Defaults matter a lot because most people will not change them.}
 
 \subsection{Arrow key handler}
 
-In this section, we design the behaviour of features that are available while on the command line. We introduce minor changes into the standard behaviour.
+In earlier analysis, we found out that standard history mechanisms available via arrow keys work reasonably well. Furthermore, people have a strong expectation to see recent history entries on \verb|ARROW_UP|. 
+For these reason we only introduce minor changes into the standard behaviour of arrow keys.
 
-\subsubsection{Prefix search}
 
-In our design, prefix history search is enabled by default. It is a useful feature that does not interfere with the standard stepping through history. 
+In our design, prefix history search is enabled by default. It is a useful feature that does not interfere with the standard stepping through history. Additionally, the history available via \verb|ARROW_UP| is fully deduplicated.
 
-\subsubsection{Forward history}
+\paragraph{Forward history}
 
-Normally when \verb|ARROW_DOWN| is only used after pressing \verb|ARROW_UP|. 
-When previous command was recalled from history, pressing \verb|ARROW_DOWN| gives you access to the next history entry in the sequence. To preserve the ability to hold \verb|ARROW_DOWN| to return from recent history to the original command line we introduce a delay. A delay in activation of forward history feature that happens when the user holds down \verb|ARROW_DOWN| while in recent history.
+In standard shell history, \verb|ARROW_DOWN| is without function unless we press \verb|ARROW_UP| first. It is only useful as a way to get back from recent history to the original command line.
+
+We overload \verb|ARROW_DOWN| with an additional feature - Forward in history. When previously executed command line entry was retrieved from history, pressing \verb|ARROW_DOWN| gives the user access to the next history entry in the sequence. 
+The user can easily repeat whole sequences because each history entry in the sequence can be retrieved by a single press of \verb|ARROW_DOWN| and then executed. 
+
+
+To preserve the ability to hold \verb|ARROW_DOWN| to return from recent history to the original command line we introduce a delay. A delay in activation of forward history feature that is triggered when the user holds down \verb|ARROW_DOWN| while in recent history.
 
 \subsection{Autosuggestions handler}
 
-Do autosuggestions
+Autosuggestions in our history system use the recorded context to recommend history entries to the user. The suggested history entry is determined based on current context. History is searched for matching entries in this order:
 
-Based on the contextual
+\begin{itemize}
+    \item History from current directory
+    \item History from current git repository
+    \item History from current host
+    \item History from anywhere
+\end{itemize}
 
-
-\redtext{use later}
-Predicting the next command line entry based on context and suggesting the prediction to the user seems very reasonable.
-Researching and designing the prediction is beyond the scope of this work. However, it is a good topic for future work.
-
-\subsection{History collector}
-
-shit, I got nothing to say
+Additionally, we introduce an exception to enhance the Forward in history feature. 
+When the user uses \verb|ARROW_DOWN| the next autosuggestion should try matching a few next history entries in the sequence before any  other history entries. 
 
 \section{Backend}
 
@@ -2145,7 +2127,8 @@ The terminal history searching application needs to server relevant entries to t
 
 The score represents how well the history entry matches both the query and the current context. It is essential that the query is given more weight in the score then the context. Not doing so could lead to situations where the user types in a query but the displayed results match the context instead.
 
-\redtext{Add a formula for the search metric$:$ Score $=$ query-score $+$ context-score }
+\[score(record) = queryScore(query, commandLine) + contextualScore(currentContext, recordContext) \]
+\[ queryScore(query) > contextualScore(context); \forall  \]
 
 \subsubsection{Matching the query}
 
@@ -2600,6 +2583,12 @@ I have created a universal shell library for binding custom functions to keys wi
 
 
 \todotext{TODO: write future work}
+
+\redtext{ML Autosuggestions}
+using ML techniques to provide Autosuggestions tailored to the user is a promising topic for future research
+%Researching and designing the prediction is beyond the scope of this work. However, it is a good topic for future work.
+
+
 
 \end{conclusion}
 
