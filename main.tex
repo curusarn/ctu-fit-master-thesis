@@ -2028,7 +2028,7 @@ command line   & COMMAND-LINE & always                              \\\hline \hl
 \label{tab:design-columns}
 \end{table}
 
-Host and directory also share a single column but they do have a separate headers. Columns are being dynamically resized to fit the data and to not waste space. Command line entry, host, and directory are shortened to fit the screen if necessary. 
+Host and directory also share a single column but they do have separate headers. Columns are being dynamically resized to fit the data and to not waste space. Command line entry, host, and directory are shortened to fit the screen if necessary. 
 
 Near the bottom of the screen there is status bar with details about the currently selected command and help. These details are displayed without any shortening and the status bar is expanded to fit them. Under the command details, there is help that shows key bindings and other information.
 
@@ -2067,7 +2067,7 @@ Since we are replacing the reverse search, we are following many of its key bind
 \end{itemize}
 
 
-\paragraph{Design from 80x25 to fullscreen}
+\paragraph{Scaling in larger terminals}
 
 Both wireframes above both use the standard 80x25 character terminal size. In larger terminals there is more space that can be used. Columns with hosts, directories, and command line entries stretch to make use of the extra space. The main section with search result becomes longer and as a result more history entries fit in the terminal.   
 
@@ -2113,26 +2113,66 @@ When the user uses \verb|ARROW_DOWN| the next autosuggestion should try matching
 
 \section{Backend}
 
-In previous sections, we described the parts of the system user interacts with.
-Now we design the parts of the system that user does not directly interact with.
-% Some of these parts happen on the daemon and some in the clients.
+In previous sections, we focused on the parts of the system user interacts with.
+Now we design the inner workings of the system that make possible to provide the desired behavior to the user.
 
 \subsection{Search algorithm}
 
-The terminal history searching application needs to server relevant entries to the user based on the typed query and current context. When searching, each history record is assigned a score based on how well it matches the query and the current context. After scoring all the entries they are sorted. % If two entries have the same score the recent one will come first. Finally, the most recent history entries with the highest scores are displayed to the user.
+The terminal history searching application needs to serve relevant entries to the user based on the typed query and current context. When searching, each history record is assigned a score; This score is based on how well history record matches the query, how well it matches the current context, and also on its time of execution. 
+
+After scoring all the history records they are sorted. Finally, history entries with the highest scores are displayed to the user.
 
 % It is essential to strike a good balance between effects of the query and the context. 
+\paragraph{Scoring metric}
 
-\subsubsection{Scoring metric}
+%Results that are displayed near the top ... is very important because it 
+The score for a record \(r\) with query \(q\) and current context \(c\) is a sum of three parts: 
 
-The score represents how well the history entry matches both the query and the current context. It is essential that the query is given more weight in the score then the context. Not doing so could lead to situations where the user types in a query but the displayed results match the context instead.
+\[ Score_r(q,c) = QueryScore_r(q) + ContextScore_r(c) + TimeScore_r \]
 
-\[score(record) = queryScore(query, commandLine) + contextualScore(currentContext, recordContext) \]
-\[ queryScore(query) > contextualScore(context); \forall  \]
+The first part, \(QueryScore\), represents how well the history record matches the query typed by the user. It is essential that \(QueryScore\) has the most influence over the total resulting score. Not giving enough weight to it could lead to situations where the user types in a query but the displayed results match the context instead. 
+
+The second most important part is \(ContextScore\); It represents the similarity between the context of the history record and the the current context. Finally, \(TimeScore\) gives higher scores to more recent history entries. The influence of \(TimeScore\) on the total resulting score should be marginal.
+
+
+
+
+
+It is essential that the query is given more weight in the score then the context. Not doing so could lead to situations where the user types in a query but the displayed results match the context instead.
+
+\begin{itemize}
+    \item R ... set of all records
+    \item Q ... set of all queries
+    \item C ... set of all contexts
+    \item S(q, c, r) ... total score of given query, context, and record
+    \item \(S_q(q, r)\) ... query score of given query, and record
+    \item \(S_c(c, r)\) ... context score of given context, and record
+    \item \(S_t(r)\) ... time score of given record
+    \item \(r = (text, time, ctx)\) ... (for purpose of these formulas) each record consists of command line, time, and context
+    \subitem \(text_r\) ... command line entry of record \(r\)
+    \subitem \(time_r\) ... date/time of record \(r\)
+    \subitem \(ctx_r\) ... context of record \(r\)
+\end{itemize}
+
+
+As the user adds more to the query it gains more weight in the score. This gives the user more control over the search.
+Longer queries produce greater or equal scores for the same record:
+
+In other words, making the query more specific cannot decrease its score.
+
+
+
 
 \subsubsection{Matching the query}
 
 Each word of the query is matched against the command line entries separately. Each query word also independently contributes to the score. This means that as the user adds more words to the query, the influence of the context becomes less and less significant.
+
+For any queries \(q_1\), \(q_2\) and history record \(r\):
+
+\[ length(q_1) > length(q_2) \Rightarrow QueryScore_r(q_1) \geq QueryScore_r(q_2)\]\
+
+The length of the 
+
 
 \subsubsection{Matching the context}
 
@@ -2140,6 +2180,41 @@ Some parts of the context increase the score and other parts influence it negati
 Matching current directory or current git repository increases the score.
 History entries from remote hosts get a small penalty to the score.
 Non-zero exit status implies a bigger penalty to the score. \redtext{Date should have an influence}
+
+
+% something somethign
+We want the records to be grouped based on context, to achieve that 
+We want to prevent history records with different contexts from unnecessarily mixing together. 
+To achieve that, \(ContextScore\) should be an injective function in respect to contex of records.
+
+In other words, if two records share the same \(ContextScore\) they also must share the same context:
+
+\[ ContextScore_r(c) = ContextScore_s(c) \Rightarrow context_{r} = context_{s} \]\
+
+In other words, any two records with different contexts never share the same \(ContextScore\):
+
+\[ context_{r} \neq context_{s}  \Rightarrow ContextScore_r(c) \neq ContextScore_s(c) \]\
+
+
+
+
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\hline \hline
+Context condition      &  \multicolumn{2}{c}{Influence on score} \\\hline
+directory matches      & positive & large   \\ 
+git repository matches & positive & medium \\ 
+non-zero exit status   & negative & small   \\
+host does not match    & negative & minor   \\ 
+\hline \hline
+\end{tabular}
+\caption{Influence on score of different parts of context}
+\label{tab:score-matching-context}
+\end{table}
+
 
 \subsubsection{Scoring weights}
 
