@@ -2138,23 +2138,6 @@ The second most important part is \(ContextScore\); It represents the similarity
 
 
 
-It is essential that the query is given more weight in the score then the context. Not doing so could lead to situations where the user types in a query but the displayed results match the context instead.
-
-\begin{itemize}
-    \item R ... set of all records
-    \item Q ... set of all queries
-    \item C ... set of all contexts
-    \item S(q, c, r) ... total score of given query, context, and record
-    \item \(S_q(q, r)\) ... query score of given query, and record
-    \item \(S_c(c, r)\) ... context score of given context, and record
-    \item \(S_t(r)\) ... time score of given record
-    \item \(r = (text, time, ctx)\) ... (for purpose of these formulas) each record consists of command line, time, and context
-    \subitem \(text_r\) ... command line entry of record \(r\)
-    \subitem \(time_r\) ... date/time of record \(r\)
-    \subitem \(ctx_r\) ... context of record \(r\)
-\end{itemize}
-
-
 As the user adds more to the query it gains more weight in the score. This gives the user more control over the search.
 Longer queries produce greater or equal scores for the same record:
 
@@ -2163,7 +2146,7 @@ In other words, making the query more specific cannot decrease its score.
 
 
 
-\subsubsection{Matching the query}
+\Paragraph{Query score}
 
 Each word of the query is matched against the command line entries separately. Each query word also independently contributes to the score. This means that as the user adds more words to the query, the influence of the context becomes less and less significant.
 
@@ -2204,7 +2187,9 @@ In other words, any two records with different contexts never share the same \(C
 \centering
 \begin{tabular}{lll}
 \hline \hline
-Context condition      &  \multicolumn{2}{c}{Influence on score} \\\hline
+Context condition      &  \multicolumn{2}{c}{Influence on score} \\
+                        & Sign & Significance \\\hline
+\hline
 directory matches      & positive & large   \\ 
 git repository matches & positive & medium \\ 
 non-zero exit status   & negative & small   \\
