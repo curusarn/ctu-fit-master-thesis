@@ -2017,12 +2017,12 @@ The search results in the main section are interactively updated as the user typ
 \begin{tabular}{lllll}
 \hline \hline
 Context        & Header       & When visible                        \\\hline
-time/date      & TIME         & always                              \\ 
-host           & HOST:        & only for history from other hosts   \\ 
-directory      & DIRECTORY    & always                              \\ 
-git repository & FLAGS        & only for history from this git repo \\ 
-exit status    & FLAGS        & only non-zero exit status           \\ 
-command line   & COMMAND-LINE & always                              \\\hline \hline
+Time/date      & TIME         & always                              \\ 
+Host           & HOST:        & only for history from other hosts   \\ 
+Directory      & DIRECTORY    & always                              \\ 
+Git repository & FLAGS        & only for history from this git repo. \\ 
+Exit status    & FLAGS        & only non-zero exit status           \\ 
+Command line   & COMMAND-LINE & always                              \\\hline \hline
 \end{tabular}
 \caption{Context and columns in the default view}
 \label{tab:design-columns}
@@ -2109,7 +2109,7 @@ Autosuggestions in our history system use the recorded context to recommend hist
 \end{itemize}
 
 Additionally, we introduce an exception to enhance the Forward in history feature. 
-When the user uses \verb|ARROW_DOWN| the next autosuggestion should try matching a few next history entries in the sequence before any  other history entries. 
+When the user uses \verb|ARROW_DOWN| the next autosuggestion should try matching a few next history entries in the history sequence before any  other history entries. 
 
 \section{Backend}
 
@@ -2134,78 +2134,67 @@ The first part, \(QueryScore\), represents how well the history record matches t
 
 The second most important part is \(ContextScore\); It represents the similarity between the context of the history record and the the current context. Finally, \(TimeScore\) gives higher scores to more recent history entries. The influence of \(TimeScore\) on the total resulting score should be marginal.
 
+Now that we covered how the partial scores relate to each other, we look at them individually.
+
+%As the user adds more to the query it gains more weight in the score. This gives the user more control over the search.
+%Longer queries produce greater or equal scores for the same record:
+
+%In other words, making the query more specific cannot decrease its score.
 
 
 
 
-As the user adds more to the query it gains more weight in the score. This gives the user more control over the search.
-Longer queries produce greater or equal scores for the same record:
+\paragraph{Query score}
 
-In other words, making the query more specific cannot decrease its score.
+To calculate the \(QueryScore\), the query provided by the user is broken down into individual words. 
+Each word is matched against the command line entries separately. Each query word also independently contributes to the score. This means that as the user adds more words to the query, the influence of the context becomes less and less significant.
 
+We formalize this property as follows; Let queries \(q_1\) and \(q_2\) be represented as sets of individual words. For any queries \(q_1\), \(q_2\) and any history record \(r\):  
 
-
-
-\Paragraph{Query score}
-
-Each word of the query is matched against the command line entries separately. Each query word also independently contributes to the score. This means that as the user adds more words to the query, the influence of the context becomes less and less significant.
-
-For any queries \(q_1\), \(q_2\) and history record \(r\):
-
-\[ length(q_1) > length(q_2) \Rightarrow QueryScore_r(q_1) \geq QueryScore_r(q_2)\]\
-
-The length of the 
+\[ q_1 \subset q_2 \Rightarrow QueryScore_r(q_1) \leq QueryScore_r(q_2)\]\
 
 
-\subsubsection{Matching the context}
+\paragraph{Context score}
 
-Some parts of the context increase the score and other parts influence it negatively.
-Matching current directory or current git repository increases the score.
-History entries from remote hosts get a small penalty to the score.
-Non-zero exit status implies a bigger penalty to the score. \redtext{Date should have an influence}
-
-
-% something somethign
-We want the records to be grouped based on context, to achieve that 
-We want to prevent history records with different contexts from unnecessarily mixing together. 
-To achieve that, \(ContextScore\) should be an injective function in respect to contex of records.
-
-In other words, if two records share the same \(ContextScore\) they also must share the same context:
-
-\[ ContextScore_r(c) = ContextScore_s(c) \Rightarrow context_{r} = context_{s} \]\
-
-In other words, any two records with different contexts never share the same \(ContextScore\):
-
-\[ context_{r} \neq context_{s}  \Rightarrow ContextScore_r(c) \neq ContextScore_s(c) \]\
-
-
-
-
-
+The second part of the total score is \(ContextScore\); It takes current context at the time of execution of the search application and compares it to context of individual history records. 
+The current context is compared the the context of the history records using four conditions displayed in the table \ref{tab:score-matching-context}. As shown in the table, each of these conditions either increases or decreases the score.
 
 \begin{table}[h]
 \centering
 \begin{tabular}{lll}
 \hline \hline
-Context condition      &  \multicolumn{2}{c}{Influence on score} \\
-                        & Sign & Significance \\\hline
+Context condition       & Effect \\
 \hline
-directory matches      & positive & large   \\ 
-git repository matches & positive & medium \\ 
-non-zero exit status   & negative & small   \\
-host does not match    & negative & minor   \\ 
+Directory matches      & significantly increase score \\ 
+Git repository matches & increase score \\ 
+Non-zero exit status   & decrease score \\
+Host does not match    & slightly decrease score \\ 
 \hline \hline
 \end{tabular}
-\caption{Influence on score of different parts of context}
+\caption{Influence of different parts of context on \(ContextScore\)}
 \label{tab:score-matching-context}
 \end{table}
 
+To make it easy to skim over displayed results in the search application, we want the results to be grouped based on context when possible. 
+We want to prevent history records with different contexts from being unnecessarily mixed together. 
+To achieve that, \(ContextScore\) should be an injective function in respect to context of the history records.
 
-\subsubsection{Scoring weights}
+In other words, any two history records \(r\) and \(s\) with different contexts never share the same \(ContextScore\) for a given current context \(c\):
+\[ context_{r} \neq context_{s}  \Rightarrow ContextScore_r(c) \neq ContextScore_s(c) \]\
+Here, \(context\) of history record \(r\) is defined as its directory, git repository, exit status, and host:
+\[ context_r = (directory_r, gitRepository_r, exitStatus_r, host_r) \]
 
-Specific weights for the query and context scoring should be determined experimentally based on real life shell history.
-Each unique combination of context should result in a unique score value; This will group together the history entries with the same context instead of mixing them with others.
-\redtext{Example?}
+
+
+
+
+
+\paragraph{Score weights}
+
+We described the scoring function as a whole. We also introduced some important properties of the partial scoring functions. However, the resulting behavior of the whole scoring function depends on the concrete weights we use. 
+Specific weights used in the partial scores should be determined experimentally based on real life shell history.
+
+
 
 %\subsection{Open session tracking}
 
@@ -2213,43 +2202,65 @@ Each unique combination of context should result in a unique score value; This w
 %Data processing is the responsibility of the daemon. Daemon keeps track of open sessions and prepares the necessary history records for them.
 
 
+\subsection{History synchronization between devices}
+
+Instead of implementing our own dedicated synchronization server, we design our history system to rely on third party services for synchronization. 
+
+The process of synchronization works like this: First, we check if there are any new history entries. If so, we download them and merge them into local history. Finally, we checks for new history again and if there is none we upload the newly merged history. 
+
+This whole synchronization process is controlled by the daemon; It initiates the individual steps and handles when they fail. It also takes care of the history merging.  Download, upload, and checking for new history is not part of the daemon. These three steps are different for each synchronization service; They are extracted out of the daemon and combined into a "Synchronization connector". Each synchronization connector provides support for a single synchronization method. Synchronization connectors do not contain any complicated logic. 
+
+
 \subsection{Data representation}
 
-In this section, we discuss what data we need to handle and how should it be represented. 
-\subsubsection{Relational data}
+In this section, we discuss what data we need to handle and how should it be represented so that all the chosen requirements and features are possible.
 
-Contextual shell history is inherently relational; Each history record was executed at a given time, on a host, in a specific directory, etc. However, we need to calculate scores for all history entries not just the ones with matching context.
 
-\subsubsection{Stream of records}
+Contextual shell history is inherently relational; Each history record was executed as part of a given session, on a host, in a specific directory. However, we do not need the relational properties of the history for most of the features. For example, when searching, we need to calculate scores for all history entries not just the ones with matching context. 
 
-We represent the data as a stream of history records; Each records can be uniquely identified by combination of a session UUID and a sequential ID unique in the session. We do not generate UUID for each record because sequential ID provides additional information. 
+We represent the data as a stream of history records; Each record can be uniquely identified by its ID. Separate entries are very easy to merge when we synchronize history from multiple devices.
 
-\subsubsection{Contents of a record}
-
-Each record contains following data:
+Based on all requirements and features of our design, each record has to contain at least following data:
 \begin{itemize}
-    \item session UUID
-    \item sequential record ID
+    \item machine ID
+    \item session ID
+    \item record ID
     \item time of execution
     \item host
     \item directory
-    \item git remote
+    \item git repository
     \item exit status
     \item command line entry
-    \item \redtext{user interactions}
+    \item usage data / user interactions
 \end{itemize}
 
-\subsection{API}
 
-\begin{itemize}
-    \item shell / line editing library
-    \subitem key bindings
-    \item 
-\end{itemize}
 
-\redtext{It does not matter where exactly things happen as long as the user is not waiting}
+\begin{figure}
+\centering
+  \tmpframe{\includegraphics[width=\linewidth]{figures/design/thesis-design-api.pdf}}
+  \caption{Schema of communication and exchanged data}
+  \label{design-api}
+\end{figure}
+
+
+\subsection{Communication}
+
+Here, we describe the communication between the components of our history system. Figure \ref{design-api} shows requests, responses, and execution that happen in the system. Data that is sent with each request is displayed under the arrow. 
+
+The search application requests all history records when it is launched and then requests details for a specific history record when the user switches to the detail view. Response with the details for the history record contains a list of occurrences of the command line entry; Each occurrence consists of the history record and surrounding command line entries.
+
+Arrow key handler is simpler; It requests a history entry based on current session, prefix that is already typed on the command line, and history offset that represents how many times did the user press the arrow key. Response is a single command line entry to display.
+
+Autosuggestions handler requests a command line entry to show. The request contains session ID and the prefix that the user already typed on the command line.
+
+All of these components are integrated into the shell and activated when a specific key is pressed. Furthermore, they directly manipulate the contents of the command line when they return a command line entry to the user.
+
+History collector is also integrated into the shell so that it can collect the current context and send it to the daemon. Synchronization connector does not receive any data, instead it is executed to complete low-level synchronization tasks. 
 
 \section{Design testing}
+
+
 
 \redtext{Confirm that requirements match the features and that the features are possible in the current design.}
 
@@ -2636,13 +2647,21 @@ I have used real life user data to evaluate user experience of the solution.
 
 I have made it easier to collect and study usage of shell and shell history in future research.
 I have proved that having contextual shell history brings many benefits. 
-I have demonstrated public demand for history tools. 
+I have demonstrated public demand for history tools. (and for contextual history tools) 
 I have created a universal shell library for binding custom functions to keys with the option to revert to previous state. 
 
 
 
 
 \todotext{TODO: write future work}
+
+\redtext{Implement sync connectors}
+
+\redtext{Use more context to handle special cases - 1) detect aliases that are not set on current host; 2) special handling for exit codes (130 + long running command), specific commands}
+
+%  any command killed by Ctrl+C after more than e.g. 30 seconds will be considered a success by resh-cli and won't be penalized 
+% different tools use exit status differently
+
 
 \redtext{ML Autosuggestions}
 using ML techniques to provide Autosuggestions tailored to the user is a promising topic for future research
