@@ -37,7 +37,7 @@
 
 \setlength{\fboxsep}{0.005pt}
 \newcommand{\tmpframe}[1]{\fbox{#1}}
-%\renewcommand{\tmpframe}[1]{#1}
+\renewcommand{\tmpframe}[1]{#1}
 \newcommand{\permanentframe}[1]{\fbox{#1}}
 \newcommand{\noframe}[1]{#1}
 
@@ -1873,10 +1873,10 @@ The requirements we selected based on the previous analysis are following:
 
 \begin{itemize}
     \item Record shell history with context and usage
-    \item Allow unlimited history
+    % \item Allow unlimited history
     \item Allow history sharing between open sessions
-    \item Provide good out-of-the-box experience (too high-level?)
-    \item Respect existing habits of people (too high-level?)
+    \item Provide good out-of-the-box experience \redtext{(too high-level?)}
+    \item Respect existing habits of people \redtext{(too high-level?)}
     \item Provide a replacement for reverse search
     \subitem Solve the issues with standard reverse search
     \subitem Match the improvements offered by Hstr and Fzf
@@ -1902,14 +1902,14 @@ Simultaneous sessions should be handled is a way that allows accessing history f
 
 The core focus of this design is providing a replacement for the standard reverse search. In this section, we explain why we chose this as the main focus of the design. We discuss how it relates to standard shell history features, existing state-of-the-art history tools, and possibilities of enhancing history searching with context.
 
-\todo{remove the paragraph titles?}
+%\todo{remove the paragraph titles?}
 
 % These features address the most common workflows and the most significant shortcomings of standard history.
 
 %We are differentiating between the core features and additional features because it is important to keep the scope of the project tight.
 % even when there are additional features that would work well with it.
 
-\paragraph{Standard history features}
+%\paragraph{Standard history features}
 
 Standard history features form the base that people are used to. We should not redesign and replace them unless we have a good reason to.
 As we saw in analysis, standard reverse search does not provide a good feature set to complete many workflows. Furthermore, there are other tools available that provide features that solve the issues of reverse search. Because of this, we design a searching application that replaces and improves the reverse search.
@@ -1918,12 +1918,12 @@ As we saw in analysis, standard reverse search does not provide a good feature s
 
 % In contrast
 
-\paragraph{Matching the state-of-the-art}
+%\paragraph{Matching the state-of-the-art}
 
 Hstr\cite{toolshstr} and Fzf\cite{tools-fzf} are existing projects that replace reverse search and provide improved searching capabilities. 
-Standard reverse search only uses a single query for searching and displays a single result at a time. In contrast, both of the tools mentioned above allow using more than a single query for searching and show a full screen of history results. We use these tools as an inspiration. Our searching application should match the improvements provided by Hstr and Fzf. 
+Standard reverse search only uses a single query for searching and displays a single result at a time. In contrast, both of the tools mentioned above allow using more than a single query for searching and show a full screen of history results. We use these tools as an inspiration. Our searching application should match the key improvements provided by Hstr and Fzf. 
 
-\paragraph{Enhancing history searching with context}
+%\paragraph{Enhancing history searching with context}
 
 %In analysis, we have identified workflows which are directly related to context. 
 %Additionally, we described different ways how context relates to shell usage. 
@@ -2256,216 +2256,73 @@ Autosuggestions handler requests a command line entry to show. The request conta
 
 All of these components are integrated into the shell and activated when a specific key is pressed. Furthermore, they directly manipulate the contents of the command line when they return a command line entry to the user.
 
-History collector is also integrated into the shell so that it can collect the current context and send it to the daemon. Synchronization connector does not receive any data, instead it is executed to complete low-level synchronization tasks. 
+History collector is also integrated into the shell so that it can collect the current context and send it to the daemon. Synchronization connector does not receive any data, instead it is executed by the daemon to complete low-level synchronization tasks. 
 
 \section{Design testing}
 
+In this section, we test out design to make sure that we covered all the requirements.
 
 
-\redtext{Confirm that requirements match the features and that the features are possible in the current design.}
+\begin{itemize}
+    \item Record shell history with context and usage ... History collector records the history with context and usage and sends it to the daemon.
+    \item Allow history sharing between open sessions ... Daemon handles all of the history so it can send it to any component regardless of sessions.
+    \item Provide good out-of-the-box experience ... Our design does not expect people to configure it before using it. Designed behaviour is based on the previous research and modeled target users.
+    \item Respect existing habits of people ... We redesigned the behaviour of standard history while keeping the original use-cases intact. Recent history is still accessible on \verb|ARROW_UP| in unchanged order. People can still press \verb|CTRL-R| for general purpose history searching. 
+    \item Provide a replacement for reverse search ... Our history searching application provides features that superset the reverse search. It can search anything that reverse search can because the query is designed to have the most influence over the scoring function.
+    \subitem Solve the issues with standard reverse search ... Reverse search only uses a single-query and shows a single-result. This significantly reduces its usefulness. Our searching app uses multiple word queries and shows a page full of results.
+    \subitem Match the improvements offered by Hstr and Fzf ... dtto. The main improvement is the multi-query, multi-result search. ???
+    \subitem Use recorded context to enhance history searching capabilities ... The search application searches history based on both query and current context.
+    \item Provide support for sequence repeating (forward in history) ... Forward in history is a feature that makes it much easier to repeat sequences.
+    \item Provide support for synchronization of shell history between devices ... Synchronization between devices is make possible because of the daemon and the synchronization connectors.
+    \item Provide support for contextual autosuggestions ... Autosuggestions handler provides support for contextual autosuggestions.
+\end{itemize}
+
 
 \redtext{Test using guidelines}
+1: Visibility of system status
+% The system should always keep users informed about what is going on, through appropriate feedback within reasonable time.
+
+
+2: Match between system and the real world
+% The system should speak the users' language, with words, phrases and concepts familiar to the user, rather than system-oriented terms. Follow real-world conventions, making information appear in a natural and logical order.
+
+
+3: User control and freedom
+% Users often choose system functions by mistake and will need a clearly marked "emergency exit" to leave the unwanted state without having to go through an extended dialogue. Support undo and redo.
+
+
+4: Consistency and standards
+% Users should not have to wonder whether different words, situations, or actions mean the same thing. Follow platform conventions.
+
+5: Error prevention
+% Even better than good error messages is a careful design which prevents a problem from occurring in the first place. Either eliminate error-prone conditions or check for them and present users with a confirmation option before they commit to the action.
+
+
+6: Recognition rather than recall
+% Minimize the user's memory load by making objects, actions, and options visible. The user should not have to remember information from one part of the dialogue to another. Instructions for use of the system should be visible or easily retrievable whenever appropriate.
+
+
+7: Flexibility and efficiency of use
+% Accelerators — unseen by the novice user — may often speed up the interaction for the expert user such that the system can cater to both inexperienced and experienced users. Allow users to tailor frequent actions.
+
+
+8: Aesthetic and minimalist design
+% Dialogues should not contain information which is irrelevant or rarely needed. Every extra unit of information in a dialogue competes with the relevant units of information and diminishes their relative visibility.
+
+
+9: Help users recognize, diagnose, and recover from errors
+% Error messages should be expressed in plain language (no codes), precisely indicate the problem, and constructively suggest a solution.
+
+
+10: Help and documentation
+% Even though it is better if the system can be used without documentation, it may be necessary to provide help and documentation. Any such information should be easy to search, focused on the user's task, list concrete steps to be carried out, and not be too large.
+
 
 \redtext{test that the search algorithm returns reasonable results}
 
 
+
 \todotext{END -------------------------}
-
-\begin{itemize}
-
-    \item Replace reverse search (because it is inefficient)
-    \subitem Search using multiple queries
-    \subitem Show a full page of results
-    \subitem Use context to serve more relevant results
-    \subitem Display all context that influences the order of results (transparency, predictability)
-    % \subitem Allow searching without context (backward compatibility, full) - user feedback
-    \subitem Allow displaying details for individual command line entries
-    \item Keep standard history mechanisms that work well (or are not relevant to the usecases we discused)
-    \subitem Arrow up works reasonably well - don't change it
-    \subitem No reason to change history expansion
-    \subitem No reason to change manual history search
-    \item Additional features
-    \subitem 
-    \subitem 
-    
-\end{itemize}
-
-
-\section{REST / Requirements / High-level design / Intro}
-
-% Easy installation, learnability
-
-\paragraph{Some of the requirements that are implied by the analysis (aka why we want a daemon)}
-\begin{itemize}
-    \item record history in full (information we want for some workflows)
-    \item serve it both deduplicated and in full (different workflows have different needs)
-    \item determine "complex" context like git repo (non-instant processing)
-    \item record the interactions of the user with the history system
-    \item + responsiveness (async)
-\end{itemize}
-
-\paragraph{Deamon-client design - responsibilities}
-
-\begin{itemize}
-    \item daemon runs in the background
-    \item client is / clients are integrated into the shell %(client is not a single program; it's a number of different shell scripts and programs "hooked" into the shell)
-    \item daemon 
-    \subitem takes care of the processing
-    \subitem prepares and serves data to the client (e.g. holds prepared data for each session)
-    \subitem + keeps track of open sessions
-    \subitem loads and saves data to disk
-    \item client / clients
-    \subitem records the shell history w/ context from the shell and sends it to the daemon (we need to do this ourselves because std history is non-contextual)
-    \subitem handles interaction with the user - 
-    \subitem asks daemon for data 
-\end{itemize}
-
-
-\section{Interactive features} % front-end
-% ALT: \section{Design of the features / designing the user experience}
-
-Responsibility of the client(s)
-
-\subsection{Standard history features}
-
-\begin{itemize}
-    \item INTRO: We discuss the most relevant standard history features that influence our design.
-    \item REASON: we need to respect what is already present - we don't want people to relearn, instead we want to leverage the habits people already have. Or at least not to break them.
-    \item GOAL1: explain which features we will leave alone because they work well (maybe mention which features we leave alone because they are not relevant enough)
-    \item GOAL2: explain which features need work - hint: Ctrl R
-    \item RESULT: it is clear which features we do not have to talk about anymore - from this point on focus on parts of the design that is important
-\end{itemize}
-
-
-\subsection{Matching the state of the art / main vision / ctrl-r}
-
-\begin{itemize}
-    \item INTRO: Here we state the core fuctionality that is based on the existing solutions.
-    \item NOTE STATE-OF-THE-ART: Hstr and fzf are by far the most popular projects - they also solve existing issues with std shell history (reverse search is by far the most lacking part of standard shell history)
-    \item GOAL1: explain that reverse search / ctrl-r is:
-    \subitem the most deficient std history feature, 
-    \subitem there is superior state of the art
-    \subitem it matches the workflows that can benefit from additional context
-    \item GOAL2: describe the vision for a contextual multi-query multi-result history search
-    \item RESULT: it is clear why Resh-cli is the most important part of the design
-\end{itemize}
-
-
-
-\subsection{Enhancing Resh-cli with context}
-
-\begin{itemize}
-    \item INTRO: Now we describe how we use the context to provide value to the user through the resh-cli
-    \item GOAL1: explain the challenges that come with context: (maybe just introduce the decisions instead of listing challenges)
-    \subitem cluttered UI
-    \subitem unpredictable search
-    \subitem fancy features that do not help enough
-    \subitem average case takes too much effort
-    
-    \item GOAL2: explain that there are different types of context that need to be combined in a predictable way: (maybe just introduce the design instead of listing everything)
-    \subitem UP history from current directories and git
-    \subitem UP previously recalled entries
-    \subitem SHOW device
-    \subitem DOWN exit status and pipestatus
-    \subitem DOWN (A BIT) other devices
-    \subitem SHOW datetime (last execution)
-    \subitem ACCESS surrounding history for a single entry (from multiple sessions)
-    \item DESIGN - we need to combine all above in a predictable transparent way
-    \subitem single default contextual mode instead of many different modes and views (less mode switching, less confusion)
-    \subitem single "raw" / non-contextual mode for "backwards compatibility"
-    \subitem a detail view that shows all history entry context with preceding and following history entries
-    \item Default contextual view
-    \subitem visibility of system status - predictability
-    \subitem each history entry gets a score that is influenced by both the query and context
-    \subitem query should be the most important thing - context should be not able to "overpower" the query - people should be able to search whatever they need from whatever context they want
-    \subitem context that affects the result should be visible in the view
-    \item Non-contextual "raw" view
-    \subitem does not show context, does not use context, and only searches using the query
-    \item Detail view
-    \subitem Shows abbreviated data in full
-    \subitem Shows preceding and following history (for occurrences of the history entry)
-\end{itemize}
-
-\todo{IDEA: Status bar} 
-\todo{IDEA: Master-detail veiw}
-\todo{IDEA: Side scrolling (aka less)}
-
-% notes - interactive hist features
-
-% arrow up
-% arrow down
-% autosuggestions
-% prefix search
-% ctrl R search
-
-
-\section{Additional and Possible features}
-
-%\todotext{TODO: intro: this section describes features that were considered during the design - for each feature we evaluate how well it would fit with the rest of the design.}
-
-\subsection{Forward in history}
-
-% SOLID CONTENT
-
-The \verb|ARROW_DOWN| should serve history entries following the most recently recalled entry
-
-it doesn't matter how it was recalled
-
-if the last entry was not recalled from history, the "algorithm" could match the last matching entry from history. (E.g. the sequence starts with a command that is short so the user did not recall it but he still wants to access to successive hisotry entries)
-
-if there is are no matching history entries then \verb|ARROW_DOWN| does nothing
-
-Full non-deduplicated sequential history is required so that the system can figure out the sequences and serve them to the user. % thats a given ?
-
-To be able to make a full use of this feature, the user should be able to select and recall individual submissions of the same command line entry. This does not mean that all history mechanisms should show duplicate entries. However, if there was a way to retrieve individual history submissions it would greatly synergize with this feature.
-
-The behavior of \verb|ARROW_UP| is preserved - we are not changing the default shell history experience.
-
-\subsection{Fuzzy search}
-
-
-
-\subsection{Autosuggestions}
-
-Predictions, even unstable
-
-
-\subsection{Deleting history entries}
-
-\subsection{Explicit history search}
-
-\subsection{History sync}
-
-%\subsubsection{Remote history ?}
-
-
-\section{Daemon}
-
-\todotext{Provide some details about the daemon}
-
-\begin{itemize}
-    \item Data
-    \subitem Save every command
-    \subitem Relational data
-    \subitem Stream of records
-    \subitem Each record should have an ID (UUIDs for sesssions + Sequential IDs for entries)
-    
-    \item Data resiliency
-    
-    \item Daemon per-user
-    
-\end{itemize}
-
-
-
-
-
-\section{Testing the design}
-
-
-\todotext{TODO: explain why we want to test the design - intro}
-
-\todotext{TODO: principals, guidelines, etc. are we are using}
 
 Ease of use
 
