@@ -61,9 +61,14 @@
 \def\UrlBreaks{\do\/\do\-\do\_}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% general commands
+% ME: thesis assignment
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
+\RequirePackage{pdfpages}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% general commands
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \DeclareRobustCommand{\chapterstyletitle}[1]{
 	\@makechapterhead{#1}
 	\noindent
@@ -504,7 +509,8 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 
 \AfterEndPreamble{
 	\thispagestyle{empty}
-	\if\@lang1{Sem vlo{\v z}te zad{\' a}n{\' i} Va{\v s}{\' i} pr{\' a}ce.}\else\if\@lang2{Sem vlo{\v z}te zadanie Va{\v s}ej pr{\' a}ce.}\else{Insert here your thesis' task.}\fi\fi
+	%\if\@lang1{Sem vlo{\v z}te zad{\' a}n{\' i} Va{\v s}{\' i} pr{\' a}ce.}\else\if\@lang2{Sem vlo{\v z}te zadanie Va{\v s}ej pr{\' a}ce.}\else{Insert your thesis task here}\fi\fi
+	\includepdf[pages={1}]{assignment.pdf}
 
 	\frontmatter
 	\pagestyle{plain}

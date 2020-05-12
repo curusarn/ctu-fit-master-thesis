@@ -1840,7 +1840,7 @@ guideline from NNgroup
 
 \chapter{Design}
 
-\subsubsection{Recording user interactions}
+%\subsubsection{Recording user interactions}
 
 \redtext{good text - bad place - maybe move up? - (this is "UP")}
 
@@ -1849,7 +1849,7 @@ User interactions are essential for understanding usage patterns and for informi
 We want our tool to record user history interactions.
 This should enable more future research of how people use shell history.
 
-\redtext{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nos}
+\redtext{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nos lore eu funon proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidanon proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt i giat nulla pariatur. Excepteur sint occaecat cupidalore eu funon proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt i giat nulla pariatur. Excepteur sint occaecat cupidatat non proidenttat non proident, sunt i giat nulla pariatur. Excepteur sint occaecat cupidalore eu funon proident, sunt ilore eu fugiat nulla epteur sint occaecat cupidatat non proident, sunt itat non proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt inon proident, sunt ilore ei}
 
 
 \todotext{Write intro}
@@ -1946,16 +1946,16 @@ The chosen additional features are Forward in history, synchronizing history bet
 
 
 
-\paragraph{Forward in history}
+%\paragraph{Forward in history}
 
 Forward in history is a feature we can find in Python console in Blender. We adopt this feature into our design because it allows the user to easily repeat sequences of history entries. Support for repeating sequences from history is poor in standard shell history.
 
-\paragraph{Synchronizing history}
+%\paragraph{Synchronizing history}
 
 Synchronizing history between multiple devices is and appealing feature. It enables history reuse between devices. The potential for reuse is further enhanced by using context to prioritize the search results.
 Synchronized history is also harder to lose because it is replicated across multiple devices. 
 
-\paragraph{Autosuggestions}
+%\paragraph{Autosuggestions}
 
 Autosuggestions are a very convenient and very fast history mechanism. Original Fish autosuggestions use context to determine what history entry should be displayed.
 We want to include a similar feature in our design.
@@ -2153,9 +2153,7 @@ We formalize this property as follows; Let queries \(q_1\) and \(q_2\) be repres
 
 \[ q_1 \subset q_2 \Rightarrow QueryScore_r(q_1) \leq QueryScore_r(q_2)\]\
 
-
 \paragraph{Context score}
-
 The second part of the total score is \(ContextScore\); It takes current context at the time of execution of the search application and compares it to context of individual history records. 
 The current context is compared the the context of the history records using four conditions displayed in the table \ref{tab:score-matching-context}. As shown in the table, each of these conditions either increases or decreases the score.
 
@@ -2279,6 +2277,8 @@ In this section, we test out design to make sure that we covered all the require
 
 
 \redtext{Test using guidelines}
+
+
 1: Visibility of system status
 % The system should always keep users informed about what is going on, through appropriate feedback within reasonable time.
 
@@ -2333,116 +2333,44 @@ Etc.
 \chapter{Implementation}
 
 
-\todo{merge sections to have less of them}
-\todotext{describe layout/contents of the chapter}
-
-\blind
-
-\section{Daemon}\todo{do we need this or is introduction enough}
-
-\blind
-
-\section{Choosing Go}
-
-\blind[3]
-
-\section{Recording shell history with context}
-
-\blind
-
-\subsection{History format}
-
-\todotext{NOTE: both on disk and in transfer}
-
-\blind
-
-\subsection{Shell integration and hooks}
-
-\blind
-
-\subsection{History record merging}
-
-\blind
-
-\section{Custom arrow key bindings}
-
-\todotext{TODO: intro: we want arrow key bindings to be able to record usage related metadata + it's a good idea to have the option to customize and use context to enhance arrow key bindings. Plus impossibility of gathering usage data and using the default bindings (at least in Bash)}
-
-\blind
-
-\subsection{Keybinding custom functions in zsh}
-
-\blind
-
-\subsection{Keybinding custom functions in Bash}
-
-\blind
-
-\subsection{Reverting keybindings}
-
-\blind
-
-\subsection{Universal keybinding library}
-\todotext{TODO: explain why: as you see Bash and zsh have a different ways of supporting custom keybindings. To simplify our codebase we extracted the keybind setting logic into a library. (unified way to set keybindings)}
-
-\blind
-
-\subsection{Performance issues of custom keybindings in Bash}
-
-\blind
-
-
-\section{Fullscreen command line history searching application}
-
-\todo{TODO: subsections}
-
-
-\section{Daemon components}
-
-\todotext{TODO: describe why we need components}
 
 \begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/daemon-components.jpg}}
-  \caption{One image. \todotext{TODO: write a title}}
-  \label{fig:TODO}
+\centering
+  \tmpframe{\includegraphics[angle=90,origin=c,width=\linewidth]{figures/implementation/thesis-impl-search-app-sequence-PADDING.pdf}}
+  \caption{Sequence diagram of using the search application}
+  \label{impl-search-app-sequence}
 \end{figure}
 
-\subsection{Server}
 
-\subsection{History file}
+\begin{figure}
+\centering
+  \tmpframe{\includegraphics[width=\linewidth]{figures/implementation/thesis-impl-search-app-data-lifetime.pdf}}
+  \caption{Schema of search and rendering process of the search application}
+  \label{impl-search-app-data-lifetime}
+\end{figure}
 
-\subsection{Session history}
-\todotext{TODO: explain: there are implications for the daemon if we want responsive arrow key bindings}
-
-\subsection{Expired session tracking}
 
 
-\subsection{Signal handling}
 
-\blind
+\begin{figure}
+\centering
+  \tmpframe{\includegraphics[width=\linewidth]{figures/implementation/thesis-impl-daemon-channels.pdf}}
+  \caption{Schema of internal daemon structure (async vs sync)}
+  \label{impl-daemon-channels}
+\end{figure}
 
-\section{Control and configuration}
 
-\blind
 
-\section{Installation, updates, and build process}
-
-\todotext{TODO: explain how simple the installation is. plus updates.}
-
-\blind
-
-\subsection{Installation and updates}
-\todotext{TODO: explain how installation works}
-
-\blind
-
-\subsection{Production and development build process}
-\todotext{TODO: explain the build process}
-
-\blind[2]
 
 
 \chapter{Testing and Evaluation}
+
+\redtext{USER FEEDBACK}
+
+turn off context -> raw mode
+
+use ctrl+R to get next result -> collision with 
+
 
 \todotext{TODO: describe layout/contents of the chapter}
 
