@@ -2363,7 +2363,7 @@ In this section, we describe the implementation of the notable parts of the sear
 
 \subsection{Overview}
 
-Here, we look at the sequence of actions that happens when the search application is used. The sequence diagram in figure \ref{impl-search-app-sequence} shows the interactions of the user with different parts of the system.
+First, we look at the sequence of actions that happens when the search application is used. The sequence diagram in figure \ref{impl-search-app-sequence} shows the interactions of the user with different parts of the system.
 
 At the start of the diagram the user presses \verb|CTRL-R| while on the shell prompt. Shell calls our custom shell function that wraps the search application. The shell function collects the current context and executes the search application; The context is passed using command line arguments. 
 
@@ -2533,7 +2533,7 @@ Order with reduced penalty for non-matching host:
 \end{itemize}
 \end{multicols}
 
-Out of these two orders we decided to use the "regular" one. This order will be better at handling situations where there are many different hosts with a lot of history. According to our previous design, each combination of conditions should result in a unique \(ContextScore\). Table \ref{tab:score-context-impl-values} shows how we assigned scores to the individual conditions in a way that produces unique result for each combination of conditions.
+Out of these two orders we decided to use the "Regular order". This order should be better at handling situations where there are many different hosts with a lot of history. According to our previous design, each combination of conditions should result in a unique \(ContextScore\). Table \ref{tab:score-context-impl-values} shows how we assigned scores to the individual conditions in a way that produces unique result for each combination of conditions.
 
 \begin{table}[h!]
 \centering
@@ -2581,33 +2581,85 @@ Now we have determined all weights except for \(TimeScore\) weight. We only want
 
 \section{Daemon}
 
+So far we covered the implementation of the search application and the necessary shell integration. Now we describe how we implement the daemon.
 
+%\subsection{Overview}
 
+As you can see in figure \ref{impl-daemon-channels}, the daemon consists of four parts that communicate asynchronously using Go channels\cite{lib-go-channels}. We use standard Go http server\cite{lib-go-http} to listen for requests. 
 
-\section{Installation, updates, and configuration}
+The history collector uses \verb|/record| request to send history records to the daemon. The search application uses \verb|/dump| request to get all history records. And the \verb|/recall| request is used by the arrow key handler to get a command line entries from the daemon. 
 
-
-
-
+All of the requests use JSON as a data exchange format. Conveniently, history records are also saved to storage as JSON.
 
 \begin{figure}
 \centering
   \tmpframe{\includegraphics[width=\linewidth]{figures/implementation/thesis-impl-daemon-channels.pdf}}
-  \caption{Schema of internal daemon structure (async vs sync)}
+  \caption{Schema of internal daemon structure and communication}
   \label{impl-daemon-channels}
 \end{figure}
 
+\subsection{History file}
 
-\newpage
-Decorrelated "scoring variables":
+The history file module is responsible of all communication with storage device. It reads history records from storage when it starts up. And it also writes history records to storage.
+
+Earlier, we explained that history collector is activated before and after each executed command line. This means that the history record is sent to the daemon in two parts. The history file module is responsible for merging the two parts into a single history record. 
+
+When the search application sends \verb|/dump| request the history file module responds with all history records. 
+
+% standard shell history
+
+\subsection{Session history}
+
+The session history module holds history for active sessions. It receives history records from \verb|/record| requests and appends them to history for matching session.
+These session history structures only exist in memory.
+
+The session history module responds to \verb|/recall| requests from the arrow key handler. The history for the session is retrieved and an appropriate history entry is returned. 
+
+\subsection{Session watcher}
+
+The session watcher module is responsible for keeping track of which sessions are no longer active. Any history records sent to the daemon using \verb|/record| requests are also sent to the session watcher module. 
+
+Whenever a new history record is received the session watched module looks at the session it belongs to. If it is not already watching this session it starts periodically checking if the session is still active. Specifically, we check if the process with the PID of the session is still running.
+
+Once a session becomes inactive, the session watcher module notifies the session history and the history file modules. These modules delete appropriate structures from memory.
+
+\subsection{Signal handler}
+
+The signal handler module is responsible for shutting down the daemon when it receives \verb|SIGINT| or \verb|SIGTERM| signal. First, it notifies the history file module to write out all pending history records to the storage device. Once this is done or a timeout is exceeded the signal handler module shuts down the whole daemon.
+
+
+\section{Installation, updates, and configuration}
+
+Writing the software is just the first part of the process. Releasing it and getting it to your users is equally important. In this section, we describe how we build the project and how users can install it.
+
+\subsection{Releasing and building the project}
+
+Our project is hosted on GitHub\cite{resh-github-homepage}. We have setup a CI pipline to build binaries of the project for every tag we push to the repository. Specifically, we use GitHub Actions\cite{github-actions} and Goreleaser\cite{tools-goreleaser}.
+
+When the CI pipeline builds the binaries it creates a new release on the release page\cite{resh-github-releases}. Built binaries are available on this page. 
+
+\subsection{Installation and updates}
+
+The project can be installed by running a single command:
+
 \begin{verbatim}
-    DIR (same DIR)
-    GIT (same GIT & different DIR)
-    ERR (non-zero)
-    HOST (different host)
+curl -fsSL https://raw.githubusercontent.com/curusarn/resh
+    /master/scripts/rawinstall.sh | bash
 \end{verbatim}
 
+First, the script checks the operating system and the CPU architecture of the device. Based on that an archive with appropriate binaries is downloaded. Then, an integrity check is performed and the archive is extracted. 
 
+After extracting the archive, we check versions of Bash and Zsh, make directories, and copy files. We also append a few lines to users dotfiles to setup the shell integration. Finally, we show some onboarding information to the user.
+
+The project has almost no dependencies; There are only a very standard utilities required for installation. The binaries are statically linked so they do not depend on any system libraries.
+
+The project can be updated at any time by running \verb|reshctl update|. This checks if there is a new version of the project available and installs it.
+
+\subsection{Configuration and control}
+
+Our project comes with a configuration command \verb|reshctl|. Basides other things, this command can be used to enable and disable key bindings. 
+
+Tab completions for \verb|reshctl| are set up during installation. The  \verb|-h|/\verb|--help| option with descriptions for individual subcommands is also available. To make it easy to provide all this, we use a library\cite{lib-go-cobra} for creating command line interfaces.
 
 
 \chapter{Testing and Evaluation}
@@ -2695,7 +2747,6 @@ I have created a universal shell library for binding custom functions to keys wi
 
 \redtext{Implement sync connectors}
 
-\redtext{Use more context to handle special cases - 1) detect aliases that are not set on current host; 2) special handling for exit codes (130 + long running command), specific commands}
 
 %  any command killed by Ctrl+C after more than e.g. 30 seconds will be considered a success by resh-cli and won't be penalized 
 % different tools use exit status differently
@@ -2705,7 +2756,12 @@ I have created a universal shell library for binding custom functions to keys wi
 using ML techniques to provide Autosuggestions tailored to the user is a promising topic for future research
 %Researching and designing the prediction is beyond the scope of this work. However, it is a good topic for future work.
 
+\redtext{Prioritize commonly recalled entries in the search application}
 
+\redtext{Use more context to handle special cases - 1) detect aliases that are not set on current host; 2) special handling for exit codes (130 + long running command), specific commands}
+
+
+\redtext{Sessions, sequences, etc.}
 
 \end{conclusion}
 
@@ -2716,7 +2772,7 @@ using ML techniques to provide Autosuggestions tailored to the user is a promisi
 
 %\printglossaries
 
-\chapter{Contents of SD card}\label{app:SDcontent}
+\chapter{Contents of attached medium}\label{app:SDcontent}
 
 \todotext{TODO: Visualise the contents of enclosed media. Use of dirtree is recommended. Note that directories src and text with appropriate contents are mandatory.}
 
