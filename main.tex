@@ -1859,7 +1859,7 @@ we should not redesign them unless we have a good reason to
 furthermore, even when we redesign and replace history features we should leverage and build upon habits people already have.
 
 
-
+\newpage
 \section{Requirements and features}
 
 
@@ -2319,18 +2319,11 @@ Support for synchronization between devices is provided by the daemon and the sy
 
 In previous chapter, we designed a history system based of our previous analysis. Now we describe the actual implementation. 
 
-We did not implement every part of the design because it is quite extensive. Instead, we chose parts of the design that bring the most value to the users. Naturally, we also implemented the parts that are required for the system to actually work.
+We did not implement every part of the design because it is quite extensive. Instead, we chose parts of the design that bring the most value to users. Naturally, we also implemented parts of the design that are required for the system to actually work.
 
-\redtext{Draft}
+First, we identified the search application as the most important part of the design to implement. Second, we wanted to collect the usage of the shell history. To implement these two parts of the design, we needed to implement many other things. 
 
-\begin{itemize}
-    \item first we needed to integrate with shell to be able to collect history
-    \item we also needed to override standard keybindings, and manipulate the commmand line contents (in shell)
-    %\item to be able to record shell usage of arrow keys we needed to replace the default arrow key bindings -- we implemented arrow key bindings for zsh and bash
-    %\item we implemented the default contextual view of the search application because searching history is common part of many workflows while showing details an history inspection in general is more of a nice-to-have
-    \item ...
-\end{itemize}
-
+We need to integrate with the shell to collect history, context, and usage. Arrow key bindings are necessary to collect their usage. The search application also needed its custom key bindings. Daemon is necessary to process, save, load, and serve history data. Additionally, we also needed a convenient way to release the project and to deliver it to users.
 
 \section{Shell integration}
 
@@ -2343,11 +2336,11 @@ We need to record contextual information both before and after the command line 
 
 We have two shell functions that record the context and send it to the daemon. One is called before and one after command line entry execution. In Zsh we used \verb|preexec| and \verb|precmd| hook functions to make Zsh call our functions at appropriate times. 
 
-In Bash there are no native \verb|preexec| and \verb|precmd| hook functions. Luckily, there is a library \cite{lib-bash-preexec} that emulates these hook functions in Bash. The behaviour is not always quite the same as in Zsh but we managed to work around all the issues we encountered with Bash.  
+In Bash there are no native \verb|preexec| and \verb|precmd| hook functions. Luckily, there is a library \cite{lib-bash-preexec} that emulates these hook functions in Bash. The behavior is not always quite the same as in Zsh but we managed to work around all the issues we encountered with Bash.  
 
 \subsection{Key bindings and line editing}
 
-For many components of out history system we need a way to bind custom shell functions to so that they are launched when a key is pressed. Additionally, we often need to be able to manipulate the contents of the command line from these functions.
+For many components of out history system we need a way to bind custom shell functions to keys so that they are launched when a key is pressed. Additionally, we often need to be able to manipulate the contents of the command line from these functions.
 
 Zsh and Bash both have their own different built-in commands that allow us to bind shell functions to keys. Both shells also provide a different way to manipulate the command line contents. Ideally, we do not want to pollute our code base with many lines of shell specific code.
 
@@ -2413,8 +2406,6 @@ Now that we know how the rendering process works we can look at the screenshots 
 The second screenshot in figure \ref{xterm-resh-normal-80-long} shows how the contents in the host and directory column are shortened. This happens when the contents are too long relative to the terminal width. The command line column takes up the rest of the terminal width. All shortened information for the selected result is displayed on the status line in full. 
 
 In larger terminals a less compact time format is used; This is shown in figure \ref{xterm-resh-normal-full}.
-
-%In larger terminals a less compact time format is used; This is shown in figure \ref{xterm-resh-normal-full}.
 
 
 \newpage
@@ -2636,7 +2627,7 @@ Writing the software is just the first part of the process. Releasing it and get
 
 Our project is hosted on GitHub\cite{resh-github-homepage}. We have setup a CI pipline to build binaries of the project for every tag we push to the repository. Specifically, we use GitHub Actions\cite{github-actions} and Goreleaser\cite{tools-goreleaser}.
 
-When the CI pipeline builds the binaries it creates a new release on the release page\cite{resh-github-releases}. Built binaries are available on this page. 
+When the CI pipeline builds the binaries it creates a new release on the release page\cite{resh-github-releases}. The built binaries are available there. 
 
 \subsection{Installation and updates}
 
@@ -2659,7 +2650,7 @@ The project can be updated at any time by running \verb|reshctl update|. This ch
 
 Our project comes with a configuration command \verb|reshctl|. Basides other things, this command can be used to enable and disable key bindings. 
 
-Tab completions for \verb|reshctl| are set up during installation. The  \verb|-h|/\verb|--help| option with descriptions for individual subcommands is also available. To make it easy to provide all this, we use a library\cite{lib-go-cobra} for creating command line interfaces.
+Tab completions for \verb|reshctl| are set up during installation. There is a help (\verb|-h|/\verb|--help|) option available with descriptions for individual subcommands. To make it easy to provide all this, we use a library\cite{lib-go-cobra} for creating command line interfaces.
 
 
 \chapter{Testing and Evaluation}
