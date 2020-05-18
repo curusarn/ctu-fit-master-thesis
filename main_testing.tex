@@ -1,0 +1,93 @@
+
+\chapter{Evaluation and Testing}
+
+
+\section{Usefulness of history tools}
+
+Usefulness make people come back and use products/systems
+
+Usefulness = Utility + Usability \cite{nielsen2012usability}
+Utility =
+Usability =
+
+\subsection{Utility}
+
+
+Typing + other tasks like detecting and correcting typing errors likely account for about half of all key strokes \cite{whiteside1982people}
+
+%"Command line entry involves not only typing the final correct characters, but also the time it takes to detect and correct typing errors. Actual character savings are likely double the theoretical ones" \cite{whiteside1982people}
+
+Remembering
+
+Before typing the user has to remember what to type. In many cases this might be more difficult than the act of typing out the command line entry.
+
+Generally, recognizing and selecting and activity is considered easier than recalling it or regenerating it. \cite{greenberg1993computer}
+
+
+
+To evaluate the utility of the system we will use metrics that are based on how many characters users do not have to type and how much information they do not have to remember.
+
+\subsection{Usability}
+
+The utility of the system is not the only thing that matters
+
+
+FROM \cite{nielsen2012usability}
+Learnability: How easy is it for users to accomplish basic tasks the first time they encounter the design?
+Efficiency: Once users have learned the design, how quickly can they perform tasks?
+Memorability: When users return to the design after a period of not using it, how easily can they reestablish proficiency?
+Errors: How many errors do users make, how severe are these errors, and how easily can they recover from the errors?
+Satisfaction: How pleasant is it to use the design?
+
+
+% 
+% For example, there might be situations when searches for a specific history entry and the system will fail to retrieve it because of its search algorithm. Such situations are especially annoying if the user is absolutely sure that the result is present in the history. 
+
+% A few annoying situations like this one can leave an impression that the system is unreliable. A predictable system with worse average performance might still feel superior to system with better 
+
+\subsection{Issues with testing of history tools}
+
+
+
+Ideally, we would want to perform usability testing; This would help us to find usability issues of the system and estimate its overall usability.
+
+However, history tools cannot be tested as easily as for example websites.
+
+When doing usability testing we want to see users try to perform real tasks using the system. This is why it is necessary to prepare testing scenarios for users to follow during the testing session.
+
+Unlike other applications, scenarios for history search application are heavily dependent on the workflows of the user and his history.
+
+
+We would need to prep personalised scenarios for individual users based on their shell history and usage of the history system.
+This is possible but it proved to be too time consuming for us to use in this work.
+
+
+We did release the project a while ago and we iteratively improve it. Because of that we got a lot of feedback and many chances interview our users. 
+
+%We will draw our conclusions about usability of the  from on interviewing users and the feedback from them.
+
+
+
+
+\section{Metrics}
+
+We suggest metrics to evaluate the usefulness of the search application.
+
+
+
+\subsection{Number of saved characters}
+
+
+
+
+\subsection{Metrics for comparing our search application with Hstr}
+
+We have some users that have used Hstr \cite{toolshstr} in the past and later started to our history system instead. 
+We take all situations when these users used either Hstr or our search application and evaluate how many characters people save by using our search application.
+
+
+
+
+\subsection{Metrics for new use-cases of our search application}
+
+In addition to 

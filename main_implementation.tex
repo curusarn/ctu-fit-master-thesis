@@ -1,4 +1,5 @@
-﻿\chapter{Implementation}
+
+\chapter{Implementation}
 
 In the previous chapter, we designed a history system based on our previous analysis. Now we describe the actual implementation. 
 
@@ -28,6 +29,7 @@ For many components of our history system, we need a way to bind custom shell fu
 Zsh and Bash both have their own different built-in commands that allow us to bind shell functions to keys. Both shells also provide a different way to manipulate the command line contents. Ideally, we do not want to pollute our code base with many lines of shell specific code.
 
 Unluckily, we could not find any library that provides a unified key bindings interface. Because of that, we created a library\cite{lib-bash-zsh-compat-widgets} that allows the same shell function to be bound to keys and used for command line editing in both Zsh and Bash. Additionally, the key bindings can be reverted to restore the original function.
+We used this library to implement arrow key bindings that imitate the default behaviour.
 
 % Bash issues and limitations 
 
@@ -125,10 +127,10 @@ As we explained earlier while designing, the scoring function consists of three 
 
 \paragraph{Query score}
 
-To calculate the \(Query score\), we split the query into words by spaces. Then we take each word, and we match it against the history entries. For each word of the query that matches the history entry, the score is increased by \verb|1|. If the same word of the query matches multiple times, we add \verb|0.002| to the score. 
+To calculate the \(Query score\), we split the query into words by spaces. Then we take each word, and we match it against the history entries. For each word of the query that matches the history entry, the score is increased by \(1\). If the same word of the query matches multiple times, we add \(0.002\) to the score. 
 
 
-We improve this simple matching algorithm by rewarding query words with an extra score if they match whole commands or whole arguments. We implement this in a very naive way; Any string in the command line entry that is delimited by spaces is considered a separate "word". For each query word that matches any of these "words", we increase the score by \verb|0.33|.
+We improve this simple matching algorithm by rewarding query words with an extra score if they match whole commands or whole arguments. We implement this in a very naive way; Any string in the command line entry that is delimited by spaces is considered a separate "word". For each query word that matches any of these "words", we increase the score by \(0.33\).
 
 \paragraph{Context score}
 
@@ -230,7 +232,12 @@ HOST & \(-0.2\) \\
 
 To calculate the \(TimeScore\), we take the number of seconds since the epoch, and we multiply them by a coefficient to scale them to a number lower than one. The specific constant we use is $1\mathrm{e}{-10}$.
 
+For example, the number of seconds since the epoch for 2020.05.18 at 14:05 is 
+1589803500. And 1589803500 times $1\mathrm{e}{-10}$ is approximately 0.158.
+
+
 \paragraph{Score weights}
+
 
 Now that we covered how we implement the partial scores, we need to combine them together.
 First, we want to make sure that the user can search effectively. We do not want to show results with matching context before these that match the search query. This means that a single match of a query should result in a \(QueryScore\) greater than any \(ContextScore\).
@@ -249,10 +256,28 @@ When we set \(w_2\) to \(1\) and fill in values based on definitions of the part
 
 For \(ContextScore\) weight equal to \(1\), the weight for \(QueryScore\) (\(w_1\)) needs to be greater than \(1.5\). This way a single query match has enough influence compared to the context.
 
-Now we have determined all weights except for \(TimeScore\) weight. We only want \(TimeScore\) to influence the order when everything else is equivalent. To do this we set the weigth for \(TimeScore\) (\(w_3\)) to $1\mathrm{e}{-3}$.
+Now we have determined all weights except for \(TimeScore\) weight. We only want \(TimeScore\) to influence the order when everything else is equivalent. To do this we set the weight for \(TimeScore\) (\(w_3\)) to $1\mathrm{e}{-3}$.
 
-% final weigths 1.51, 1, 1e-3
+Table \ref{tab:score-weights-ranges} shows weights and ranges for all partial scores. The maximal \(TimeScore\) is 0.9 for all dates up to year 2255. The maximal \(QueryScore\) is 1.37 per each word of the query for up to 20 consecutive matches. 
 
+% Theoretically, the maximal value for \(QueryScore\) is unlimited because there can be any number of consecutive matches. However, realistically, we will rarely have more than a few consecutive matches; 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lrrr}
+\hline \hline
+Partial score & Weight & Minimal value & Maximal value \\
+\hline
+$QueryScore$ & 1.51 & 0 & 1.37 per word of query  \\ 
+$ContextScore$ & 1 & -0.6 & 0.9 \\ 
+$TimeScore$ & $1\mathrm{e}{-3}$ & 0 & 0.9 \\
+\hline \hline
+\end{tabular}
+\caption{Weights and ranges for partial scores}
+\label{tab:score-weights-ranges}
+\end{table}
+
+\newpage
 \section{Daemon}
 
 So far, we covered the implementation of the search application and the necessary shell integration. Now we describe how we implement the daemon.
@@ -263,7 +288,9 @@ As you can see in figure \ref{impl-daemon-channels}, the daemon consists of four
 
 The history collector uses \verb|/record| request to send history records to the daemon. The search application uses \verb|/dump| request to get all history records. And the \verb|/recall| request is used by the arrow key handler to get command line entries from the daemon. 
 
-All of the requests use JSON as a data exchange format. Conveniently, history records are also saved to storage as JSON.
+All of the requests use JSON as a data exchange format. Conveniently, history records are also saved to storage as JSON. 
+
+\redtext{Link to JSON description of JSON}
 
 \begin{figure}
 \centering
@@ -272,7 +299,7 @@ All of the requests use JSON as a data exchange format. Conveniently, history re
 \label{impl-daemon-channels}
 \end{figure}
 
-\subsection{History file}
+\subsection{History file module}
 
 The history file module is responsible for all communication with a storage device. It reads history records from storage when it starts up. And it also writes history records to storage.
 
@@ -282,14 +309,14 @@ When the search application sends \verb|/dump| request, the history file module 
 
 % standard shell history
 
-\subsection{Session history}
+\subsection{Session history module}
 
 The session history module holds the history for active sessions. It receives history records from \verb|/record| requests and appends them to history for the matching session.
 These session history structures only exist in memory.
 
 The session history module responds to \verb|/recall| requests from the arrow key handler. The history for the session is retrieved, and an appropriate history entry is returned. 
 
-\subsection{Session watcher}
+\subsection{Session watcher module}
 
 The session watcher module is responsible for keeping track of which sessions are no longer active. Any history records sent to the daemon using \verb|/record| requests are also sent to the session watcher module. 
 
@@ -297,7 +324,7 @@ Whenever a new history record is received, the session watched module looks at t
 
 Once a session becomes inactive, the session watcher module notifies the session history and the history file modules. These modules delete appropriate structures from memory.
 
-\subsection{Signal handler}
+\subsection{Signal handler module}
 
 The signal handler module is responsible for shutting down the daemon when it receives \verb|SIGINT| or \verb|SIGTERM| signal. First, it notifies the history file module to write out all pending history records to the storage device. Once this is done, or a timeout is exceeded, the signal handler module shuts down the whole daemon.
 
@@ -314,18 +341,12 @@ When the CI pipeline builds the binaries, it creates a new release on the releas
 
 \subsection{Installation and updates}
 
-The project can be installed by running a single command:
-
-\begin{verbatim}
-curl -fsSL https://raw.githubusercontent.com/curusarn/resh
-/master/scripts/rawinstall.sh | bash
-\end{verbatim}
-
+The project can be installed by running a simple installation script.
 First, the script checks the operating system and the CPU architecture of the device. Based on that, an archive with appropriate binaries is downloaded. Then, an integrity check is performed, and the archive is extracted. 
 
 After extracting the archive, we check versions of Bash and Zsh, make directories, and copy files. We also append a few lines to users dotfiles to set up the shell integration. Finally, we show some onboarding information to the user.
 
-The project has almost no dependencies; There are only a few very standard utilities required for installation. The binaries are statically linked, so they do not depend on any system libraries.
+The project has almost no dependencies. There are only a few very standard utilities required for installation. The binaries are statically linked, so they do not depend on any system libraries.
 
 The project can be updated at any time by running \verb|reshctl update|. This checks if there is a new version of the project available and installs it.
 
