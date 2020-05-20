@@ -38,40 +38,46 @@ To evaluate the utility of our history system we use metrics that are based on h
 
 \subsection{Usability}
 
+Usability can be broken down to five following quality components.\cite{nielsen2012usability}
 
-FROM \cite{nielsen2012usability}
-Learnability: How easy is it for users to accomplish basic tasks the first time they encounter the design?
-Efficiency: Once users have learned the design, how quickly can they perform tasks?
-Memorability: When users return to the design after a period of not using it, how easily can they reestablish proficiency?
-Errors: How many errors do users make, how severe are these errors, and how easily can they recover from the errors?
-Satisfaction: How pleasant is it to use the design?
+\begin{itemize}
+    \item Learnability
+    \item Efficiency
+    \item Memorability
+    \item Errors
+    \item Satisfaction
+\end{itemize}
 
+Learnability assesses how easily can users complete basic task when they use the system for the first time. For example, non-standard key bindings that are not shown on the screen could make the interface difficult to use.
 
-% 
-% For example, there might be situations when searches for a specific history entry and the system will fail to retrieve it because of its search algorithm. Such situations are especially annoying if the user is absolutely sure that the result is present in the history. 
+Efficiency means how quickly can users achieve their goals once they already know how to use the system. If the design requires users to complete too many steps to accomplish their goal it will slow them down. 
 
-% A few annoying situations like this one can leave an impression that the system is unreliable. A predictable system with worse average performance might still feel superior to system with better 
+Memorability represents if the users can proficiently use the system after they did not use it for a while. 
+
+We also want to know how many errors people make while using the system. Does the design make it easy to recover from errors? For instance, if there would be no way to revert ones actions the users might learn to use the system slowly and carefully. 
+
+Satisfaction assesses if it is pleasant to use the system. For example, system that unpredictably fails will likely cause its users to distrust it. Users might not enjoy to use a system they do not find reliable. 
+
+%Learnability: How easy is it for users to accomplish basic tasks the first time they encounter the design?
+%Efficiency: Once users have learned the design, how quickly can they perform tasks?
+%Memorability: When users return to the design after a period of not using it, how easily can they reestablish proficiency?
+%Errors: How many errors do users make, how severe are these errors, and how easily can they recover from the errors?
+%Satisfaction: How pleasant is it to use the design?
 
 \subsection{Issues with testing history tools}
 
+Ideally, we would want to perform usability testing with users; This would help us to find usability issues of the system and estimate its overall usability.
+
+When conducting usability testing we want to see users perform real tasks using the system. It is necessary to prepare testing scenarios for users to follow during the testing session.
+
+However, history tools cannot be tested as easily as other applications or websites.
+Unlike with other applications, scenarios for our history search application are heavily dependent on the personal workflows of the specific user and his history.
 
 
-Ideally, we would want to perform usability testing; This would help us to find usability issues of the system and estimate its overall usability.
-
-However, history tools cannot be tested as easily as for example websites.
-
-When doing usability testing we want to see users try to perform real tasks using the system. This is why it is necessary to prepare testing scenarios for users to follow during the testing session.
-
-Unlike other applications, scenarios for history search application are heavily dependent on the workflows of the user and his history.
-
-
-We would need to prep personalised scenarios for individual users based on their shell history and usage of the history system.
+We would need to prepare personalised scenarios for individual users based on their shell history and their usage of the history mechanisms.
 This is possible but it proved to be too time consuming for us to use in this work.
 
-
-We released the project a while ago and we iteratively improve it. Because of that we got a lot of feedback and many chances interview our users. 
-
-%We will draw our conclusions about usability of the  from on interviewing users and the feedback from them.
+We released this project a while ago and we iteratively improve it. Because of that we got a lot of feedback and many chances interview our users. We also collected some shell history and usage data from our users. We use this data to demonstrate the usefulness of our solution.
 
 \section{Evaluating real life scenarios}
 
