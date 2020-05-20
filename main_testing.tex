@@ -1,35 +1,42 @@
 
 \chapter{Evaluation and Testing}
 
+In this chapter, we evaluate and test the implemented history system to find out how useful it is.
+
+First, we explain what does it mean for a system of a tool to be useful. Plus we point out the specifics of estimating the usefulness of history systems.
+
+Second, we use a few real life scenarios to show the advantages of our search application in practice. Using these scenarios we compare different methods to search for and retrieve entries from shell history.
+
+Third, we introduce metrics to quantitatively evaluate our history system. Then, we use the metrics to compare our search application with another state-of-the-art history tool.
+
+Fourth, we describe how we incrementally improve the system since the initial release. The community of existing users makes it possible to get impressions, ideas, and feedback. 
+
+Finally, we show additional use cases that are possible to fulfill using our search application. 
 
 \section{Usefulness of history tools}
 
-Usefulness make people come back and use products/systems
+The goal of this work is to design and create a history system that is useful. 
+We want people to use the tool because it both solves their workflows and it is easy and pleasant to use.
 
-Usefulness = Utility + Usability \cite{nielsen2012usability}
-Utility =
-Usability =
+The usefulness of the system is determined by its utility and its usability.\cite{nielsen2012usability} Utility is a quality attribute of the system that assesses if the system provides the features that users need.\cite{nielsen2012usability} Usability refers to how easy and pleasant are the features to use. Any useful system needs to have both good utility and usability.
+
+In following sections we describe what utility and usability means for history tools specifically.
 
 \subsection{Utility}
 
+History systems should make it cheaper, in terms of mechanical and cognitive activity, to retrieve history entries than to type them again.\cite{greenberg1993computer}
 
-Typing + other tasks like detecting and correcting typing errors likely account for about half of all key strokes \cite{whiteside1982people}
+Retrieving command line entries from history saves us typing. Even small savings in typed characters make a difference because typing is an error-prone activity; A significant amount of time is usually spent detecting and fixing errors. According to \cite{whiteside1982people}, typing only accounts for about a half of all key strokes during text editing. 
 
 %"Command line entry involves not only typing the final correct characters, but also the time it takes to detect and correct typing errors. Actual character savings are likely double the theoretical ones" \cite{whiteside1982people}
 
-Remembering
+Before typing the command line entry, the user has to think of what to type. In many cases, this might be more difficult than the act of typing out the command line entry.   
 
-Before typing the user has to remember what to type. In many cases this might be more difficult than the act of typing out the command line entry.
+%Generally, recognizing and selecting and activity is considered easier than recalling it or regenerating it. \cite{greenberg1993computer}
 
-Generally, recognizing and selecting and activity is considered easier than recalling it or regenerating it. \cite{greenberg1993computer}
-
-
-
-To evaluate the utility of the system we will use metrics that are based on how many characters users do not have to type and how much information they do not have to remember.
+To evaluate the utility of our history system we use metrics that are based on how many characters users retrieve from history and how much information is required for a successful retrieval.
 
 \subsection{Usability}
-
-The utility of the system is not the only thing that matters
 
 
 FROM \cite{nielsen2012usability}
@@ -45,7 +52,7 @@ Satisfaction: How pleasant is it to use the design?
 
 % A few annoying situations like this one can leave an impression that the system is unreliable. A predictable system with worse average performance might still feel superior to system with better 
 
-\subsection{Issues with testing of history tools}
+\subsection{Issues with testing history tools}
 
 
 
@@ -62,32 +69,170 @@ We would need to prep personalised scenarios for individual users based on their
 This is possible but it proved to be too time consuming for us to use in this work.
 
 
-We did release the project a while ago and we iteratively improve it. Because of that we got a lot of feedback and many chances interview our users. 
+We released the project a while ago and we iteratively improve it. Because of that we got a lot of feedback and many chances interview our users. 
 
 %We will draw our conclusions about usability of the  from on interviewing users and the feedback from them.
 
+\section{Evaluating real life scenarios}
+
+In this section, we compare our history searching with other history tools based real life scenarios. We have collected shell history with usage from some of our users and chose specific situations to showcase the advantages of using our history search application.
+
+We found situations when people have used either Hstr\cite{toolshstr} or our search application to retrieve history entries. We took the shell history available at the time and fed it into three different history tools. The tools we test are standard reverse search, Hstr, and our search application. Now, we compare how difficult it is to retrieve the desired history entry using these three history tools.
+
+
+\subsection{First scenario}
+
+In the first real life scenario, the user is trying to retrieve following history entry: 
+
+\begin{verbatim}
+ansible-galaxy install -r requirements.yml -p roles
+\end{verbatim}
+
+%\verb|/Users/vit.listik/git/szn/laas/ansible-etcd|
+
+\paragraph{Reverse search}
+If the user used reverse search and typed \verb|ansible| as a query, the desired history entry would be twenty results away. As we described earlier in section  \ref{workflow-search-w-implicit-context}, pressing \verb|CTRL-R| twenty times while reading the results one by one is quite inefficient.
+
+Instead of using \verb|ansible| as a query and going through many results, the user could use a more specific query. Using \verb|ansible-g| as a query returns the desired history entry as the first result. In this case, however, the user has to remember more information about the history entry.
+
+\paragraph{Hstr}
+Now, we look at how the user could use Hstr to retrieve the same history entry.
+
+Typing \verb|ansible| returns the history entry on twentieth position on the page. Unlike with the reverse search, the user could fairly quickly scan the page and select the desired history. 
+
+However, it could be faster to extend the query to further filter the results. Unlike with the reverse search, the user can use any part of the command line entry as a query because Hstr breaks the query down to separate words. Extending the query to \verb|ansible ins| returns the desired entry as the first result.
+
+% Hstr requires less knowledge and less typing than reverse search. Plus selecting a twentieth result in Hstr is realistic unlike in reverese search.
+
+\paragraph{Our contextual search application}
+Finally, we compare how our search application performs compared to the other two options.
+
+After the user opens the search application the desired result is already in the third position. The user does not even have to specify a query because the search application returned the history entry based on the current context.
+
+Typing \verb|ans| as a query brings the desired history entry to the first position. As we can see, our solution requires less knowledge and less typing to retrieve the desired history entry than both Hstr and reverse search. 
+
+\subsection{Second scenario}
+
+In this second scenario, the user wants to retrieve the following history entry.
+
+\begin{verbatim}
+ansible-playbook infra_os_deploy.yml -i inventory_example.ini -b
+    -u debian -D
+\end{verbatim}
+
+%\verb|~/git/szn/laas/ansible-playbooks|
+
+\paragraph{Reverse search} 
+First, we look at how the user could use the reverse search to retrieve the desired history entry.
+
+Using \verb|ansible-playbook| as a query returns the history entry as thirty-first result. This is practically unusable. Plus this query is very hard to extend.
+
+The user could chose to delete the query and use a different one. Coming up with a usable query is hard in this case; For example, typing \verb|inventory| or \verb|debian| returns the history entry as second and third result respectively. In contrast, using \verb|infra| or \verb|deploy| leaves the entry well beyond the reach of the user. 
+
+\paragraph{Hstr}
+Second, we describe how Hstr can be used to retrieve the previously mentioned history entry.
+
+Typing \verb|ansible| does not return the desired history entry. However, the user can quite easily extend the query to \verb|ansible inf| which returns the history entry as a first result. 
+
+We can see how the ability use multi-word queries makes it much easier to use Hstr than reverse search.
+
+\paragraph{Our contextual search application}
+
+Third, we compare our search application with both previous methods. 
+
+When the user launches the application, he can already see the desired history entry as the eight result on the page. This is possible because the current context matches the context of the desired history entry. 
+
+As before, typing \verb|ans| as a query brings the desired history entry to the very first position on the page. 
+
+In situations like this one, our search application makes it very easy to retrieve the desired history entry. Hstr provides an reasonable to retrieve the entry but using context gives advantage to our solution. Reverse search is nearly impossible to use in this scenario.
 
 
 
 \section{Metrics}
 
+Now that we 
+
 We suggest metrics to evaluate the usefulness of the search application.
 
 
 
-\subsection{Number of saved characters}
+\subsection{Number of retrieved characters}
+
+This very simple metric is calculated by comparing the number of typed characters with different methods to retrieve and execute the command line entry. 
+
+We take the length of the command line entry as a reference value. And we subtract the number of key strokes needed to retrieve the history entry using a given history tool.
+
+\subsection{Amount of required knowledge}
+
+
+The number of tokens required to retrieve the history entry.
+
+Tokens are substrings that consist of alpha numerical characters.
+
+To make the metric deterministic we parse out all tokens  
 
 
 
+\subsection{Comparing contextual search with Hstr}
 
-\subsection{Metrics for comparing our search application with Hstr}
+Both Hstr and our search application give us a screen of results. We can measure how much it takes to make the commands show up in the top 10 or 20 results. (type and remember) 
+
+%\subsection{Metrics for comparing our search application with Hstr}
 
 We have some users that have used Hstr \cite{toolshstr} in the past and later started to our history system instead. 
 We take all situations when these users used either Hstr or our search application and evaluate how many characters people save by using our search application.
 
-
-
-
 \subsection{Metrics for new use-cases of our search application}
 
-In addition to 
+How many times it is possible to retrieve the history entry without any query.
+
+
+
+\subsection{Applying metrics}
+
+
+\subsection{Comparing our search application with Hstr}
+
+
+
+\subsection{New use cases}
+
+\section{User feedback}
+
+\subsection{User adoption}
+
+Since the release of the first prototype four months ago (20.1.2020) the project was downloaded over 600 times.
+
+Over 250 GitHub stars which 
+
+% https://keep.google.com/u/0/#NOTE/1pMiUTB0AU_JLmuiPByH7lHyzJR8_brmRqsiOeXRFez5t6wb0OUFtlinZ4oVNGpS9wRl_
+
+Incremental updates, etc
+
+\subsection{Feedback from the users}
+
+\begin{itemize}
+    \item Turn off context $->$ Raw mode (e.g. ssh is context agnostic)
+    \item Ctrl+R should work as arrow down $->$ need for more ergonomic arrow key bindings $->$ Ctrl+P/N
+    \item Exit codes (130 and different meaning based on program)
+    \item Better help / onboarding
+    \item Directory jumping - history vs. specialised tools
+\end{itemize}
+
+\subsection{User testimonies}
+
+People feel like resh search replaces Hstr well
+
+People feel like resh search replaces standard reverse search very well
+
+The overall feedback from people is overwhelmingly positive
+
+\section{Additional workflows}
+
+Quickly retrieve commands from other sessions ... Ctrl+R, Ctrl+R raw mode
+
+Find similar commands ... Arrow up (N times), Ctrl+R
+
+Writing new commands based on history ... Ctrl+R, type command, Ctrl+G to go back to the command line
+
+
