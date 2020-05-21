@@ -192,25 +192,45 @@ In this section, we apply the previously introduced metrics. We use the metrics 
 
 \subsection{Collected data}
 
-We have collected shell history and usage data from a few of our users. Out of these users we have a single user that was previously using Hstr and switched to our history search application. We use the data from this user to compare the utility of these two history applications.
+We have collected shell history and usage data from a few of our users. Out of these users there is a single user that was previously using Hstr and switched to our history search application. We use the data from this user to compare the utility of these two history applications.
 
-During five months, this user has successfully used Hstr 121 times and our history search application 69 times. For each of these data points we know what command line entry the user executed. 
+During five months of collecting the data, this user has successfully used Hstr 121 times and our history search application 69 times. For each of these data points we know what command line entry the user executed. 
 
-We also know when the event happened. This means that we can take the shell history that was available at the time and feed it into Hstr and our search application. This way we can see what results would these history tools return.
+We also know when the event happened. This means that we can take the shell history that was available at the time and feed it into Hstr and our search application. This way we can see what results would these history tools return at that time. We can compare how difficult would it be to retrieve the desired history entry in either of the history tools. 
 
 \subsection{Simulating history searching}
 
-We evaluate the history tools by simulating searching and calculating metrics.
+To evaluate the history tools we simulate searching and use previously introduced metrics compare them.
 
 First, we look at the results that are returned without any query. If we can find the desired history entry in the first twenty results then we are done. We use the first twenty returned results because it is an amount that fits into small terminals. 
 
-When we do not find the result, we add a single word to the query and we search again. We keep adding more words to the query until we find the desired history entry.
+When we do not find the result, we add a single word to the query and we search again. We keep adding more words to the query until we find the desired history entry. 
+
+After we find the desired result we know how the search tool performed; We know how many characters were retrieved from history and we also know how many words we needed to use as a query.
 
 \subsection{Comparing Hstr with our search application}
+
+
+
+
+\begin{itemize}
+    \item We want to compare these tools
+    \item We have usage from the same user from time when they used Hstr and when they used our solution
+    \item People use different tools differently; We saw a difference in usage of Hstr and in the usage our search application. It seems that users adapt to whatever tool they have available.
+    \item Because of this we take the usage from both of these tools separately. And then for each "usage" we simulate how well would both of the history tools perform.
+\end{itemize}
+
+
+
 
 Figure \ref{eval-metrics-plot-cmds-hstr} comparing hstr and our search application in situations when the user originally used Hstr
 
 Figure \ref{eval-metrics-plot-cmds-resh} comparing hstr and our search application in situations when the user originally used our search application
+
+\begin{itemize}
+    \item We can see that our application requires more knowledge than Hstr in figure \ref{eval-metrics-plot-cmds-hstr} which is expected because user origianally used Hstr for this history searching
+    \item In figure \ref{eval-metrics-plot-cmds-resh}, we see the opposite. Our shearch application requires less knowledge than Hstr because user originally used our search application for these history searches.
+\end{itemize}
 
 
 Figure \ref{eval-metrics-plot-chars-hstr} comparing hstr and our search application in situations when the user originally used Hstr
@@ -218,6 +238,17 @@ Figure \ref{eval-metrics-plot-chars-hstr} comparing hstr and our search applicat
 
 Figure \ref{eval-metrics-plot-chars-resh} comparing hstr and our search application in situations when the user originally used our search application
 
+\begin{itemize}
+    \item Figures \ref{eval-metrics-plot-chars-hstr} and \ref{eval-metrics-plot-chars-resh} show something similar but here we use the number of saved characters (normalized per number of retrieved history entries). 
+    \item Here, we can see that Hstr is on average more successful at finding shorter history entries when applied to the usage data from our search application.
+    \item This is not surprising; It matches findings from previous research\cite{greenberg1993computer} where directory sensitive history returned longer history entries because. More specific history entries generally tend to be longer and generic and common command line entries tend to be shorter.
+\end{itemize}
+
+We conclude that our history search application performs on par with Hstr. Using contextual search as a default is a reasonable trade off.
+
+One important thing we should point out is that we have used the same full shell history for both Hstr and our search application. Hstr normally only uses standard shell history which might be missing some history entries. 
+
+In all previous comparisons we give the benefit of the doubt to Hstr. 
 
 \clearpage
 \begin{figure}[h!]
