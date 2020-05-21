@@ -156,89 +156,183 @@ In situations like this one, our search application makes it very easy to retrie
 
 \section{Metrics}
 
-Now that we 
+In previous section, we demonstrated the advantages of using the contextual search application using specific situations. We saw how reverse search can be very ineffective. In contrast both Hstr and our search application performed adequately.
 
-We suggest metrics to evaluate the usefulness of the search application.
+Here, we introduce metrics we will use to evaluate the utility of the search application. We will later use the metrics to compare Hstr with our search application. 
 
+\subsection{Number of saved characters}
 
+The first metric is the number of saved characters. It represents the typing saved by the user.
 
-\subsection{Number of retrieved characters}
-
-This very simple metric is calculated by comparing the number of typed characters with different methods to retrieve and execute the command line entry. 
-
-We take the length of the command line entry as a reference value. And we subtract the number of key strokes needed to retrieve the history entry using a given history tool.
+Since we compare two similar history tools we assume that the number of key strokes needed to select a history entry is similar once the entry appears on the screen. Because of that we are not subtracting the key strokes needed for selection inside the history search applications.
 
 \subsection{Amount of required knowledge}
 
+The second metric represents the amount of knowledge the user needs to retrieve the history entry. We measure the amount of required knowledge in the unit of "knowledge tokens".
 
-The number of tokens required to retrieve the history entry.
+Knowledge tokens are substrings of the command line entry that consist of alphanumerical characters and are at least four characters long. We chose this definition of a knowledge token because it matches the type of information people usually remember and use for searching. We observed this behavior in our users. 
 
-Tokens are substrings that consist of alpha numerical characters.
+For example, imagine that you are searching for the following history entry.
 
-To make the metric deterministic we parse out all tokens  
+\begin{verbatim}
+curl -O -L https://api.github.com/repos/curusarn/resh/releases  
+\end{verbatim}
 
-
-
-\subsection{Comparing contextual search with Hstr}
-
-Both Hstr and our search application give us a screen of results. We can measure how much it takes to make the commands show up in the top 10 or 20 results. (type and remember) 
-
-%\subsection{Metrics for comparing our search application with Hstr}
-
-We have some users that have used Hstr \cite{toolshstr} in the past and later started to our history system instead. 
-We take all situations when these users used either Hstr or our search application and evaluate how many characters people save by using our search application.
-
-\subsection{Metrics for new use-cases of our search application}
-
-How many times it is possible to retrieve the history entry without any query.
+You would probably use something like \verb|curl github| as a query. The longer chunks of letters represent meaningful information while symbols are repetitive noise.
 
 
 
-\subsection{Applying metrics}
+%\redtext{...........}
+%When applying this metric we want it to be deterministic. This means that we need an automatic way to turn a command line entry into tokens 
 
 
-\subsection{Comparing our search application with Hstr}
+\section{Applying metrics}
+
+In this section, we apply the previously introduced metrics. We use the metrics to compare Hstr with our search application.
+
+\subsection{Collected data}
+
+We have collected shell history and usage data from a few of our users. Out of these users we have a single user that was previously using Hstr and switched to our history search application. We use the data from this user to compare the utility of these two history applications.
+
+During five months, this user has successfully used Hstr 121 times and our history search application 69 times. For each of these data points we know what command line entry the user executed. 
+
+We also know when the event happened. This means that we can take the shell history that was available at the time and feed it into Hstr and our search application. This way we can see what results would these history tools return.
+
+\subsection{Simulating history searching}
+
+We evaluate the history tools by simulating searching and calculating metrics.
+
+First, we look at the results that are returned without any query. If we can find the desired history entry in the first twenty results then we are done. We use the first twenty returned results because it is an amount that fits into small terminals. 
+
+When we do not find the result, we add a single word to the query and we search again. We keep adding more words to the query until we find the desired history entry.
+
+\subsection{Comparing Hstr with our search application}
+
+Figure \ref{eval-metrics-plot-cmds-hstr} comparing hstr and our search application in situations when the user originally used Hstr
+
+Figure \ref{eval-metrics-plot-cmds-resh} comparing hstr and our search application in situations when the user originally used our search application
 
 
+Figure \ref{eval-metrics-plot-chars-hstr} comparing hstr and our search application in situations when the user originally used Hstr
 
-\subsection{New use cases}
 
+Figure \ref{eval-metrics-plot-chars-resh} comparing hstr and our search application in situations when the user originally used our search application
+
+
+\clearpage
+\begin{figure}[h!]
+\centering
+\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-hstr.pdf}}
+\caption{Cumulative percentage of retrieved history entries as a function of required knowledge (Invocations of Hstr)}
+\label{eval-metrics-plot-cmds-hstr}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-resh.pdf}}
+\caption{Cumulative percentage of retrieved history entries as a function of required knowledge (Invocations of our search app.)}
+\label{eval-metrics-plot-cmds-resh}
+\end{figure}
+
+
+\begin{figure}[h!]
+\centering
+\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-hstr.pdf}}
+\caption{Cumulative retrieved characters as a function of required knowledge (Invocations of Hstr)}
+\label{eval-metrics-plot-chars-hstr}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-resh.pdf}}
+\caption{Cumulative retrieved characters as a function of required knowledge (Invocations of our search app.)}
+\label{eval-metrics-plot-chars-resh}
+\end{figure}
+
+\redtext{TODO: increase the size of the images if you shrink the captions}
+
+\clearpage
 \section{User feedback}
+
+In this section, we describe how we released the project to the public, what improvements we made based on interviewing our users, and what feedback we get from users,
+
+We released the first prototype of the search application about five months ago. We are engaging with the community and incrementally updating and improving the project. 
 
 \subsection{User adoption}
 
-Since the release of the first prototype four months ago (20.1.2020) the project was downloaded over 600 times.
+Since the release of the first prototype of the search application four months ago the project was downloaded and installed over 600 times. 
 
-Over 250 GitHub stars which 
+The project also received over 250 stars on GitHub which is a bookmarking and endorsement feature on the GitHub website.\cite{github-stars}
 
 % https://keep.google.com/u/0/#NOTE/1pMiUTB0AU_JLmuiPByH7lHyzJR8_brmRqsiOeXRFez5t6wb0OUFtlinZ4oVNGpS9wRl_
 
-Incremental updates, etc
 
 \subsection{Feedback from the users}
 
+Here, we describe what improvements we made to the project and what feedback we got from our users. We only mention a few examples of changes and feedback.
+
+\paragraph{Non-contextual mode}
+
+Some of the users were asking for a way to turn off the contextual search because it can occasionally get in their way. For example, logging into remote servers with \verb|ssh| can be done regardless of current directory. When searching for past \verb|ssh| commands the contextual search might do more harm than good.
+
+Based on this we have added the ability to switch between contextual and non-contextual mode with \verb|CTRL-R|. This way the user can always choose the appropriate tool for the specific situation.
+
+\redtext{ADD screenshot}
+
+\paragraph{More ergonomic arrow key bindings}
+
+One of our users was complaining that he is used to repeatedly pressing \verb|CTRL-R| to navigate to between the search results. He was previously using the standard reverse search.
+
+By interviewing the user we discovered that he needs more ergonomic key bindings for arrow keys because they are quite far away from the home row. We have added alternative emacs-inspired bindings for arrow keys; Pressing \verb|CTRL-N| selects the next result on the page and \verb|CTRL-P| selects the previous one.   
+
+
+\paragraph{Special handling for exit status}
+
+We got some feedback regarding using exit status as part of contextual search. When users kill the running command using \verb|CTRL-C| it exits with the status of 130.
+We anticipated that this would happen but it is more common than we expected.
+We could add special handling for exit statuses that have special meaning.
+
+\redtext{SKIP ?}
 \begin{itemize}
-    \item Turn off context $->$ Raw mode (e.g. ssh is context agnostic)
-    \item Ctrl+R should work as arrow down $->$ need for more ergonomic arrow key bindings $->$ Ctrl+P/N
-    \item Exit codes (130 and different meaning based on program)
     \item Better help / onboarding
     \item Directory jumping - history vs. specialised tools
 \end{itemize}
 
 \subsection{User testimonies}
 
-People feel like resh search replaces Hstr well
+Now, we sum up what people say about the project. 
 
-People feel like resh search replaces standard reverse search very well
+In our sizeable user base we have people who have switched from Hstr to our history system. Multiple people have said that our search application have fully replaced Hstr in their workflows. Based on this we conclude that we provide a reasonable alternative to Hstr.
 
-The overall feedback from people is overwhelmingly positive
+We shared the project online on multiple occasions and the feedback we received from people is overwhelmingly positive.\cite{resh-feedback}
 
 \section{Additional workflows}
 
-Quickly retrieve commands from other sessions ... Ctrl+R, Ctrl+R raw mode
+In this section, we describe additional workflows that are possible to complete using our search application. 
 
-Find similar commands ... Arrow up (N times), Ctrl+R
+\subsection{Quickly retrieve history from other sessions}
 
-Writing new commands based on history ... Ctrl+R, type command, Ctrl+G to go back to the command line
+Since standard history is handled individually in each session users cannot access history from other simultaneously running sessions. 
+
+Our search applications uses history from all running sessions immediately. This means that user can quickly access history from another open terminals. 
+
+Specifically, pressing \verb|CTRL-R| twice launches the search application and switches to non-contextual mode. This way the user can see all recent history entries from all sessions.
+
+\subsection{Find similar history entries}
+
+When the search application is launched, the contents of the command line are used as the initial query. For example, the user can use \verb|ARROW_UP| to retrieve the previous history entry and then press \verb|CTRL-R|. 
+
+Using a full command line entry as a query fills the page with similar history entries. This is possible because of properties of our scoring function; It returns reasonable results even when there are words in the query that do not match anything. 
+
+\subsection{Write new command line entries based on history}
+
+Sometimes we want to write a new command line entry but we do not quite remember all of its parts. To make the writing easier it would be useful to see other similar history entries while writing.
+
+As we already mentioned, when launching the search application the contents of the command line are used as a query. Conversely, the user can press \verb|CTRL-G| to abort the search and the contents of the query are pasted back onto the command line.
+Combination of these two actions makes it possible to transfer back and forth between the command line and the search application. 
+
+All this can be used to write new command line entries while
+
+We can launch the search application and start writing the command line into the query field. The search application continuously shows us similar history entries we can use as an inspiration. When we are done with typing the command line entry, we use \verb|CTRL-G| to get back to the command line. Then, we can execute the command line entry.
 
 

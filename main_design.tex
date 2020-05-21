@@ -210,7 +210,7 @@ Since we are replacing the reverse search, we are following many of its key bind
 \item \verb|ENTER| to execute the selected entry
 \item \verb|CTRL-X| to show detail view for the selected entry
 \item \verb|CTRL-C|/\verb|CTRL-D| to quit
-\item \verb|CTRL-G| to abort and paste the current search query on to the command line
+\item \verb|CTRL-G| to abort and paste the current search query onto the command line
 \end{itemize}
 
 
@@ -420,14 +420,17 @@ The history collector is also integrated into the shell so that it can collect t
 \section{Design testing}
 
 In this section, we test out design to make sure that we covered all the requirements. We go through the requirements one-by-one and argue why our design fulfills them. 
+
 \begin{itemize}
 \item Record shell history with context and usage
 \end{itemize}
+
 History collector records the history with context and usage and sends it to the daemon.
 
 \begin{itemize}
 \item Allow history sharing between open sessions
 \end{itemize}
+
 Daemon handles all of the history records so it can send it to any component regardless of sessions.
 
 \begin{itemize}
@@ -435,20 +438,25 @@ Daemon handles all of the history records so it can send it to any component reg
 \subitem Allow people to use the history system without configuring it first
 \subitem Allow use of the system without reading manuals or help pages
 \end{itemize}
+
 Our design does not expect people to configure the system before using it. Designed behavior is based on previous research and target users. Information required to use the search application is presented inside of it. There are features that are harder to discover, but these are not essential for the most common workflows. 
+
 \begin{itemize}
 \item Respect existing history features and existing habits of people
 \subitem Do not change keybindings used to complete existing workflows
 \subitem Support original workflows when replacing history mechanisms
 \end{itemize}
+
 We redesigned the behavior of standard history while keeping the original workflows intact. Recent history is still accessible on \verb|ARROW_UP| in unchanged order. People can still press \verb|CTRL-R| for general-purpose history searching. 
 The search application supports the workflows of standard reverse search.
+
 \begin{itemize}
 \item Provide a replacement for reverse search
 \subitem Solve the issues with standard reverse search
 \subitem Match the few main improvements offered by Hstr and Fzf
 \subitem use recorded context to enhance history searching capabilities
 \end{itemize}
+
 Our history searching application provides features that are a superset of what the reverse search provides. It can search for anything that reverse search can because the query is designed to have the most influence over the scoring function.
 
 Reverse search only uses a single query and shows a single result. This significantly reduces its usefulness. Our searching app uses multiple word queries and shows a page full of results. These are also the main improvement provided by the Hstr and Fzf.
@@ -459,6 +467,7 @@ The search application searches history based on both query and current context.
 \item Provide support for synchronization of shell history between devices
 \item Provide support for contextual autosuggestions
 \end{itemize}
+
 Our design includes support for forward history. Forward in history is a feature that makes it possible to easily repeat sequences. 
 The daemon and the synchronization connectors provide support for synchronization between devices. The autosuggestions handler provides support for contextual autosuggestions.
 
