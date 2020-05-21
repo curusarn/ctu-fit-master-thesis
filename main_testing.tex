@@ -208,81 +208,80 @@ When we do not find the result, we add a single word to the query and we search 
 
 After we find the desired result we know how the search tool performed; We know how many characters were retrieved from history and we also know how many words we needed to use as a query.
 
-\subsection{Comparing Hstr with our search application}
+\subsection{Comparing our search application with Hstr}
+
+We have just explained how we can simulate searching and compare history searching tools.
+
+In the usage data we are using, the user used Hstr for a period of time and at some point he started using our search application. These two parts of the usage data differ because people use different tools differently. We take these two parts of the usage data and separately test how both of the history tools would perform.
+
+\paragraph{Knowledge required to complete searches}
+
+In figure \ref{eval-metrics-plot-cmds-hstr}, we take all the situations when the user originally used Hstr and we simulate how both Hstr and our search application perform.
+We can see how many knowledge tokens are required to perform searches. For instance, without specifying any query we are able to complete 84.2\% and 77.6\% of searches using Hstr and our search application respectively. 
+
+Figure \ref{eval-metrics-plot-cmds-resh} shows the same metrics but for situations when the user originally user our search application. We can see that this time our search application requires less knowledge to complete the searches. For example, when we provide a single query we are able to complete 97.1\% of searches using our search application and 92.7\% of searches using Hstr. 
+
+The conclusion is that both methods perform similarly but the history tool that the user originally used performs better. It seems that users adapt to tools they are using.
+
+\paragraph{Saved characters as a function of required knowledge}
+
+In figures \ref{eval-metrics-plot-chars-hstr} and \ref{eval-metrics-plot-chars-resh} we use a similar method but we take the number of saved characters into account. Instead of just looking at percentage of searches that is achievable, we use the number of retrieved characters as a metric. 
+
+This means that successfully completing searches for longer history entries is worth more than completing searches for short entries.
+%To normalize the values we divide them by the total number of possible searches.
 
 
+When we look at the figure \ref{eval-metrics-plot-chars-hstr}, we can see that both history tools perform similarly. Without using any query we can retrieve on average 45.5 and 43 of characters by using Hstr and our search application respectively. This is expected for searches that were originally performed using Hstr.
+
+In contrast, figure \ref{eval-metrics-plot-chars-resh} shows us that Hstr does not perform well in situations when the user originally used our contextual search application. Without requiring any knowledge our search application can retrieve on average 46.5 characters. In contrast, Hstr is only able to retrieve the average of 32.9 characters.
 
 
-\begin{itemize}
-    \item We want to compare these tools
-    \item We have usage from the same user from time when they used Hstr and when they used our solution
-    \item People use different tools differently; We saw a difference in usage of Hstr and in the usage our search application. It seems that users adapt to whatever tool they have available.
-    \item Because of this we take the usage from both of these tools separately. And then for each "usage" we simulate how well would both of the history tools perform.
-\end{itemize}
-
-
-
-
-Figure \ref{eval-metrics-plot-cmds-hstr} comparing hstr and our search application in situations when the user originally used Hstr
-
-Figure \ref{eval-metrics-plot-cmds-resh} comparing hstr and our search application in situations when the user originally used our search application
-
-\begin{itemize}
-    \item We can see that our application requires more knowledge than Hstr in figure \ref{eval-metrics-plot-cmds-hstr} which is expected because user origianally used Hstr for this history searching
-    \item In figure \ref{eval-metrics-plot-cmds-resh}, we see the opposite. Our shearch application requires less knowledge than Hstr because user originally used our search application for these history searches.
-\end{itemize}
-
-
-Figure \ref{eval-metrics-plot-chars-hstr} comparing hstr and our search application in situations when the user originally used Hstr
-
-
-Figure \ref{eval-metrics-plot-chars-resh} comparing hstr and our search application in situations when the user originally used our search application
-
-\begin{itemize}
-    \item Figures \ref{eval-metrics-plot-chars-hstr} and \ref{eval-metrics-plot-chars-resh} show something similar but here we use the number of saved characters (normalized per number of retrieved history entries). 
-    \item Here, we can see that Hstr is on average more successful at finding shorter history entries when applied to the usage data from our search application.
-    \item This is not surprising; It matches findings from previous research\cite{greenberg1993computer} where directory sensitive history returned longer history entries because. More specific history entries generally tend to be longer and generic and common command line entries tend to be shorter.
-\end{itemize}
-
-We conclude that our history search application performs on par with Hstr. Using contextual search as a default is a reasonable trade off.
-
-One important thing we should point out is that we have used the same full shell history for both Hstr and our search application. Hstr normally only uses standard shell history which might be missing some history entries. 
-
-In all previous comparisons we give the benefit of the doubt to Hstr. 
-
-\clearpage
 \begin{figure}[h!]
 \centering
 \tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-hstr.pdf}}
-\caption{Cumulative percentage of retrieved history entries as a function of required knowledge (Invocations of Hstr)}
+\caption{Knowledge required to perform searches (Originally performed using Hstr)}
 \label{eval-metrics-plot-cmds-hstr}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 \tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-resh.pdf}}
-\caption{Cumulative percentage of retrieved history entries as a function of required knowledge (Invocations of our search app.)}
+\caption{Percentage of achievable searches (Originally performed using our search application)}
 \label{eval-metrics-plot-cmds-resh}
 \end{figure}
+
 
 
 \begin{figure}[h!]
 \centering
 \tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-hstr.pdf}}
-\caption{Cumulative retrieved characters as a function of required knowledge (Invocations of Hstr)}
+\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
 \label{eval-metrics-plot-chars-hstr}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 \tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-resh.pdf}}
-\caption{Cumulative retrieved characters as a function of required knowledge (Invocations of our search app.)}
+\caption{Saved characters as a function of required knowledge (Originally usage of our search application)}
 \label{eval-metrics-plot-chars-resh}
 \end{figure}
 
-\redtext{TODO: increase the size of the images if you shrink the captions}
 
-\clearpage
+
+The fact that contextual history yields longer history entries is not surprising; It matches findings from previous research\cite{greenberg1993computer} where directory sensitive history returned longer history entries then simple recency-based history. More specific history entries generally tend to be longer and generic and common command line entries tend to be shorter. 
+
+\paragraph{Evaluating metrics}
+
+We conclude that our history search application performs on par with Hstr. Using contextual search as a default is a reasonable trade off for the extra capabilities contextual search provides. It seems that users learn what their tools can or cannot do and use them accordingly.
+
+
+One thing we should point out is that we have used the same full shell history for both Hstr and our search application. Hstr normally uses standard shell history which might be missing some history entries.
+In all previous comparisons, Hstr might have performed differently. For example, we would expect degraded performance if many of the desired history entries were missing in the standard shell history.
+
+
+
+%\redtext{TODO: increase the size of the images if you manage shrink the captions}
+
 \section{User feedback}
 
 In this section, we describe how we released the project to the public, what improvements we made based on interviewing our users, and what feedback we get from users,
@@ -306,9 +305,13 @@ Here, we describe what improvements we made to the project and what feedback we 
 
 Some of the users were asking for a way to turn off the contextual search because it can occasionally get in their way. For example, logging into remote servers with \verb|ssh| can be done regardless of current directory. When searching for past \verb|ssh| commands the contextual search might do more harm than good.
 
-Based on this we have added the ability to switch between contextual and non-contextual mode with \verb|CTRL-R|. This way the user can always choose the appropriate tool for the specific situation.
+Based on this we have added the ability to switch between contextual and non-contextual mode with \verb|CTRL-R|. This way the user can always choose the appropriate tool for the specific situation. Screenshot of the non-contextual mode is shown in figure \ref{xterm-resh-raw-80}.
 
-\redtext{ADD screenshot}
+\begin{figure}
+\permanentframe{\includegraphics[width=0.995\linewidth]{figures/testing/xterm-resh-raw-80.pdf}}
+\caption{Screenshot of the non-contextual mode of the search application}
+\label{xterm-resh-raw-80}
+\end{figure}
 
 \paragraph{More ergonomic arrow key bindings}
 
@@ -321,13 +324,14 @@ By interviewing the user we discovered that he needs more ergonomic key bindings
 
 We got some feedback regarding using exit status as part of contextual search. When users kill the running command using \verb|CTRL-C| it exits with the status of 130.
 We anticipated that this would happen but it is more common than we expected.
-We could add special handling for exit statuses that have special meaning.
+We could add special handling for exit statuses that have special meaning. This feature, however, is not included in the current release.
 
-\redtext{SKIP ?}
-\begin{itemize}
-    \item Better help / onboarding
-    \item Directory jumping - history vs. specialised tools
-\end{itemize}
+%\redtext{SKIP ?}
+%\begin{itemize}
+%    \item Better help / onboarding
+%    \item Directory jumping - history vs. specialised tools
+%\end{itemize}
+
 
 \subsection{User testimonies}
 
