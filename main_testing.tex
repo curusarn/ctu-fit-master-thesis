@@ -40,6 +40,9 @@ To evaluate the utility of our history system we use metrics that are based on h
 
 Usability can be broken down to five following quality components.\cite{nielsen2012usability}
 
+
+\redtext{lose the itemize}
+
 \begin{itemize}
     \item Learnability
     \item Efficiency
@@ -80,6 +83,8 @@ This is possible but it proved to be too time consuming for us to use in this wo
 We released this project a while ago and we iteratively improve it. Because of that we got a lot of feedback and many chances interview our users. We also collected some shell history and usage data from our users. We use this data to demonstrate the usefulness of our solution.
 
 \section{Evaluating real life scenarios}
+
+\redtext{talk about workflows}
 
 In this section, we compare our history searching with other history tools based real life scenarios. We have collected shell history with usage from some of our users and chose specific situations to showcase the advantages of using our history search application.
 
@@ -122,8 +127,8 @@ Typing \verb|ans| as a query brings the desired history entry to the first posit
 In this second scenario, the user wants to retrieve the following history entry.
 
 \begin{verbatim}
-ansible-playbook infra_os_deploy.yml -i inventory_example.ini -b
-    -u debian -D
+ansible-playbook infra_os_deploy.yml -i inventory_example.ini\
+-b -u debian -D
 \end{verbatim}
 
 %\verb|~/git/szn/laas/ansible-playbooks|
@@ -180,7 +185,9 @@ curl -O -L https://api.github.com/repos/curusarn/resh/releases
 
 You would probably use something like \verb|curl github| as a query. The longer chunks of letters represent meaningful information while symbols are repetitive noise.
 
+\subsection{Position in the results}
 
+\redtext{TODO}
 
 %\redtext{...........}
 %When applying this metric we want it to be deterministic. This means that we need an automatic way to turn a command line entry into tokens 
@@ -194,7 +201,7 @@ In this section, we apply the previously introduced metrics. We use the metrics 
 
 We have collected shell history and usage data from a few of our users. Out of these users there is a single user that was previously using Hstr and switched to our history search application. We use the data from this user to compare the utility of these two history applications.
 
-During five months of collecting the data, this user has successfully used Hstr 121 times and our history search application 69 times. For each of these data points we know what command line entry the user executed. 
+During five months of collecting the data, this user has successfully used Hstr 121 times and our history search application 69 times. For each of these data points we know what command line entry the user executed. \redtext{12 thousand of history lines}
 
 We also know when the event happened. This means that we can take the shell history that was available at the time and feed it into Hstr and our search application. This way we can see what results would these history tools return at that time. We can compare how difficult would it be to retrieve the desired history entry in either of the history tools. 
 
@@ -214,7 +221,7 @@ We have just explained how we can simulate searching and compare history searchi
 
 In the usage data we are using, the user used Hstr for a period of time and at some point he started using our search application. These two parts of the usage data differ because people use different tools differently. We take these two parts of the usage data and separately test how both of the history tools would perform.
 
-\paragraph{Knowledge required to complete searches}
+\paragraph{Percentage of achievable searches}
 
 In figure \ref{eval-metrics-plot-cmds-hstr}, we take all the situations when the user originally used Hstr and we simulate how both Hstr and our search application perform.
 We can see how many knowledge tokens are required to perform searches. For instance, without specifying any query we are able to complete 84.2\% and 77.6\% of searches using Hstr and our search application respectively. 
@@ -222,6 +229,17 @@ We can see how many knowledge tokens are required to perform searches. For insta
 Figure \ref{eval-metrics-plot-cmds-resh} shows the same metrics but for situations when the user originally user our search application. We can see that this time our search application requires less knowledge to complete the searches. For example, when we provide a single query we are able to complete 97.1\% of searches using our search application and 92.7\% of searches using Hstr. 
 
 The conclusion is that both methods perform similarly but the history tool that the user originally used performs better. It seems that users adapt to tools they are using.
+
+\begin{figure}
+\centering
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-cmds-hstr.pdf}}\hfill
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-cmds-resh.pdf}}
+\caption{Percentage of achievable searches (more is better)}
+\small{Originally usage of Hstr (left) and usage of our search application (right)}
+%\caption{Percentage of achievable searches (Originally performed using Hstr)}
+\label{eval-metrics-plot-cmds}
+\end{figure}
+
 
 \paragraph{Saved characters as a function of required knowledge}
 
@@ -236,39 +254,77 @@ When we look at the figure \ref{eval-metrics-plot-chars-hstr}, we can see that b
 In contrast, figure \ref{eval-metrics-plot-chars-resh} shows us that Hstr does not perform well in situations when the user originally used our contextual search application. Without requiring any knowledge our search application can retrieve on average 46.5 characters. In contrast, Hstr is only able to retrieve the average of 32.9 characters.
 
 
-\begin{figure}[h!]
+
+%\begin{figure}[h!]
+%\centering
+%\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-resh.pdf}}
+%\caption{Percentage of achievable searches (Originally performed using our search application)}
+%\label{eval-metrics-plot-cmds-resh}
+%\end{figure}
+
+
+\begin{figure}
 \centering
-\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-hstr.pdf}}
-\caption{Knowledge required to perform searches (Originally performed using Hstr)}
-\label{eval-metrics-plot-cmds-hstr}
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-chars-hstr.pdf}}\hfill
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-chars-resh.pdf}}
+\caption{Average number of saved characters (more is better)}
+\small{Originally usage of Hstr (left) and usage of our search application (right)}
+%\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
+\label{eval-metrics-plot-chars}
 \end{figure}
 
-\begin{figure}[h!]
-\centering
-\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-resh.pdf}}
-\caption{Percentage of achievable searches (Originally performed using our search application)}
-\label{eval-metrics-plot-cmds-resh}
-\end{figure}
-
-
-
-\begin{figure}[h!]
-\centering
-\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-hstr.pdf}}
-\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
-\label{eval-metrics-plot-chars-hstr}
-\end{figure}
-
-\begin{figure}[h!]
-\centering
-\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-resh.pdf}}
-\caption{Saved characters as a function of required knowledge (Originally usage of our search application)}
-\label{eval-metrics-plot-chars-resh}
-\end{figure}
-
+%\begin{figure}[h!]
+%\centering
+%\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-resh.pdf}}
+%\caption{Saved characters as a function of required knowledge (Originally usage of our search application)}
+%\label{eval-metrics-plot-chars-resh}
+%\end{figure}
 
 
 The fact that contextual history yields longer history entries is not surprising; It matches findings from previous research\cite{greenberg1993computer} where directory sensitive history returned longer history entries then simple recency-based history. More specific history entries generally tend to be longer and generic and common command line entries tend to be shorter. 
+
+
+\begin{figure}
+\centering
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-cmds-hstr.pdf}}\hfill
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-cmds-resh.pdf}}
+\caption{Percentage of achievable searches (more is better)}
+\small{Originally usage of Hstr (left) and usage of our search application (right)}
+%\caption{Percentage of achievable searches (Originally performed using Hstr)}
+\label{eval-metrics-plot-dist-0-cmds}
+\end{figure}
+
+\begin{figure}
+\centering
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-chars-hstr.pdf}}\hfill
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-chars-resh.pdf}}
+\caption{Average number of saved characters (more is better)}
+\small{Originally usage of Hstr (left) and usage of our search application (right)}
+%\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
+\label{eval-metrics-plot-dist-0-chars}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-cmds-hstr.pdf}}\hfill
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-cmds-resh.pdf}}
+\caption{Percentage of achievable searches (more is better)}
+\small{Originally usage of Hstr (left) and usage of our search application (right)}
+%\caption{Percentage of achievable searches (Originally performed using Hstr)}
+\label{eval-metrics-plot-dist-1-cmds}
+\end{figure}
+
+\begin{figure}
+\centering
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-chars-hstr.pdf}}\hfill
+\tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-chars-resh.pdf}}
+\caption{Average number of saved characters (more is better)}
+\small{Originally usage of Hstr (left) and usage of our search application (right)}
+%\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
+\label{eval-metrics-plot-dist-1-chars}
+\end{figure}
+
 
 \paragraph{Evaluating metrics}
 
@@ -278,6 +334,8 @@ We conclude that our history search application performs on par with Hstr. Using
 One thing we should point out is that we have used the same full shell history for both Hstr and our search application. Hstr normally uses standard shell history which might be missing some history entries.
 In all previous comparisons, Hstr might have performed differently. For example, we would expect degraded performance if many of the desired history entries were missing in the standard shell history.
 
+
+\redtext{TODO position}
 
 
 %\redtext{TODO: increase the size of the images if you manage shrink the captions}
