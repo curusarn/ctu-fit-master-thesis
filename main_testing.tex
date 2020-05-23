@@ -11,7 +11,7 @@ Third, we introduce metrics to quantitatively evaluate our history system. Then,
 
 Fourth, we describe how we incrementally improve the system since the initial release. The community of existing users makes it possible to get impressions, ideas, and feedback. 
 
-Finally, we show additional use cases that are possible to fulfill using our search application. 
+Finally, we show additional workflows that are possible to fulfill using our search application. 
 
 \section{Usefulness of history tools}
 
@@ -38,18 +38,15 @@ To evaluate the utility of our history system we use metrics that are based on h
 
 \subsection{Usability}
 
-Usability can be broken down to five following quality components.\cite{nielsen2012usability}
+Usability represents how easy to use the interface of the system is. Usability can be broken down to five following quality components: Learnability, Efficiency, Memorability, Errors, and Satisfaction.\cite{nielsen2012usability}
 
-
-\redtext{lose the itemize}
-
-\begin{itemize}
-    \item Learnability
-    \item Efficiency
-    \item Memorability
-    \item Errors
-    \item Satisfaction
-\end{itemize}
+%\begin{itemize}
+%    \item Learnability
+%    \item Efficiency
+%    \item Memorability
+%    \item Errors
+%    \item Satisfaction
+%\end{itemize}
 
 Learnability assesses how easily can users complete basic task when they use the system for the first time. For example, non-standard key bindings that are not shown on the screen could make the interface difficult to use.
 
@@ -59,7 +56,7 @@ Memorability represents if the users can proficiently use the system after they 
 
 We also want to know how many errors people make while using the system. Does the design make it easy to recover from errors? For instance, if there would be no way to revert ones actions the users might learn to use the system slowly and carefully. 
 
-Satisfaction assesses if it is pleasant to use the system. For example, system that unpredictably fails will likely cause its users to distrust it. Users might not enjoy to use a system they do not find reliable. 
+Satisfaction assesses if it is pleasant to use the system. For example, system that unpredictably fails will likely cause its users to distrust it. Users probably will not enjoy using a system they find unreliable. 
 
 %Learnability: How easy is it for users to accomplish basic tasks the first time they encounter the design?
 %Efficiency: Once users have learned the design, how quickly can they perform tasks?
@@ -82,16 +79,20 @@ This is possible but it proved to be too time consuming for us to use in this wo
 
 We released this project a while ago and we iteratively improve it. Because of that we got a lot of feedback and many chances interview our users. We also collected some shell history and usage data from our users. We use this data to demonstrate the usefulness of our solution.
 
-\section{Evaluating real life scenarios}
-
-\redtext{talk about workflows}
+\section{Evaluating real life scenarios}\label{test-real-life-scenarios}
 
 In this section, we compare our history searching with other history tools based real life scenarios. We have collected shell history with usage from some of our users and chose specific situations to showcase the advantages of using our history search application.
 
-We found situations when people have used either Hstr\cite{toolshstr} or our search application to retrieve history entries. We took the shell history available at the time and fed it into three different history tools. The tools we test are standard reverse search, Hstr, and our search application. Now, we compare how difficult it is to retrieve the desired history entry using these three history tools.
+We found situations when people have used either Hstr\cite{toolshstr} or our search application to retrieve history entries. These match the following workflows from our previous analysis:
+
+\begin{itemize}
+\item Searching with limited knowledge (section \ref{workflow-search-w-limited-knowledge})
+\item Searching with implicit context (section \ref{workflow-search-w-implicit-context})
+\end{itemize}
+We took the shell history available at the time and fed it into three different history tools. The tools we test are standard reverse search, Hstr, and our search application. Now, we compare how difficult it is to retrieve the desired history entry using these three history tools.
 
 
-\subsection{First scenario}
+\subsection{Searching with implicit context}
 
 In the first real life scenario, the user is trying to retrieve following history entry: 
 
@@ -108,7 +109,6 @@ Instead of using \verb|ansible| as a query and going through many results, the u
 
 \paragraph{Hstr}
 Now, we look at how the user could use Hstr to retrieve the same history entry.
-
 Typing \verb|ansible| returns the history entry on twentieth position on the page. Unlike with the reverse search, the user could fairly quickly scan the page and select the desired history. 
 
 However, it could be faster to extend the query to further filter the results. Unlike with the reverse search, the user can use any part of the command line entry as a query because Hstr breaks the query down to separate words. Extending the query to \verb|ansible ins| returns the desired entry as the first result.
@@ -117,17 +117,16 @@ However, it could be faster to extend the query to further filter the results. U
 
 \paragraph{Our contextual search application}
 Finally, we compare how our search application performs compared to the other two options.
-
 After the user opens the search application the desired result is already in the third position. The user does not even have to specify a query because the search application returned the history entry based on the current context.
 
 Typing \verb|ans| as a query brings the desired history entry to the first position. As we can see, our solution requires less knowledge and less typing to retrieve the desired history entry than both Hstr and reverse search. 
 
-\subsection{Second scenario}
+\subsection{More searching with implicit context}
 
-In this second scenario, the user wants to retrieve the following history entry.
+In this second scenario, the user wants to retrieve the following history entry:
 
 \begin{verbatim}
-ansible-playbook infra_os_deploy.yml -i inventory_example.ini\
+ansible-playbook infra_os_deploy.yml -i inventory_example.ini \
 -b -u debian -D
 \end{verbatim}
 
@@ -135,14 +134,12 @@ ansible-playbook infra_os_deploy.yml -i inventory_example.ini\
 
 \paragraph{Reverse search} 
 First, we look at how the user could use the reverse search to retrieve the desired history entry.
-
 Using \verb|ansible-playbook| as a query returns the history entry as thirty-first result. This is practically unusable. Plus this query is very hard to extend.
 
 The user could chose to delete the query and use a different one. Coming up with a usable query is hard in this case; For example, typing \verb|inventory| or \verb|debian| returns the history entry as second and third result respectively. In contrast, using \verb|infra| or \verb|deploy| leaves the entry well beyond the reach of the user. 
 
 \paragraph{Hstr}
 Second, we describe how Hstr can be used to retrieve the previously mentioned history entry.
-
 Typing \verb|ansible| does not return the desired history entry. However, the user can quite easily extend the query to \verb|ansible inf| which returns the history entry as a first result. 
 
 We can see how the ability use multi-word queries makes it much easier to use Hstr than reverse search.
@@ -150,7 +147,6 @@ We can see how the ability use multi-word queries makes it much easier to use Hs
 \paragraph{Our contextual search application}
 
 Third, we compare our search application with both previous methods. 
-
 When the user launches the application, he can already see the desired history entry as the eight result on the page. This is possible because the current context matches the context of the desired history entry. 
 
 As before, typing \verb|ans| as a query brings the desired history entry to the very first position on the page. 
@@ -158,139 +154,163 @@ As before, typing \verb|ans| as a query brings the desired history entry to the 
 In situations like this one, our search application makes it very easy to retrieve the desired history entry. Hstr provides an reasonable to retrieve the entry but using context gives advantage to our solution. Reverse search is nearly impossible to use in this scenario.
 
 
-
 \section{Metrics}
 
-In previous section, we demonstrated the advantages of using the contextual search application using specific situations. We saw how reverse search can be very ineffective. In contrast both Hstr and our search application performed adequately.
+In previous section, we demonstrated the advantages of using the contextual search application using specific situations we found in shell history of our users. We saw how reverse search can be very ineffective. In contrast both Hstr and our search application performed adequately.
 
-Here, we introduce metrics we will use to evaluate the utility of the search application. We will later use the metrics to compare Hstr with our search application. 
+Here, we introduce metrics we will use to evaluate the utility of our search application. We will later use these metrics to compare our search application with Hstr. 
 
 \subsection{Number of saved characters}
 
-The first metric is the number of saved characters. It represents the typing saved by the user.
+The first metric is the number of saved characters. Retrieving longer history entries from history saves more work to the user. Longer history entries take more effort to type. Remembering longer history entries is also likely more difficult than remembering shorter ones. 
 
-Since we compare two similar history tools we assume that the number of key strokes needed to select a history entry is similar once the entry appears on the screen. Because of that we are not subtracting the key strokes needed for selection inside the history search applications.
+% Since we compare two similar history tools we assume that the number of key strokes needed to select the history entry is similar once it has been found. Because of that we are not subtracting the key strokes needed for selection inside the history search applications.
 
-\subsection{Amount of required knowledge}
+\subsection{Amount of required knowledge}\label{knowledge-tokens}
 
 The second metric represents the amount of knowledge the user needs to retrieve the history entry. We measure the amount of required knowledge in the unit of "knowledge tokens".
 
 Knowledge tokens are substrings of the command line entry that consist of alphanumerical characters and are at least four characters long. We chose this definition of a knowledge token because it matches the type of information people usually remember and use for searching. We observed this behavior in our users. 
 
-For example, imagine that you are searching for the following history entry.
-
+For example, imagine that you are searching for the following history entry:
 \begin{verbatim}
 curl -O -L https://api.github.com/repos/curusarn/resh/releases  
 \end{verbatim}
 
 You would probably use something like \verb|curl github| as a query. The longer chunks of letters represent meaningful information while symbols are repetitive noise.
 
-\subsection{Position in the results}
+\subsection{Position on the screen}
 
-\redtext{TODO}
-
-%\redtext{...........}
-%When applying this metric we want it to be deterministic. This means that we need an automatic way to turn a command line entry into tokens 
-
+Last metric we use is the position of the history entry on the screen. Both of the history searching tools we are testing show a screen full of results. There is a significant difference between returning the history entry as the first result compared to displaying it near the bottom of the screen. It takes extra time to scan the screen and notice the result. Plus, even the act of navigating and selecting results near bottom of the screen takes additional effort.
 
 \section{Applying metrics}
 
-In this section, we apply the previously introduced metrics. We use the metrics to compare Hstr with our search application.
+In this section, we apply the previously introduced metrics to compare the performance of Hstr and our search application. We simulate searches based on collected usage data and then we use the metrics to compare and evaluate the results. 
 
 \subsection{Collected data}
 
 We have collected shell history and usage data from a few of our users. Out of these users there is a single user that was previously using Hstr and switched to our history search application. We use the data from this user to compare the utility of these two history applications.
 
-During five months of collecting the data, this user has successfully used Hstr 121 times and our history search application 69 times. For each of these data points we know what command line entry the user executed. \redtext{12 thousand of history lines}
+During five months of collecting the data, this user has executed 12 thousand command line entries. He has successfully used Hstr 121 times and our history search application 69 times. 
 
-We also know when the event happened. This means that we can take the shell history that was available at the time and feed it into Hstr and our search application. This way we can see what results would these history tools return at that time. We can compare how difficult would it be to retrieve the desired history entry in either of the history tools. 
+For each time the user has searched his history we know what history entry the user retrieved and executed. We also know when the event happened. This means that we can take the shell history that was available at the time and feed it into Hstr and our search application. This way we can see what results would these history tools return at that time. We can compare how difficult would it be to retrieve the desired history entry in either of the history tools. 
+
+We should note that Hstr normally uses standard shell history for searching. Standard shell history can be missing history entries. This can be caused by upper history size limit and losing history from simultaneous terminal sessions.
+
+When we compare our history search application with Hstr we are providing our collected history to Hstr. This means that in following tests we share the advantage of having complete timestamped history without missing history entries with Hstr. In reality, we would expect the performance of Hstr to degrade because of the missing history entries.
 
 \subsection{Simulating history searching}
 
-To evaluate the history tools we simulate searching and use previously introduced metrics compare them.
+To evaluate the history tools we simulate the successful searches performed by the user. Then we use previously introduced metrics to compare the utility of these history tools.
 
-First, we look at the results that are returned without any query. If we can find the desired history entry in the first twenty results then we are done. We use the first twenty returned results because it is an amount that fits into small terminals. 
+When simulating the searches, we iterate over all situations when the user searched his history\footnote{Actually, we skip searches performed before the first one thousand history entries. We do this to not perform searches on almost empty history. We can still observe some minor warm up effect but it does not skew the results.}. With each simulated searches we are essentially asking questions such as:
 
-When we do not find the result, we add a single word to the query and we search again. We keep adding more words to the query until we find the desired history entry. 
+\begin{itemize}
+    \item Does this history entry show up in \textbf{first 20 results} if we use \textbf{no query}?
+    \item Does this history entry show up in \textbf{first 20 results} when we use \textbf{one word as a query}?
+    \item Does this history entry show up as \textbf{the first result} when we use \textbf{two words as a query}?
+\end{itemize}
+The process of simulating a single search is following:
 
-After we find the desired result we know how the search tool performed; We know how many characters were retrieved from history and we also know how many words we needed to use as a query.
+\begin{enumerate}
+    \item Take all shell history available at the time of the search
+    \item Feed the history into either Hstr or our search application
+    \item Process the desired history entry into knowledge tokens (described in section \ref{knowledge-tokens})
+    \item Shuffle the knowledge tokens\footnote{The sequential order is a bad representation of how people choose search queries in history tools. We deterministically shuffle the list of knowledge tokens by moving every odd token to the end of the token list.}
+    \item Take \(N\) of the knowledge tokens and use them as a query
+    \item Find the desired history entry in the list of results and return its position as \(M\)
+\end{enumerate}
+
+Simulating a single search tells us that a specific history entry shows up on \(Mth\) position when we use \(N\) words as a query.
+
 
 \subsection{Comparing our search application with Hstr}
 
-We have just explained how we can simulate searching and compare history searching tools.
+We have just explained how we simulate searches that were performed by the user. We can compare how different history searching tools perform by simulating the searches. 
 
-In the usage data we are using, the user used Hstr for a period of time and at some point he started using our search application. These two parts of the usage data differ because people use different tools differently. We take these two parts of the usage data and separately test how both of the history tools would perform.
+In the usage data we are using, the user has originally used Hstr for a period of time and at some point he started using our search application. These two parts of the usage data differ because people use different tools differently. We take these two parts of the usage data and separately test how both of the history tools would perform. 
 
-\paragraph{Percentage of achievable searches}
+Essentially, we test how our search application performs in situation when the user originally used Hstr. And conversely, we test how Hstr performs in situations when the user originally used our search application.
 
-In figure \ref{eval-metrics-plot-cmds-hstr}, we take all the situations when the user originally used Hstr and we simulate how both Hstr and our search application perform.
-We can see how many knowledge tokens are required to perform searches. For instance, without specifying any query we are able to complete 84.2\% and 77.6\% of searches using Hstr and our search application respectively. 
+\paragraph{Achievable searches as a function of knowledge}
 
-Figure \ref{eval-metrics-plot-cmds-resh} shows the same metrics but for situations when the user originally user our search application. We can see that this time our search application requires less knowledge to complete the searches. For example, when we provide a single query we are able to complete 97.1\% of searches using our search application and 92.7\% of searches using Hstr. 
+The first thing we want to find out is how many searches are achievable and how much the user has to remember to achieve them. We only count the search as achievable if the desired history entry is returned in the first 20 results.\footnote{The first twenty results represents an amount of lines that fits even into small terminals.} 
 
-The conclusion is that both methods perform similarly but the history tool that the user originally used performs better. It seems that users adapt to tools they are using.
+Figure \ref{eval-metrics-plot-cmds} shows us the percentage of searches that we could achieve if we only used a limited number of knowledge tokens (words) as a query. 
 
-\begin{figure}
+The figure \ref{eval-metrics-plot-cmds} is split into two parts; The left part shows situations when the user originally used Hstr. The right part show situations when the user originally used our search application. As we can see, both history tools perform very similarly for original usage of Hstr. However, our search application performs significantly better in situations when it was originally used. 
+
+Using our search application, the user can successfully complete 48.5\% searches with zero knowledge. In comparison, Hstr only shows the correct history entry with no query in 26.8\% of searches. 
+This means that if the user switched back to Hstr, he would have to start typing queries for about a half of searches that previously worked without any query.
+
+
+When we use more knowledge tokens as a query the differences between Hstr and our search application get insignificant. This is expected, our solution is designed to prioritize query over context. As we add words to the query, the \(QueryScore\) dominates the \(ContextScore\) and our search application behaves more and more as non-contextual search. This is essential because it gives users control over the search and enables them to find what they need.
+
+
+
+\begin{figure}[h!]
 \centering
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-cmds-hstr.pdf}}\hfill
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-cmds-resh.pdf}}
-\caption{Percentage of achievable searches (more is better)}
+\caption{Achievable searches as a function of knowledge (more is better)}
 \small{Originally usage of Hstr (left) and usage of our search application (right)}
 %\caption{Percentage of achievable searches (Originally performed using Hstr)}
 \label{eval-metrics-plot-cmds}
 \end{figure}
 
-
-\paragraph{Saved characters as a function of required knowledge}
-
-In figures \ref{eval-metrics-plot-chars-hstr} and \ref{eval-metrics-plot-chars-resh} we use a similar method but we take the number of saved characters into account. Instead of just looking at percentage of searches that is achievable, we use the number of retrieved characters as a metric. 
-
-This means that successfully completing searches for longer history entries is worth more than completing searches for short entries.
-%To normalize the values we divide them by the total number of possible searches.
-
-
-When we look at the figure \ref{eval-metrics-plot-chars-hstr}, we can see that both history tools perform similarly. Without using any query we can retrieve on average 45.5 and 43 of characters by using Hstr and our search application respectively. This is expected for searches that were originally performed using Hstr.
-
-In contrast, figure \ref{eval-metrics-plot-chars-resh} shows us that Hstr does not perform well in situations when the user originally used our contextual search application. Without requiring any knowledge our search application can retrieve on average 46.5 characters. In contrast, Hstr is only able to retrieve the average of 32.9 characters.
-
-
-
-%\begin{figure}[h!]
-%\centering
-%\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-cmds-resh.pdf}}
-%\caption{Percentage of achievable searches (Originally performed using our search application)}
-%\label{eval-metrics-plot-cmds-resh}
-%\end{figure}
-
-
-\begin{figure}
+\begin{figure}[h!]
 \centering
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-chars-hstr.pdf}}\hfill
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-chars-resh.pdf}}
-\caption{Average number of saved characters (more is better)}
+\caption{Avg. saved characters as a function of knowledge (more is better)}
 \small{Originally usage of Hstr (left) and usage of our search application (right)}
-%\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
 \label{eval-metrics-plot-chars}
 \end{figure}
 
-%\begin{figure}[h!]
-%\centering
-%\tmpframe{\includegraphics[width=0.97\linewidth]{figures/testing/testing-metrics-chars-resh.pdf}}
-%\caption{Saved characters as a function of required knowledge (Originally usage of our search application)}
-%\label{eval-metrics-plot-chars-resh}
-%\end{figure}
 
+\paragraph{Average saved characters as a function of knowledge}
+
+Again, we are looking at how many searches are achievable for a limited number of knowledge tokens. However, we are also taking the length of the retrieved history entries into account. Essentially, searches that retrieve longer entries are worth more than shorter ones.
+
+% In the previous section, each search was worth the same; Here, the searches retrieving longer history entries are worth more then ones retrieving short entries.
+
+In figure \ref{eval-metrics-plot-chars}, we can observe many of the same characteristics as we saw in previous figure \ref{eval-metrics-plot-cmds}. Both history tools perform similarly in situations when the user originally used Hstr (left part of figure \ref{eval-metrics-plot-chars}). Our search application performs significantly better in situation when it was originally used (right part of figure \ref{eval-metrics-plot-chars}). 
+
+When we compare figure \ref{eval-metrics-plot-cmds} with \ref{eval-metrics-plot-chars}, we can see that the difference between our solution and  Hstr is more substantial when we take retrieved characters into account. 
+
+Our application not only achieves more searches with limited knowledge; It also returns longer history results on average.
 
 The fact that contextual history yields longer history entries is not surprising; It matches findings from previous research\cite{greenberg1993computer} where directory sensitive history returned longer history entries then simple recency-based history. More specific history entries generally tend to be longer and generic and common command line entries tend to be shorter. 
+
+
+\subsection{Position of results on the screen}
+
+We have shown the difference between situations when user originally used Hstr and when he used our search application. We have also explained why our application starts behaving similarly to Hstr as we increase the number of words we use as a query.
+
+The main difference in performance between Hstr and our search application happens when we only search using little or no knowledge. Because of that we further explore how the two history tools perform when searching with limited knowledge.
+
+In this section, we are testing how many searches we can complete and how close to the top of the screen retrieved results show up. 
+
+\paragraph{Achievable searches with zero knowledge}
+
+Here, we want to find out how many searches are achievable if we only accept results from a given number of top positions. We are not using any query because we need to find out how well the search tools works when the user remembers nothing.
+
+Figure \ref{eval-metrics-plot-dist-0-cmds} shows the percentage of searches that we could achieve if we only accepted results from limited number of top positions on the screen. In other words, how many searches can we complete if we are only accepting results from e.g. first 10 returned results.
+
+We can see that the performance of both history tools is similar in situations when the user originally used Hstr (left part of figure \ref{eval-metrics-plot-dist-0-cmds}). We will see this in all figures in this section. To not repeat ourselves, we are not going to mention it anymore.
+
+As shown by the right part of figure \ref{eval-metrics-plot-dist-0-cmds}, Hstr and our solution performs similarly if we only accept results from first nine positions (or less). If we accept results further down the screen our solution is able complete significantly more searches than Hstr.
+
+
+Figure \ref{eval-metrics-plot-dist-0-chars} is very similar to figure \ref{eval-metrics-plot-dist-0-cmds}. It shows average saved characters instead of percentage of searches. All of the previous observations still hold. The performance differences between our solution and Hstr are more pronounced. 
 
 
 \begin{figure}
 \centering
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-cmds-hstr.pdf}}\hfill
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-cmds-resh.pdf}}
-\caption{Percentage of achievable searches (more is better)}
+\caption{Achievable searches with zero knowledge (more is better)}
 \small{Originally usage of Hstr (left) and usage of our search application (right)}
-%\caption{Percentage of achievable searches (Originally performed using Hstr)}
 \label{eval-metrics-plot-dist-0-cmds}
 \end{figure}
 
@@ -298,20 +318,40 @@ The fact that contextual history yields longer history entries is not surprising
 \centering
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-chars-hstr.pdf}}\hfill
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-0-chars-resh.pdf}}
-\caption{Average number of saved characters (more is better)}
+\caption{Average saved characters with zero knowledge (more is better)}
 \small{Originally usage of Hstr (left) and usage of our search application (right)}
-%\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
 \label{eval-metrics-plot-dist-0-chars}
 \end{figure}
 
+
+\newpage
+\paragraph{Achievable searches with a single word query}
+
+Once again, we are interested in finding out how many searches are achievable if we only look at a given number of top results. This time however, we provide a single knowledge token as a query to the search tools.
+
+As shown by the right part of figure \ref{eval-metrics-plot-dist-1-cmds}, our search application can complete more searches than Hstr. Now that we provide a query to the searching tools the difference is less striking (compare figure \ref{eval-metrics-plot-dist-0-cmds} and \ref{eval-metrics-plot-dist-1-cmds}). We can see how even a single query word has a serious influence over the scoring function and by extension displayed results. 
+
+Right part of \ref{eval-metrics-plot-dist-1-chars} shows a significant difference between Hstr and our solution. Hstr retrieves much shorter history entries than our search application. Our application saves considerably more typing to the user when a single word query is used. 
+
+\subsection{Evaluating metrics}
+
+We conclude that our history search application and Hstr perform similarly in all tasks that the user originally performed using Hstr. Contrarily, Hstr does not perform well in all situations when our application can be used. It appears that our solution covers extra workflows that are more difficult to achieve with Hstr. Examples of such workflows are described in previous section \ref{test-real-life-scenarios}. 
+%It seems that users learn what their tools can or cannot do and use them accordingly.
+
+Our search application enables users to retrieve history entries with less typing and remembering. Specifically, with no query, Hstr can only complete about half of the amount of searches our solution can. 
+
+Furthermore, our search application on average retrieves longer history entries from history. Longer history entries take longer to type and remember. This means that the average effort saved to the user should be higher when using our solution. 
+
+One thing we should point out is that we have used the same full shell history for both Hstr and our search application. Hstr normally uses standard shell history which might be missing some history entries. In reality, we expect the performance of Hstr to degrade because of the missing history entries.
+
+% In all previous comparisons, Hstr might have performed differently. For example, we would expect degraded performance if many of the desired history entries were missing in the standard shell history.
 
 \begin{figure}
 \centering
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-cmds-hstr.pdf}}\hfill
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-cmds-resh.pdf}}
-\caption{Percentage of achievable searches (more is better)}
+\caption{Achievable searches with a single knowledge token (more is better)}
 \small{Originally usage of Hstr (left) and usage of our search application (right)}
-%\caption{Percentage of achievable searches (Originally performed using Hstr)}
 \label{eval-metrics-plot-dist-1-cmds}
 \end{figure}
 
@@ -319,24 +359,10 @@ The fact that contextual history yields longer history entries is not surprising
 \centering
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-chars-hstr.pdf}}\hfill
 \tmpframe{\includegraphics[width=0.5\linewidth]{figures/testing/testing-metrics-dist-1-chars-resh.pdf}}
-\caption{Average number of saved characters (more is better)}
+\caption{Avg. saved chars. with a single knowledge token (more is better)}
 \small{Originally usage of Hstr (left) and usage of our search application (right)}
-%\caption{Saved characters as a function of required knowledge (Originally usage of Hstr)}
 \label{eval-metrics-plot-dist-1-chars}
 \end{figure}
-
-
-\paragraph{Evaluating metrics}
-
-We conclude that our history search application performs on par with Hstr. Using contextual search as a default is a reasonable trade off for the extra capabilities contextual search provides. It seems that users learn what their tools can or cannot do and use them accordingly.
-
-
-One thing we should point out is that we have used the same full shell history for both Hstr and our search application. Hstr normally uses standard shell history which might be missing some history entries.
-In all previous comparisons, Hstr might have performed differently. For example, we would expect degraded performance if many of the desired history entries were missing in the standard shell history.
-
-
-\redtext{TODO position}
-
 
 %\redtext{TODO: increase the size of the images if you manage shrink the captions}
 
@@ -350,7 +376,7 @@ We released the first prototype of the search application about five months ago.
 
 Since the release of the first prototype of the search application four months ago the project was downloaded and installed over 600 times. 
 
-The project also received over 250 stars on GitHub which is a bookmarking and endorsement feature on the GitHub website.\cite{github-stars}
+The project also received over 250 stars on GitHub which is a bookmarking and endorsement feature on the GitHub website.\cite{github-stars}\cite{resh-github-homepage}
 
 % https://keep.google.com/u/0/#NOTE/1pMiUTB0AU_JLmuiPByH7lHyzJR8_brmRqsiOeXRFez5t6wb0OUFtlinZ4oVNGpS9wRl_
 
@@ -427,5 +453,23 @@ Combination of these two actions makes it possible to transfer back and forth be
 %All this can be used to write new command line entries while
 
 We can launch the search application and start writing the command line entry into the query field. The search application continuously shows us similar history entries we can use as an inspiration. When we are done with typing the command line entry, we use \verb|CTRL-G| to get back to the command line. Then, we can execute the command line entry.
+
+
+\section{Evaluation conclusion}
+
+Here, we sum up our findings from testing and evaluating our history searching solution. We point out why our search application is a useful replacement for both standard reverse search and Hstr. 
+
+Our search application matches the usability improvements that Hstr offers compared to standard reverse search. We have shown this using chosen real life scenarios.
+
+There are tasks that the observed user completed using Hstr. Our search application matches the searching performance of Hstr in all of those situations. This means that using our solution instead of Hstr does not lead to degraded performance.
+
+There are new workflows that are easier to perform using our search application. Hstr does not perform well in those situations. Real life examples of such situations are described in section \ref{test-real-life-scenarios}.
+
+Our solution can complete more searches with less knowledge and typing compared to Hstr. If the user switched back to Hstr, he would have to use queries in about half of all searches that are possible with zero knowledge in our search application. Our search application also retrieves longer history entries which saves more typing and remembering to the user.
+
+The average performance of our search application is either comparable or better than Hstr depending on a specific situation. In many situations, however, our solution performs significantly better than Hstr. Because of that, we conclude that the contextual search is a great default way to search history. Furthermore, users have the option to switch between contextual and non-contextual mode. This is useful for retrieving history entries that are clearly non-contextual.
+    
+We released the first prototype of the search application about five months ago. Since then the application has grown in popularity and it was installed over 600 times. We have received overwhelmingly positive feedback. There are people who switched from Hstr to our search application and say that our solution has fully replaced all their Hstr workflows.
+
 
 

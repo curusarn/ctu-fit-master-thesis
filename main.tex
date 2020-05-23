@@ -219,14 +219,57 @@ guideline from NNgroup
 
 \todotext{TODO: rewrite conclusion}
 
-I have analysed shell history features available in current shells. I explored available history tools and found both positive and negative inspiration.
+\paragraph{}
 
-\par I have found previous research on how people use shell and shell history.  
-I have collected a sample of shell history. I have analyzed the collected usage data and compared it to data used in existing research. I have found which characteristics of shell usage changed over time and which characteristics stayed the same. I have concluded that most of the principals and ideas from the existing research do still hold. I have found out that potential recalled characters increased 4 times since the study was conducted. This and other differences reinforced the idea that it makes sense to design and develop new history related tools. 
 
-\par I have conducted a market research to find out how people interact with shell history and what are the workflows that are not well supported nowadays. I have modelled personas representing target users of the system. I have put together use cases based on actual shell history I have collected.
-I have designed a contextual shell history tools based on problems and suggestions from existing literature, user-centered design guidelines and principals, information learned via market research, and modelled personas.
-I have actively sought feedback from users during both design and implementation. 
+We have found previous research on how people use shell and shell history.  
+
+We have collected a sample of shell history and usage data from multiple users. The data was analysed and compared with existing historical research.
+% meh
+We have found out which characteristics of shell usage changed over time and which characteristics stayed the same. We discovered a few interesting properties of the collected data. \redtext{Replace this sentence with a better analysis conclusion} 
+%Most of the principals and ideas from the existing research do still hold. 
+The average number potential retrieved characters increased 4 times since the original study was conducted (around 1993). These findings reinforced the idea that it makes sense to design and develop new contextual history tools. 
+
+We have described shell history features available in current standard shells and pointed out their disadvantages. Market research was conducted to find out what issues people encounter and how they use existing shell history features. 
+
+Based on collected usage data and market research we described the target users of shell history tools. For these target users we have presented workflows that accomplish different tasks using shell history. We have provided a detailed explanation of the workflows pointing out issues with standard shell history mechanisms. As the main finding, we have identified reverse search as very deficient and worth redesigning.
+
+We have explored what popular history tools are available. Some existing tools tools provided major improvement over standard history by replacing reverse search and solving specific issues we have identified. There were some contextual history tools that were based on appealing ideas but did not provide a reasonable overall experience.
+
+We have described how contextual information relates to ways people use shell.
+
+% design
+
+Based on our previous analysis, issues we have identified, and existing tools, we have designed a contextual history system. We have outlined the architecture of the system. A search application that replaces reverse search was described in detail. We have explained how the parts of the system work and how they communicate. 
+
+The design went through multiple iterations with experiments.
+We have actively sought feedback from users during the whole design process and the implementation. The design was tested to make sure that it fulfills all requirements we introduced earlier. 
+
+We have implemented a significant portion of the design. The working solution records shell history with context and usage. It features a fullscreen terminal application that both searches history and offers results based on current context. 
+
+We evaluated the performance of the application and compared it with both state-of-the-art history tool and standard builtin history search mechanism.
+Our history searching application matches the performance of Hstr\cite{toolshstr} - the state-of-the-art history searching tool. 
+
+Our solution enables the user to complete more workflows with less knowledge and less typing. If the user switched back to Hstr, he would have to type queries in almost half of all searches that were possible with zero knowledge in our search application. Furthermore, our search application saves more typed characters to the user. 
+
+
+
+
+the daemon, and a major part of the search application. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 I have used usability principals and heuristics to test and evaluate the design.
 
@@ -248,6 +291,10 @@ I have created a universal shell library for binding custom functions to keys wi
 
 
 \todotext{TODO: write future work}
+%Right now, we want to encourage you, the reader, to try out the project for yourself. You can find installation instructions on the GitHub page of the project. \cite{resh-github-homepage}
+
+
+
 
 \redtext{Implement sync connectors}
 
