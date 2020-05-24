@@ -1,33 +1,34 @@
 
 \chapter{Design}
 
-%\subsubsection{Recording user interactions}
+In this chapter, we design our history system based on the previous analysis.
+The design we present in this chapter is a result of iterative process based on experiments and feedback from users. Designing user interfaces without iterative design often leads to usability issues.\cite{nielsen1993iterative}
+    
+We are designing new features to be integrated into shell and by extension workflows of people. Because of that we need to respect the standard history features and the habits that people have built by using them. This is especially important for CLI features because they have low discoverability\footnote{For example, if we add a new history feature to an unused key binding, there is no way for our users to discover it. Compare this with GUI application where available features can be displayed on the screen.}.
 
 
-\begin{itemize}
-    \item In this chapter, we design our history system.
-    \item The resulting design we present in this chapter is a result of iterative process based on experiments and feedback from users. Designing user interfaces without iterative design often leads to usability issues.\cite{nielsen1993iterative}
-    \item (When designing new features to be integrated into shell ...) People are used to standard history features. We need to respect the habits that people built while using them. This is true for any design but it is especially important for features integrated into shell. Discoverability is very bad in shell because available features are invisible.\footnote{For example, if we design a new history tool and bind it to an unused key, there is not really a way for our users to discover it. Compare this with GUI applications where available features can be displayed on the screen.}
-    \item We also want to keep the design simple so that the user is not overwhelmed with available features. According to \cite{greenberg1993computer}, overloading history mechanisms with complex functionality would not make them better.
-    \item the structure
-    \subitem We introduce requirements that are based on previous analysis
-    \subitem We describe the features we want in the design
-    \subitem We explain the architecture of the history system, describe the parts and their responsibilities
-    \subitem We design the interactive parts of the system - the behavior we want the user to experience
-    \subitem We describe the backend parts of the system - the necessary processes
-    \subitem We show and explain the communication that needs to happen between parts of the system
-    \subitem Finally, we come back to the requirements and we explain how each of them is fulfilled
-\end{itemize}
+%This is true for any design but it is especially important for features integrated into shell. Discoverability is very bad in shell because available features are invisible.
+
+The design should be simple and minimalist so that the user is not overwhelmed with available features. Overloading history mechanisms with complex functionality does not make them better.\cite{greenberg1993computer}
 
 
+The first step of our design is to formulate requirements. These are based on previous analysis, workflows we identified, issues people have with standard history, and existing history tools. 
 
+Second, we design the architecture of the history system. We describe what parts the system consists of. We also explain purpose of these parts and the interactions between them.
+
+%
+Then, we focus on the interactive parts of our design. We explain the behavior we want the user to experience. The biggest interactive part of the system is an application that replaces standard reverse search. We design the visual layout of the application, keybindings, colors, and responsiveness. 
+
+After that, we move on to the backend of the system. Backend includes the processes that support the interactive parts of the design. We show what data we need to handle and how we represent it.
+
+Finally, we come back to the initial requirements. We go through all of them and we explain how our design fulfills them.
 
 
 \newpage
 \section{Requirements and features}
 
 
-The requirements we selected based on the previous analysis are following:
+We selected following requirements based on the previous analysis:
 
 \begin{itemize}
 \item Record shell history with context and usage
@@ -86,7 +87,9 @@ Standard reverse search only uses a single query for searching and displays a si
 %In analysis, we have identified workflows that are directly related to context. 
 %Additionally, we described different ways how context relates to shell usage. 
 
-In addition to matching the state-of-the-art features, we want to use context to enhance the searching capabilities of our history system. Our searching application should make it easier to retrieve history that matches the current context. 
+In addition to matching the state-of-the-art features, we want to use context to enhance the searching capabilities of our history system. Our searching application should make it easier to retrieve history that match the current context. 
+
+
 % todo: do not be as specific CUT here
 
 
@@ -99,7 +102,7 @@ In addition to matching the state-of-the-art features, we want to use context to
 
 \subsection{Additional features}
 
-In this section, we cover features that are not the main focus of our design. These features are not as important as providing a replacement for the reverse search. However, they are still valuable, and we want to make sure they fit with the rest of the design. 
+Here, we describe features that are not the main focus of our design. These features are less important than providing a replacement for the reverse search. However, they are still valuable; We want to make sure they fit with the rest of the design. 
 The chosen additional features are Forward in history, synchronizing history between devices, and Fish-like Autosuggestions.
 
 
@@ -228,6 +231,7 @@ Colors are used to highlight the information that influences the order of displa
 The red color is reserved for highlighting remote hosts and non-zero error status; This communicates to the user that these history entries might not work well.
 Currently selected history entry is highlighted by inverting the foreground and background colors.
 
+\newpage
 
 \begin{figure}[h!]
 \permanentframe{\includegraphics[width=0.995\linewidth]{figures/design/xterm-wireframe-bw-normal.pdf}}
@@ -450,7 +454,7 @@ Our design does not expect people to configure the system before using it. Desig
 \subitem Support original workflows when replacing history mechanisms
 \end{itemize}
 
-We redesigned the behavior of standard history while keeping the original workflows intact. Recent history is still accessible on \verb|ARROW_UP| in unchanged order. People can still press \verb|CTRL-R| for general-purpose history searching. 
+We redesigned the behavior of standard history while keeping the original workflows intact. Recent history is still accessible on \verb|ARROW_UP| in unchanged order. People can still use \verb|CTRL-R| for general-purpose history searching. 
 The search application supports the workflows of standard reverse search.
 
 \begin{itemize}
