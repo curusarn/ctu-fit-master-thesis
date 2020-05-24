@@ -87,6 +87,25 @@ Finally, I would like to thank my family for their support during writing this t
 \abstractCS{\todotext{TODO: CZ abstrakt}  \blind[2]}
 \abstractEN{\todotext{TODO: abstract} This thesis is an enhancement for standard shell history. It records shell history with context. It uses the recorded context to make it easier to find relevant history records and to make it possible to search search history using context explicitly.
 
+
+\begin{itemize}
+    \item 
+    \item In this work we set out to improve the standard shell history. 
+    \item We want to design and implement a solution that solves issues of std. history and uses context to enhance its capabilities.
+    \item ??? We collect shell history; We analyze and compare it with previous research about shell usage and shell history tools. - We found out that potential for hsitory tools is 4x the 90s and ...
+    \item We analyze standard history features. We explore common issues people have. We describe typical workflows people do and shortcoming of std. hitsory tools. - We identify reverse search as inefficient (redesign)
+    \item We analyze existing hisotry tools and find ones that solve the isses with reverse search. We also find contextual tools that solve "nothing". - Useful contextuial history tools need to match the improvements of state-of-the-art non-contextual tools.
+    \item We describe available context and how it relates to history usage.
+    \item We design a history system based on requirements and our analysis.
+    \item We implement parts of the system that record history with context and use this context to show relevant history entries when searching shell history.
+    \item Our solution always performs similarly or better than Hstr (s-o-t-a).
+    \item Our solution performs much better than Hstr in "many" situations.
+    \item Our solution requires less knowledge and typing when searching.
+    \item Our solution on average saves more typed chars to the user. (effort by extension)
+    \item Our solution has been installed over 600 times in last five months (since the initial release).
+    \item People switched from Hstr and they are happy.
+\end{itemize}
+
 \blind[2]
 }
 \placeForDeclarationOfAuthenticity{Prague} %where you have signed the declaration
@@ -104,23 +123,30 @@ Finally, I would like to thank my family for their support during writing this t
 
 
 
-Classic command line interfaces were mostly replaced by GUIs in consumer software \cite{norman2007ui}. \todo{REF?} However, many professionals around the world still rely on UNIX shells to achieve their daily tasks. CLIs are generally not replaceable by GUIs because GUIs do not scale well when the number of available actions is high \cite{norman2007ui}. 
+Classic command line interfaces were mostly replaced by GUIs in consumer software \cite{norman2007ui}. However, among IT professionals and enthusiasts, CLIs and shells are a popular way to interact with computers.\footnote{CLIs and shells are active topics on websites that are popular among developers. Specifically, GitHub Topics, Stack Overflow, and Super User all register notable activity under topics/tags about CLIs, Bash, and Zsh.} 
+%CLIs are generally not replaceable by GUIs. GUIs do not work well when the number of available actions is high \cite{norman2007ui}. 
 
-More than half of all developers use Unix-based operating systems\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers uses Linux and MacOS respectively.}. 
-About half of all developers have been working with Linux during year 2018. \cite{stackoverflow2019devsurvey} 
+Shell history enables shell users to reuse previously entered command line submissions.
+There are many people who care about shell history tools.\footnote{We have sparked a wave of reactions by asking people about what shell history tools they are using.\cite{twitter-thread}}
 
-Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on MacOS is zsh since October 2019 \cite{apple2019zsh}. In this work we primarily focus on these two popular shells.
-\todo{TODO: polish the argument why is this work relevant \hatx\hatx\hatx}
+Shells like Bash and Zsh were initially released around year 1990. History features in these shells have not seen many improvements since beginning of the millennium. In this work, we analyze the standard history mechanisms to find how they could be improved.
 
-\todotext{TODO: what is the shell history good for}
-\todotext{TODO: why could contextual history improve the history offerings}https://www.overleaf.com/project/5d0cfdef69f8f06780064608
+People use shell differently in different situations. For example, some directories contain projects and people might use different commands based on which project they are working on. We think that we could use directories and more additional information to improve the capabilities of shell history. 
 
-The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in Zsh and only when it is enabled.\cite{zshdocs}}. 
+We focus on Unix-based operating systems because more than half of all developers use them\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers use Linux and MacOS respectively.}. 
+Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on MacOS is Zsh\footnote{According to \cite{apple2019zsh}, default shell in MacOS is Zsh since October 2019.}. Because of that, we focus on these two popular shells.
 
-Additionally, it is quite common to use shell configuration\footnote{\todotext{e.g. Bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This removes more information from history because the original command line sequences are lost.
+\redtext{We analyze: how people use history and what common history-related issues they encounter. We model target users and workflows. We look at existing history tools. We design a new contextual history system based on our analysis. We implement core parts of the designed system. Then we evaluate the system using data we collect from our users.}
 
-As we can see the standard shell history contains only very basic information about executed command lines.
-There is much more contextual data available at the time of command line execution e.g. present working directory, exit status, and previously executed commands. In this work, we explore the possibilities of using the contextual data about executed commands to increase the usefulness of shell history.
+
+%About half of all developers have been working with Linux during year 2018. \cite{stackoverflow2019devsurvey} 
+
+%The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in Zsh and only when it is enabled.\cite{zshdocs}}. 
+
+%Additionally, it is quite common to use shell configuration\footnote{\todotext{e.g. Bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This removes more information from history because the original command line sequences are lost.
+
+%As we can see the standard shell history contains only very basic information about executed command lines.
+%There is much more contextual data available at the time of command line execution e.g. present working directory, exit status, and previously executed commands. In this work, we explore the possibilities of using the contextual data about executed commands to increase the usefulness of shell history.
 
 
 
@@ -128,17 +154,16 @@ There is much more contextual data available at the time of command line executi
 
 % MORE PRACTICAL: When using shells you likely do not run individual commands completely independently of each other. But instead run commands as parts of different workflows that 
 
-\todo{describe the contents of this work / layout - redo because moved chapters in analysis} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
+%\todo{describe the contents of this work / layout - redo because moved chapters in analysis} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
 
-After that, we focus on people. We start broad and research how people use computer tools in general. Then we move on to examining how people use shell and shell history. We also look at public discourse related to history tools and engage in online discussions to find out more about configurations and tools people use.
+%After that, we focus on people. We start broad and research how people use computer tools in general. Then we move on to examining how people use shell and shell history. We also look at public discourse related to history tools and engage in online discussions to find out more about configurations and tools people use.
 
-Next, we focus on the contextual information; We cover what information is available to be saved at the time of command line execution and we discuss how it could be used to enhance shell history. 
+%Next, we focus on the contextual information; We cover what information is available to be saved at the time of command line execution and we discuss how it could be used to enhance shell history. 
 
-At this point we move on to design(ing) ...
-\todotext{TODO: finish this intro}
+%At this point we move on to design(ing) ...
+%\todotext{TODO: finish this intro}
 
 
-\blind[2]
 
 \end{introduction}
 
