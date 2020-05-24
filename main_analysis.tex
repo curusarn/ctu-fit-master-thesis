@@ -634,7 +634,6 @@ Some people would also like if there was a way to filter out history entries wit
 
 \subsubsection*{Control over what is saved to history}
 Sometimes people do not want certain command line entries to be saved to history. 
-
 It is very common to have the shell configured to not save duplicate entries to the history.  
 Another common reason to not want a certain command line to be saved to history is when it contains some sensitive information. This is typically a password passed as an argument to an executable.
 
@@ -823,7 +822,7 @@ The usage data we collected shows that even somebody who claimed to not press \v
 
 %It seems that in situations like this one people do remember the history entry well and perceive it as recent. This is why they chose to use  
 
-\paragraph{History prefix search \redtext{TODO: next title, same workflow}}
+\paragraph{History prefix search}
 
 An efficient alternative way to fulfil the same workflow is to use history prefix search. To use prefix search the user needs to remember the first word or at least the first few characters of the command line entry; This is very likely since all the command line entries we are retrieving in this workflow are recent.
 
@@ -863,7 +862,7 @@ At this point, the user presses \verb|ARROW_UP| six times to get to the desired 
 
 After retrieving the desired history entry, the user needs to edit it to change the server URL from \verb|localhost| to \verb|test.example.com|. He holds down \verb|ARROW_LEFT| for a about a second, holds down \verb|DELETE| for about a second, types \verb|test.example.com|, and finally executes the changed command line entry. 
 
-This seems a little tedious but it is still more efficient than typing the whole command line entry from scratch. Instead of navigating by and deleting single characters, we could use \verb|CTRL+ARROW_LEFT| to navigate by words and \verb|ALT+BACKSPACE| to delete whole words; This would be faster and more efficient. However, it seems that many people do not use the command line editing functions.\todo{TODO: Ask more people, so far more people use it than I expected}
+This seems a little tedious but it is still more efficient than typing the whole command line entry from scratch. Instead of navigating by and deleting single characters, we could use \verb|CTRL+ARROW_LEFT| to navigate by words and \verb|ALT+BACKSPACE| to delete whole words; This would be faster and more efficient. %However, it seems that many people do not use the command line editing functions.\todo{TODO: Ask more people, so far more people use it than I expected}
 
 This workflow shows us how people edit history entries after they retrieve them. We see that standard history mechanisms make it possible to edit history entries after retrieval. Reverse search, which we did not see in any workflow yet, is not an exception. This is a useful property that we should include in our designs as well. 
 

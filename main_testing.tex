@@ -91,10 +91,10 @@ We found situations when people have used either Hstr\cite{toolshstr} or our sea
 \end{itemize}
 We took the shell history available at the time and fed it into three different history tools. The tools we test are standard reverse search, Hstr, and our search application. Now, we compare how difficult it is to retrieve the desired history entry using these three history tools.
 
+\redtext{Consider adding one more scenario}
+\subsection{Searching with limited knowledge}
 
-\subsection{Searching with implicit context}
-
-In the first real life scenario, the user is trying to retrieve following history entry: 
+In this first real life scenario, the user is trying to retrieve following history entry: 
 
 \begin{verbatim}
 ansible-galaxy install -r requirements.yml -p roles
@@ -121,7 +121,7 @@ After the user opens the search application the desired result is already in the
 
 Typing \verb|ans| as a query brings the desired history entry to the first position. As we can see, our solution requires less knowledge and less typing to retrieve the desired history entry than both Hstr and reverse search. 
 
-\subsection{More searching with implicit context}
+\subsection{Searching with implicit context}
 
 In this second scenario, the user wants to retrieve the following history entry:
 
@@ -172,6 +172,8 @@ The second metric represents the amount of knowledge the user needs to retrieve 
 
 Knowledge tokens are substrings of the command line entry that consist of alphanumerical characters and are at least four characters long. We chose this definition of a knowledge token because it matches the type of information people usually remember and use for searching. We observed this behavior in our users. 
 
+\redtext{Check "newpage"}
+\newpage 
 For example, imagine that you are searching for the following history entry:
 \begin{verbatim}
 curl -O -L https://api.github.com/repos/curusarn/resh/releases  

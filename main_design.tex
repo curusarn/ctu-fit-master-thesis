@@ -4,20 +4,23 @@
 %\subsubsection{Recording user interactions}
 
 
-\redtext{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nos lore eu funon proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidanon proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt i giat nulla pariatur. Excepteur sint occaecat cupidalore eu funon proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt i giat nulla pariatur. Excepteur sint occaecat cupidatat non proidenttat non proident, sunt i giat nulla pariatur. Excepteur sint occaecat cupidalore eu funon proident, sunt ilore eu fugiat nulla epteur sint occaecat cupidatat non proident, sunt itat non proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ilore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt inon proident, sunt ilore ei}
+\begin{itemize}
+    \item In this chapter, we design our history system.
+    \item The resulting design we present in this chapter is a result of iterative process based on experiments and feedback from users. Designing user interfaces without iterative design often leads to usability issues.\cite{nielsen1993iterative}
+    \item (When designing new features to be integrated into shell ...) People are used to standard history features. We need to respect the habits that people built while using them. This is true for any design but it is especially important for features integrated into shell. Discoverability is very bad in shell because available features are invisible.\footnote{For example, if we design a new history tool and bind it to an unused key, there is not really a way for our users to discover it. Compare this with GUI applications where available features can be displayed on the screen.}
+    \item We also want to keep the design simple so that the user is not overwhelmed with available features. According to \cite{greenberg1993computer}, overloading history mechanisms with complex functionality would not make them better.
+    \item the structure
+    \subitem We introduce requirements that are based on previous analysis
+    \subitem We describe the features we want in the design
+    \subitem We explain the architecture of the history system, describe the parts and their responsibilities
+    \subitem We design the interactive parts of the system - the behavior we want the user to experience
+    \subitem We describe the backend parts of the system - the necessary processes
+    \subitem We show and explain the communication that needs to happen between parts of the system
+    \subitem Finally, we come back to the requirements and we explain how each of them is fulfilled
+\end{itemize}
 
 
-\todotext{Write intro}
-In this chapter, we design our history system.
 
-Before jumping into the design itself, we want to point out a few pieces of information that motivate our decisions.
-
-
-People are used to standard history features
-
-we should not redesign them unless we have a good reason to
-
-Furthermore, even when we redesign and replace history features we should leverage and build upon habits people already have.
 
 
 \newpage
@@ -39,7 +42,7 @@ The requirements we selected based on the previous analysis are following:
 \item Provide a replacement for reverse search
 \subitem Solve the issues with standard reverse search
 \subitem Match the few main improvements offered by Hstr and Fzf
-\subitem use recorded context to enhance history searching capabilities
+\subitem Use recorded context to enhance history searching capabilities
 \item Provide support for sequence repeating (forward in history)
 \item Provide support for synchronization of shell history between devices
 \item Provide support for contextual autosuggestions
