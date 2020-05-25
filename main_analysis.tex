@@ -311,13 +311,9 @@ in Hanson et al. (1984). (Greenberg)}
 \end{figure}
 
 \begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
-  \caption{Sequential structure of command usage.}
-  \label{seq-graph}
-\end{figure}
-
-\begin{figure}
-
+\tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
+%\newline
+%\newline
 \centering
 \begin{tabular}{|l|l|}
 \hline
@@ -327,9 +323,13 @@ Dashed      & 0.3 -- 0.2                         \\
 Dotted      & 0.2 -- 0.1                         \\
 \hline
 \end{tabular}
-\caption{Sequential structure of command usage (legend).}
-\label{tab:seq-table}
+%\caption{Sequential structure of command usage (legend).}
+%\label{tab:seq-table}
+
+\caption{Sequential structure of command usage.}
+\label{seq-graph}
 \end{figure}
+
 
 \todo{sequential graph and its legend table must be on the same page!}
 
@@ -996,15 +996,15 @@ This result is an improvement over the previous one. However, it is still far fr
 Previously, we assumed that the user remembers enough to extend the query to \verb|thumbnail-api|; That is a bold assumption. What if the user does not remember that words \verb|thumbnail| and \verb|api| are adjacent or that they are delimited by a dash symbol? In practice, it is hard to come up with a query that only matches the desired history entry; Oftentimes the query matches many other history entries which forces us to go through multiple search results.
 
 
-The user is in a similar situation. He presses \verb|CTRL+R| repeatedly to display the search results one by one. At first, the user presses \verb|CTRL+R| slowly to have enough time to read the results. After about three key presses he becomes impatient and speeds up. This does not leave enough time to properly read each of the results which causes him to press \verb|CTRL+R| one too many times.
+The user is in a similar situation. He presses \verb|CTRL-R| repeatedly to display the search results one by one. At first, the user presses \verb|CTRL-R| slowly to have enough time to read the results. After about three key presses he becomes impatient and speeds up. This does not leave enough time to properly read each of the results which causes him to press \verb|CTRL-R| one too many times.
 
 \begin{verbatim}
 (reverse-i-search)`thumbnail': cd git/thumbnail_api
 \end{verbatim}
 
-The user knows that pressing \verb|CTRL+S| \textit{should} bring back the previous result. However, he also knows that pressing \verb|CTRL+S| freezes all input coming to his terminal; This is the default\footnote{Default configuration on many popular distributions has CTRL+S bound to generate XOFF -- the software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
+The user knows that pressing \verb|CTRL-S| \textit{should} bring back the previous result. However, he also knows that pressing \verb|CTRL-S| freezes all input coming to his terminal; This is the default\footnote{Default configuration on many popular distributions has CTRL-S bound to generate XOFF -- the software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
 
-At this point, the user gets annoyed because the only option is to start over. He aborts the search, presses \verb|CTRL+R|, and types in the query \verb|thumbnail|. Then, it takes five presses of \verb|CTRL+R| to get to the desired result; This time he is more careful to not go too far again.
+At this point, the user gets annoyed because the only option is to start over. He aborts the search, presses \verb|CTRL-R|, and types in the query \verb|thumbnail|. Then, it takes five presses of \verb|CTRL-R| to get to the desired result; This time he is more careful to not go too far again.
 
 
 \paragraph{\redtext{TODO: title: why reverse search sucks}}
@@ -1119,7 +1119,7 @@ This makes it more appealing to experienced shell users because they use what th
 % SUMMARY: By using the shell history in this workflow, the user not only saved himself some typing but also remembering of the command line entries. Recreating old history entries from scratch often takes a lot of effort because it is not just a matter of typing. The saved effort by history during this workflow is significant. This also means that people are generally willing to spend more effort searching for the desired history entry because of the effort they would have to "spend" otherwise.
 
 
-\subsection{Searching with implicit context \redtext{TODO: better title}}\label{workflow-search-w-implicit-context}
+\subsection{Searching with implicit context}\label{workflow-search-w-implicit-context}
 % GOOD vvv
 In the previous workflows we saw that searching history heavily relies on the memory of the user. When the user does not remember enough the efficiency of the standard history searching mechanisms is reduced.
 
@@ -1158,7 +1158,7 @@ In situations like this one, it could be useful if the history entries that orig
 %Reordering is non-invasive - not all entries with non-zero status are worthless so we want to keep them
 
 
-\paragraph{\redtext{TODO: title} Directory sensitive history}
+\paragraph{Directory sensitive history}
 
 
 %# history from ~/git/image_server directory:
@@ -1624,6 +1624,6 @@ For example, when you retrieve a specific history entry using \verb|CTRL-R|, you
 
 A detailed transcript of user interactions with the history mechanisms would give us even more useful information. Consider a situation where the user presses \verb|ARROW_UP| ten times and then gives up and uses \verb|CTRL-R| to search the history instead. This is not an effective way to use history. However, it would be wrong to blame the user. If such situation happens a lot to many users we should look into if we can redesign \verb|ARROW_UP| to improve it.
 
-From the perspective of User-centered design, the interaction between the user and the history system is everything. It is essential for informing design decisions and estimating usefulness of the system. Interactions can help us understand when the system works and when it does not.
+The interactions between the user and the history system can help us understand how people use history. They are essential for informing design decisions and estimating usefulness of the system. Interactions can help us understand when the system works and when it does not.
  
-When exploring relevant research, we did not find anyone who recorded shell history with the history interactions of the user. Furthermore, we did not find any tools that are capable of recording the shell history with user interactions. We think that collecting a dataset of shell history with the user history interactions would enable future research. To move forward towards this goal we should record the history usage data as part of the history.
+%When exploring relevant research, we did not find anyone who recorded shell history with the history interactions of the user. Furthermore, we did not find any tools that are capable of recording the shell history with user interactions. We think that collecting a dataset of shell history with the user history interactions would enable future research. To move forward towards this goal we should record the history usage data as part of the history.

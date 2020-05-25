@@ -247,8 +247,7 @@ This means that if the user switched back to Hstr, he would have to start typing
 
 
 When we use more knowledge tokens as a query the differences between Hstr and our search application get insignificant. This is expected, our solution is designed to prioritize query over context. As we add words to the query, the \(QueryScore\) dominates the \(ContextScore\) and our search application behaves more and more as non-contextual search. This is essential because it gives users control over the search and enables them to find what they need.
-
-
+\redtext{ADD a plot to show how QueryScore and ContextScore mix}
 
 \begin{figure}[h!]
 \centering
@@ -303,6 +302,8 @@ We can see that the performance of both history tools is similar in situations w
 
 As shown by the right part of figure \ref{eval-metrics-plot-dist-0-cmds}, Hstr and our solution performs similarly if we only accept results from first nine positions (or less). If we accept results further down the screen our solution is able complete significantly more searches than Hstr.
 
+\redtext{Explain why we end at 20 - the size of views ... ADD plot for longer X with lines for significant screen sizes}
+\redtext{Con}
 
 Figure \ref{eval-metrics-plot-dist-0-chars} is very similar to figure \ref{eval-metrics-plot-dist-0-cmds}. It shows average saved characters instead of percentage of searches. All of the previous observations still hold. The performance differences between our solution and Hstr are more pronounced. 
 
@@ -458,6 +459,8 @@ We can launch the search application and start writing the command line entry in
 
 
 \section{Evaluation conclusion}
+
+\redtext{Consider redoing this as paragraphs with bold first word}
 
 Here, we sum up our findings from testing and evaluating our history searching solution. We point out why our search application is a useful replacement for both standard reverse search and Hstr. 
 
