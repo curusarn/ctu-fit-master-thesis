@@ -1,4 +1,4 @@
-% arara: xelatex
+﻿% arara: xelatex
 % arara: xelatex
 % arara: xelatex
 
@@ -74,11 +74,11 @@
 
 \acknowledgements{I would like to thank my supervisor Ing. Lukáš Bařinka for his guidance and advice. His insights and expertise shaped this work significantly. 
 
-Next, my thanks goes to my colleagues and friends for their valuable feedback. They helped me spot my personal biases and assumptions rooted in my personal shell workflows. 
+Next, my thanks go to my colleagues and friends for their valuable feedback. They helped me spot my personal biases and assumptions rooted in my personal shell workflows. 
 
 I am grateful for the trust of hundreds of people who downloaded this project. I would also like to thank all GitHub users who submitted issues and pull requests to the project.
 
-I want to thank Installfest conference organizers for the opportunity to give a talk and to demo this project on Installfest.  
+I want to thank Installfest conference organizers for the opportunity to give a talk and to demo this project on Installfest. 
 
 Finally, I would like to thank my family for their support during writing this thesis and trough my whole studies.
 }
@@ -89,7 +89,7 @@ Způsob jakým lidé používají shell závisí na kontextu jako je třeba sou�
 %Even nowadays, command line is a popular way to interact with computers. Shell history allows people to reuse previous commands which increases productivity. 
 %The way people use shell changes based on context such as current directory. In this work, we intend to use additional context to enhance the standard shell history.
 
-Analyzujeme funkce standartní historie a to jak je lidé používají. Identifikujeme interaktivní zpětné vyhledávání jako neefektivní mechanismus standartní historie vhodný pro náhradu.   
+Analyzujeme funkce standartní historie a to jak je lidé používají. Identifikujeme interaktivní zpětné vyhledávání jako neefektivní mechanismus standartní historie vhodný pro náhradu. 
 
 %We analyze standard history features and how people use them. We identify reverse search as inefficient standard feature we need to redesign.
 
@@ -119,25 +119,24 @@ Naše řešení bylo za posledních pět měsíců nainstalováno přes 600 krá
 %Our solution has been installed over 600 times in last five months. Some of our users previously used Hstr and our application covers all of their previous workflows. We have received overwhelmingly positive feedback from the community.
 }
 
-\abstractEN{Even nowadays, command line is a popular way to interact with computers. Shell history allows people to reuse previous commands which increases productivity. 
-The way people use shell changes based on context such as current directory. In this work, we intend to use available context to enhance the standard shell history.
+\abstractEN{Even nowadays, the command line is a popular way to interact with computers. Shell history allows people to reuse previous commands, which increases productivity. 
+The way people use shell changes based on context such as current directory. In this work, we intend to use the available context to enhance the standard shell history.
 
 % e describe target users for our system and typical workflows people perform. Based on the workflows w
-We analyze standard history features and how people use them. We identify reverse search as inefficient standard feature we need to redesign.
+We analyze standard history features and how people use them. We identify reverse search as an inefficient standard feature we need to redesign.
 
-By exploring existing history tools we find tools that address the issues of reverse search. We also find out that existing contextual history tools do not bring much value to the user. 
+By exploring existing history tools, we find tools that address the issues of reverse search. We also find out that existing contextual history tools do not bring much value to the user. 
 %Useful contextual history tools need to match the improvements provided by non-contextual tools.
- 
 We design a history system that matches the improvement of state-of-the-art non-contextual history tools; Plus it uses context to further enhance the capabilities of the shell history.
 
-We implement a core parts of the design. It records shell history with context. A fullscreen terminal application searches the history and returns relevant results based on current context.
+We implement the core parts of the design. It records shell history with context. A fullscreen terminal application searches the history and returns relevant results based on the current context.
 
-Based on usage data from some of our users, we compare our solution with one of the state-of-the-art history tools -- Hstr.
-Our solution on average performs similarly or better than Hstr.
+Based on our users' usage data, we compare our solution with one of the state-of-the-art history tools -- Hstr.
+Our solution, on average, performs similarly or better than Hstr.
 
-There are many situations where our solution outperforms Hstr. It requires less knowledge and less typing when searching. Our solution on average saves more typed chars to the user. 
+There are many situations where our solution outperforms Hstr. It requires less knowledge and less typing when searching. Our solution, on average, saves more typed chars to the user. 
 
-Our solution has been installed over 600 times in last five months. Some of our users previously used Hstr and our application covers all of their previous workflows. We have received overwhelmingly positive feedback from the community.
+Our solution has been installed over 600 times in the last five months. Some of our users previously used Hstr, and our application covers all of their previous workflows. We have received overwhelmingly positive feedback from the community.
 
 }
 \placeForDeclarationOfAuthenticity{Prague} %where you have signed the declaration
@@ -161,20 +160,20 @@ Classic command line interfaces were mostly replaced by GUIs in consumer softwar
 Shell history enables shell users to reuse previously entered command line submissions.
 There are many people who care about shell history tools.\footnote{We have sparked a wave of reactions by asking people about what shell history tools they are using.\cite{twitter-thread}}
 
-Shells like Bash and Zsh were initially released around year 1990. History features in these shells have not seen many improvements since beginning of the millennium. In this work, we analyze the standard history mechanisms to find how they could be improved.
+Shells like Bash and Zsh were initially released around the year 1990. History features in these shells have not seen many improvements since the beginning of the millennium. In this work, we analyze the standard history mechanisms to find how they could be improved.
 
-People use shell differently in different situations. For example, some directories contain projects and people might use different commands based on which project they are working on. We think that we could use directories and more additional information to improve the capabilities of shell history. 
+People use shell differently in different situations. For example, some directories contain projects, and people might use different commands based on which project they are working on. We think that we could use directories and more additional information to improve the capabilities of shell history. 
 
-We focus on Unix-based operating systems because more than half of all developers use them\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers use Linux and MacOS respectively.}. 
+We focus on Unix-based operating systems because more than half of all developers use them\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers use Linux and MacOS, respectively.}. 
 Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on MacOS is Zsh\footnote{According to \cite{apple2019zsh}, default shell in MacOS is Zsh since October 2019.}. Because of that, we focus on these two popular shells.
 
-We examine standard history features and what issues people encounter when using them. We introduce target users and formulate typical shell history workflows. We explore existing history tools and how they improve standard shell history. Then, we design a new contextual history system based on our analysis. We implement core parts of the designed system. Finally, we test the system using data we collect from our users. Based on that, we draw conclusion about this work.
+We examine standard history features and what issues people encounter when using them. We introduce target users and formulate typical shell history workflows. We explore existing history tools and how they improve standard shell history. Then, we design a new contextual history system based on our analysis. We implement the core parts of the designed system. Finally, we test the system using the data we collect from our users. Based on that, we draw conclusions about this work.
 
 \section*{Defined terms}
 
 \redtext{should we define the terms here?}
 
-To avoid confusion through out this work, we define several terms.
+To avoid confusion throughout this work, we define several terms.
 
 \begin{itemize}
     \item Command line entry $=$ the contents of the command line submitted by the user
@@ -204,48 +203,48 @@ To avoid confusion through out this work, we define several terms.
 
 
 We have described shell history features available in current standard shells and pointed out their disadvantages. 
-We have described the target users of our shell history tool. Based on shell history we collected we have formulated typical workflows that accomplish different tasks using shell history. We have provided a detailed explanation of these workflows pointing out issues with standard shell history mechanisms. As the main finding, we have identified reverse search as very inefficient history feature that is worth redesigning.
+We have described the target users of our shell history tool. Based on shell history we collected, we have formulated typical workflows that accomplish different tasks using shell history. We have provided a detailed explanation of these workflows, pointing out issues with standard shell history mechanisms. As the main finding, we have identified reverse search as a very inefficient history feature that is worth redesigning.
 
-We have explored what popular history tools are available. We have found state-of-the-art non-contextual history tools that provide major improvement over standard history by replacing reverse search. These tools address the specific issues of reverse search we identified. We found contextual history tools that are based on appealing ideas; These tools however, do not match the improvements provided by the state-of-the-art non-contextual history tools. We have described how available contextual information relates to ways people use shell. \redtext{TODO: shorten analysis above as necessary}
+We have explored what popular history tools are available. We have found state-of-the-art non-contextual history tools that provide a major improvement over standard history by replacing reverse search. These tools address the specific issues of reverse search we identified. We found contextual history tools that are based on appealing ideas; These tools, however, do not match the improvements provided by state-of-the-art non-contextual history tools. We have described how available contextual information relates to the ways people use shell. \redtext{TODO: shorten analysis above as necessary}
 
 
 % design
 
-Based on our previous analysis, we have designed a history system. The design is a result of iterative process that involved feedback from users. Our design matches the improvements of the state-of-the-art non-contextual history tools. Furthermore, it uses context to enhance the capabilities of the shell history. The design was tested to make sure that it fulfills all set requirements. 
+Based on our previous analysis, we have designed a history system. The design is a result of the iterative process that involved feedback from users. Our design matches the improvements of the state-of-the-art non-contextual history tools. Furthermore, it uses context to enhance the capabilities of the shell history. The design was tested to make sure that it fulfills all set requirements. 
 
 % implementation
 
-We have implemented a significant portion of the design. The working solution records shell history with context and usage. It features a fullscreen terminal application that searches shell history and shows relevant results based on current context. Without any search query the application offers history entries from current context. 
+We have implemented a significant portion of the design. The working solution records shell history with context and usage. It features a fullscreen terminal application that searches shell history and shows relevant results based on the current context. Without any search query, the application offers history entries from the current context. 
 
 % evaluation/testing
 
 
-We have evaluated the performance of the search application and compared it with both state-of-the-art history tool and standard builtin history search mechanism. 
+We have evaluated the performance of the search application and compared it with both state-of-the-art history tool and standard builtin history search feature. 
 We have suggested metrics and used them to compare our solution with state-of-the-art history searching tool -- Hstr \cite{toolshstr}.
 The average performance of our history searching application is either similar or better than Hstr. 
 
-We have found real life situations where our solution provides significant advantage over both standard reverse search and Hstr.
-Our solution enables the user to search with significantly less knowledge and typing. Furthermore, our search application on average saves more typed characters to the user. 
+We have found real-life situations where our solution provides a significant advantage over both standard reverse search and Hstr.
+Our solution enables the user to search with significantly less knowledge and typing. Furthermore, our search application, on average, saves more typed characters to the user. 
 We have concluded that contextual search is a great default because it offers new possibilities without degrading the average performance.
 
 
 As a result of feedback from our users, we have added several features to the search application. Notably, users can switch between default contextual search and non-contextual search. This is great for specific situations where using context does not bring value.
 
-Since the release of the first prototype the search application has been installed over 600 times. The project has over 250 stars on GitHub. The feedback we have received is overwhelmingly positive. %We have also got a chance to present one of the first versions of the application on Installfest conference. \cite{installfest-talk}\cite{installfest} 
+Since the release of the first prototype, the search application has been installed over 600 times. The project has over 250 stars on GitHub. The feedback we have received is overwhelmingly positive. %We have also got a chance to present one of the first versions of the application on Installfest conference. \cite{installfest-talk}\cite{installfest} 
 
 Right now, we want to encourage you, the reader, to try out the project for yourself. You can find installation instructions on the GitHub page of the project: \url{https://github.com/curusarn/resh} %\cite{resh-github-homepage}
 
 
 \paragraph{Future work}
 
-Our work implements the core functionality of the designed history system. However, there are parts of the design that should be implemented because they provide considerable value to the users.
+Our work implements the core functionality of the designed history system. However, the remaining parts of the design should also be implemented because they provide considerable value to the users.
 
 One part of the design we want to point out is synchronization.
-Implementing the synchronization connectors for the daemon would enable history searching across devices. It would also make the stored history replicated which could prevent potential data loss.
+Implementing the synchronization connectors for the daemon would enable history searching across devices. It would also make the stored history replicated, which could prevent potential data loss.
 
-Outside of the things we have included in the design, we suggest an improvement for our search application based on existing research. According to \cite{greenberg1993computer}, history entries that were already retrieved should be easier retrieve in the future. The scoring function should be modified to include this extra factor. 
+Outside of the things we have included in the design, we suggest an improvement for our search application based on existing research. According to \cite{greenberg1993computer}, history entries that were already retrieved should be easier to retrieve in the future. The scoring function should be modified to include this extra factor. 
 
-Additionally, we propose a topic for future research. Using machine learning techniques and context to provide Autosuggestions tailored to the user is a promising topic for a thesis.   
+Additionally, we propose a topic for future research. Using machine learning techniques and context to provide Autosuggestions tailored to the user is a promising topic for a thesis. 
 
 More research should be done to explore relationships between history entries. Exploring how terminal sessions and sequences of history entries relate to workflows of people could bring useful insights. These insights could be used to improve history searching tools.
 
@@ -295,12 +294,12 @@ More research should be done to explore relationships between history entries. E
 
 Figure \ref{seq-graph} shows sequential relationships between command stubs in shell usage of a single chosen user. 
 
-The graph contains 41 most used commands. Each node represents a command stub and its is proportionate to the command stub frequency. Each vertex represents a transition probability from one command to the next one. Nodes \verb|_start_| and \verb|_end_| represent the beginning and end of terminal sessions.
+The graph contains 41 most used commands. Each node represents a command stub, and its size is proportionate to the command stub frequency. Each vertex represents a transition probability from one command to the next one. Nodes \verb|_start_| and \verb|_end_| represent the beginning and end of terminal sessions.
 
 We can see that there are significant dependencies between command stubs. Many commands repeat themselves with high probabilities. There are also high probability transitions between specific commands. For example, \verb|mkdir| is followed by \verb|cd| in 90\% of situations.
 
-This is all interesting but is it usable in practice? Do people even recognize these sequential relationships in their shell usage?
-We created a sequential graphs like this based on shell history of different users. When we show these graphs to the original user they always instantly recognize their history. Furthermore, people can immediately recognize and describe the workflows different sequences in the graph represent.
+%This is all interesting, but is it usable in practice? Do people even recognize these sequential relationships in their shell usage?
+We created sequential graphs like this based on the shell history of different users. When we show these graphs to the original user, they always instantly recognize their history. Furthermore, they can immediately spot and describe the workflows different sequences in the graph represent.
 
 \begin{figure}
 
