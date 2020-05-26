@@ -3,9 +3,9 @@
 
 In the previous chapter, we designed a history system based on our previous analysis. Now we describe the actual implementation. 
 
-We did not implement every part of the design because it is quite extensive. Instead, we chose parts of the design that bring the most value to users. Naturally, we also implemented parts of the design that are required for the system to actually work.
+We do not implement every part of the design because it is quite extensive. Instead, we choose parts of the design that bring the most value to users. Naturally, we also implement parts of the design that are required for the system to actually work.
 
-First, we identified the search application as the most important part of the design to implement. Second, we wanted to collect the usage of shell history. To implement these two parts of the design, we needed to implement many other things. 
+First, we identify the search application as the most important part of the design to implement. Second, we want to collect the usage of shell history. To implement these two parts of the design, we needed to implement many other things. 
 
 We need to integrate with the shell to collect history, context, and usage. Arrow key bindings are necessary to collect their usage. The search application also needed its custom key bindings. Daemon is necessary to process, save, load, and serve history data. Additionally, we also needed a convenient way to release the project and to deliver it to users.
 

@@ -2,23 +2,24 @@
 
 \chapter{Analysis}
 
-\redtext{Write intro}
 
-\begin{itemize}
-    \item Describe features of standard shell history
-    \item We introduce typical shell users we design for
-    \item We formulate typical workflows for those users. Describe the workflows in detail, identify which are easy to achieve with std. shell history features and which are difficult or have issues
-    \item Explore existing shell history tools. Identify which issues of std. shell history they solve. 
-    \item Examine contextual information available in shell. Explain how it could be useful in history tools.
-\end{itemize}
+In this chapter, look at the current state-of-the-art. 
+We examine standard shell features because they represent both what people are used to and the starting point for our solution.
 
-\newpage
+Because we want to know who we design for we introduce target users for our solution shell history. We formulate shell history workflows based on shell usage data we collected from several people. %Each workflow is described in detail. 
+These workflows show us when standard shell history features work well and when there are issues. We explain the limitations and disadvantages of standard shell history features.
+
+Then, we review existing history tools to see what problems they solve. We identify tools that solve the issues of standard shell history features. We also find contextual history tools that do not bring much value to the user.
+
+After that, we explore what contextual information is available in shell. We break it down into multiple distinct categories. For each of them, we describe how it relates to shell history usage and how could it be useful in history tools.
+
+
 \section{Standard shell history features}
 
-In this section, we describe common shell history features. These features are most likely available to the majority our target users. Standard shell history features shape how people use shell history.  advantages and disadvantages
-
-
-%We only focus on commonly used features. Most of the history features we describe are enabled by default. The list of history features we describe is following:
+In this section, we describe common shell history features. Most of these features are enabled by default so the user does not have to configure them before using them.
+%These features are most likely available to the majority our target users. %Standard shell history features shape how people use shell history. 
+For each of the features we point out its advantages and disadvantages.
+The list of history features we cover is following:
 
 \begin{itemize}
     \item Saving history entries
@@ -29,13 +30,6 @@ In this section, we describe common shell history features. These features are m
     \item Manual history filtering
 \end{itemize}
 
-
-%Shells offer two editing modes which change the behavior and keybindings for some of the history features. We only cover the default Emacs editing mode.
-%Most of the history features are either present in both modes or they have an equivalent feature in Vi mode.
-
-
-
-\redtext{Fuck vim mode because it does not seem to be common enough - as in many people who use vim as an editor still use the default emacs mode in shell.}
 
 \subsection{Saving history entries}
 
@@ -625,49 +619,22 @@ This information is stored in the shell history but it is not easy to retrieve. 
 
 \section{Existing history tools}
 
-\todotext{TODO: mention our online research again}
-\todotext{TODO: shell history configurations options}
+In this section, we take a look at popular existing history tools. Many of these tools relate to the workflows we identified earlier. We describe how these tools work and we explain how they are useful to users. 
 
+Most of the tools we cover can be used to enhance the capabilities of standard shell history. Apart from shell history tools we also describe history features of other programs such as the Fish shell\cite{fishdocs} and the Python console in Blender\cite{tools-blender-docs-python-console}. Full list of tools we look at is following:
 
-\subsection{how much do people configure and customize \redtext{TODO: better title?}} 
-\todotext{TODO: Some people enjoy actively tweaking and customizing their setups and we look at the configurations they are sharing to explore possible features and options. - the lesson here is to keep things extensible and hackable.}
-
-\todotext{TODO: Large group of people does not want to spend time configuring and customizing their shell and expect it to just work.}
-\todotext{TODO: The major reason why people avoid customizing is that to customize and configure you need to either pause whatever you are doing or dedicate some extra time for it. This seems obvious but the extra time/effort and the delay/diversion of/from the original goal will deter many people from configuring their shells. }
-\todotext{TODO: The lesson here is that the default configuration should provide good out of the box experience for the average user. }
-
-\todotext{TODO: Another specific reason people avoid customization is when they often ssh to many different machines. The issue is that they get used to the custom the local environment and then they miss the customizations on different machines they visit. Depending on how much time they spend on other machines, it might be more convenient to just use the standard defaults everywhere.}
-
-\todotext{TODO: This kind of issue is tough one to deal with; People may be hesitant to even use new history tools because of this issue. We should be aware of this issue and consider how could shell history work across multiple devices.}
-
-% MOVE/BAD vvv
-%\todotext{TODO: common configuration options and what problems are they solving}
-
-%\todotext{-$>$ issues caused by running simultaneous sessions - SO full of questions, semi tricky config, PROMPT-COMMAND, histappend option }
-
-%\todotext{TODO: per directory history}
-
-%\todotext{TODO: per date + session history}
-
-%\todotext{TODO: more configurations ...}
-
-%\todotext{TODO: configuration management projects e.g.: oh-my-zsh}
-
-%\todotext{TODO: many people avoid custom configuration because they move between many devices (ssh into servers)}
-% end MOVE/BAD ...
-
-Generally, people create and use custom configuration to solve issues they face and to improve their command line experience. Some problems cannot be solved by configuration which leads people to write new tools. Many of the configurations and tools people create are personal experiments; These are usually too opinionated and not polished enough to be used by other people. In contrast, some tools grow popular because they are useful to many people. 
-
-In the following sections, we will examine various history tools and configurations that are related to issues and workflows we described in previous chapters. We are going focus on popular tools and common configurations. Additionally, we will cover less common tools and configurations that bring interesting features and solutions which cannot be found elsewhere. Apart from history tools and configurations we will also look at history features of other programs such as the Fish shell and the Python console in Blender. 
-
-% order by "workflows" start with immediate features and move on to regular serach and then to context search
-% NOTE: myabe we could explicitly mention that we want to follow the order
-
+\begin{itemize}
+    \item Autosuggestions
+    \item Forward in history
+    \item Multi-query multi-result interactive history search
+    \item Fuzzy history search
+    \item Contextual shell history in the cloud
+    \item Contextual history search powered by a neural network
+\end{itemize}
 
 \subsection{Autosuggestions}
 
-\todo{section Order-sensitive text}
-First, important history feature we discuss are autosuggestions. As you type on the command line autosuggestions suggest a single history entry that starts with characters you already typed. The suggested text is displayed in grey as shown in figure \ref{fish-autosuggestions} where the user just typed \verb|ssh|.  
+First history feature we discuss are autosuggestions. As you type on the command line autosuggestions suggest a single history entry that starts with characters you already typed. The suggested text is displayed in grey as shown in figure \ref{fish-autosuggestions} where the user just typed \verb|ssh|.  
 
 
 \begin{figure}[h!]
