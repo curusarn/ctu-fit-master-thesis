@@ -176,84 +176,26 @@ Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on 
 We research how people used shell in the past and compare it with how they use it now.
 Then, we look at standard history features and what issues people encounter when using them. We introduce target users and formulate typical shell history workflows. We explore existing history tools and how they improve standard shell history. Then, we design a new contextual history system based on our analysis. We implement core parts of the designed system. Finally, we test the system using data we collect from our users. Based on that, we draw conclusion about this work.
 
-%\redtext{We analyze: how people use history and what common history-related issues they encounter. We model target users and workflows. We look at existing history tools.}
+\paragraph{Defined terms}
 
+\redtext{should we define the terms here?}
 
-%About half of all developers have been working with Linux during year 2018. \cite{stackoverflow2019devsurvey} 
+To avoid confusion through out this work, we define following terms:
 
-%The standard shell history contains records with basic information about previously executed command lines. Each record only contains following details: the command line, timedate of the execution, and the duration of the execution\footnote{Duration is only available in Zsh and only when it is enabled.\cite{zshdocs}}. 
-
-%Additionally, it is quite common to use shell configuration\footnote{\todotext{e.g. Bash: histocontrol=ignoredups\cite{bashman}; zsh: HIST\_SAVE\_NO\_DUPS\cite{zshdocs}}} to prune duplicates from the history. This removes more information from history because the original command line sequences are lost.
-
-%As we can see the standard shell history contains only very basic information about executed command lines.
-%There is much more contextual data available at the time of command line execution e.g. present working directory, exit status, and previously executed commands. In this work, we explore the possibilities of using the contextual data about executed commands to increase the usefulness of shell history.
-
-
-
-% BAD: This limits the potential of standard shell history utilities because shell usage is contextual. is not generally used to run ad-hoc commands but 
-
-% MORE PRACTICAL: When using shells you likely do not run individual commands completely independently of each other. But instead run commands as parts of different workflows that 
-
-%\todo{describe the contents of this work / layout - redo because moved chapters in analysis} We start by analysing shell history features to understand advantages and disadvantages of standard shell history. We research existing history tools to see what ideas were already explored, which features work and which do not. 
-
-%After that, we focus on people. We start broad and research how people use computer tools in general. Then we move on to examining how people use shell and shell history. We also look at public discourse related to history tools and engage in online discussions to find out more about configurations and tools people use.
-
-%Next, we focus on the contextual information; We cover what information is available to be saved at the time of command line execution and we discuss how it could be used to enhance shell history. 
-
-%At this point we move on to design(ing) ...
-%\todotext{TODO: finish this intro}
-
-
+\begin{itemize}
+    \item Command line entry $=$ the contents of the command line submitted by the user
+    \item Command stub $=$ the first word of the command line entry
+    \item History entry and command line submissions are sometimes used instead of command line entry.
+\end{itemize}
 
 \end{introduction}
-
 
 % \begin{verbatim}
 % ____5___10___15___20___25___30___35___40___45___50___55___60__64
 % \end{verbatim}
 % The page is 64 verbatim characters wide
 
-
 \input{main_analysis}
-
-% DESIGN NOTES
-
-\todotext{XXX: Guidelines to mention/cite in the text}
-
-\todotext{Response times - usability}
-
-https://www.nngroup.com/articles/response-times-3-important-limits/
-
-0.1s - “system is reacting instantaneously” -$>$ prompt - recording
-
-1.0s - “user's flow of thought to stay uninterrupted” -$>$ cli app prototype maximum load time
-
-10s - ...
-\todotext{Visibility of system status}
-X1: Visibility of system status
-system should communicate its state -> highlights, all info displayed
-challenge with more underlying info
-
-\todotext{X4: Consistency and standards}
-
-\todotext{Discoverability}
-
-bad in shell
-
-related: recognition rather than recall, consistency and standards
-important for user experience, adoption, learning curve
-generally hard in shell (recall-based)
--$>$ don’t break expectations (conform to standards)
-e.g. new keybinds are not a great idea
-make use of habits people could already have built while using std shell history features
-e.g. people use arrows to get recent commands and ctrl-R to get arbitrary commands
-
-\todotext{Minimal, simple}
-
-guideline from NNgroup
-
-“Overloading a reuse facility with complex functionality would not make it better.” greenberg
-
 
 \input{main_design}
 
@@ -355,6 +297,44 @@ More research should be done to explore relationships between history entries. E
 		.2 thesis.ps\DTcomment{the Diploma thesis in PS format}.
 	}
 \end{figure}
+
+\chapter{}\label{app:extras}
+
+\redtext{This should not be empty}
+
+\newpage
+\section{Sequential structure of command usage}\label{seq-app}
+
+Figure \ref{seq-graph} shows sequential relationships between command stubs in shell usage of a single chosen user. 
+
+The graph contains 41 most used commands. Each node represents a command stub and its is proportionate to the command stub frequency. Each vertex represents a transition probability from one command to the next one. Nodes \verb|_start_| and \verb|_end_| represent the beginning and end of terminal sessions.
+
+We can see that there are significant dependencies between command stubs. Many commands repeat themselves with high probabilities. There are also high probability transitions between specific commands. For example, \verb|mkdir| is followed by \verb|cd| in 90\% of situations.
+
+This is all interesting but is it usable in practice? Do people even recognize these sequential relationships in their shell usage?
+We created a sequential graphs like this based on shell history of different users. When we show these graphs to the original user they always instantly recognize their history. Furthermore, people can immediately recognize and describe the workflows different sequences in the graph represent.
+
+\begin{figure}
+
+\tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
+%\newline
+%\newline
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Vertex style & Transition probability            \\\hline
+Regular/full     & 1.0 -- 0.3 (specified by labels) \\
+Dashed      & 0.3 -- 0.2                         \\
+Dotted      & 0.2 -- 0.1                         \\
+\hline
+\end{tabular}
+%\caption{Sequential structure of command usage (legend).}
+%\label{tab:seq-table}
+
+\caption{Sequential structure of command usage.}
+\label{seq-graph}
+\end{figure}
+
 
 
 \end{document}

@@ -2,83 +2,20 @@
 
 \chapter{Analysis}
 
+\redtext{Write intro}
+
+\begin{itemize}
+    \item Describe features of standard shell history
+    \item We introduce typical shell users we design for
+    \item We formulate typical workflows for those users. Describe the workflows in detail, identify which are easy to achieve with std. shell history features and which are difficult or have issues
+    \item Explore existing shell history tools. Identify which issues of std. shell history they solve. 
+    \item Examine contextual information available in shell. Explain how it could be useful in history tools.
+\end{itemize}
+
 \todo{DEFINE "command line entry"/"history entry" is a full command entered/submitted by the user}
 \todo{DEFINE "stub"/"command stub" is the first word of the command line entry - usually an executable, a shell builtin, or an alias.}
 
-
-
-\todotext{TODO: describe layout/contents of the chapter}
-
-\section{How people use shell}
-
-\subsection{\redtext{Comparing past and todays usage od shell}}
-
-\begin{itemize}
-    \item Previous research
-    \item We collected and compared with previous esearch
-    \item Most of the characteristics were similar and did not lead to noteworthy findings
-    \item We only point out the interesting observations that lead to conclusions
-    \item Additional plots comparing our data with previous research can be found in the appendix. LINK
-\end{itemize}
-
-\subsection{Personal nature of shell usage}
-
-\begin{itemize}
-    \item According to \cite{greenberg1993computer}, the way people use shell is highly individual.
-    \item 
-\end{itemize}
-
-
-\subsection{Sequential relationships between history entries}
-
-%In earlier chapter, we saw that there are a big differences in vocabularies of different people so it is not surprising that sequential properties of the commands also differ significantly between individuals.
-
-
-
-Here, we study sequential dependencies between commands for a selected individual.
-We create the graph by taking 41 most used commands. Each node represents a command and the size of the node is proportionate to the command frequency. Each vertex represents a transition probability from one command to the next one. 
-
-%We decided to create the graph this way because it represents properties that could be potentially used in history tools; It only uses the probability of transition from one command to the next one. Hanson used a method which also considers the reverse transition probabilities; That is the probability that given command was preceded by the previous command. For example, when predicting the next command we only have the information about the past and current command. 
-The \verb|_start_| and \verb|_end_| nodes represents the start and the end of a terminal session.
-
-\todotext{Errors filtered out because we want to study the history to help people achieve their goals - filtering exit status !0 is not fully correct but the resulting data is more useful than without any filtering.}
-
-\todotext{There are strong dependencies between certain commands - e.g. mkdir almost always followed cd - cd into the newly created directory, source is almost always followed by git w/o clear reason; Existence of strong dependencies suggests that it could be worth to predict the next command using the previous one.}
-
-\todotext{Many commands have a high probability of being repeated - e.g. jq which is almost always followed by itself, curl, git, ssh ...; High rate of commands being repeated shows the need to recall recent history records - even the most immediate ones. Remember that these high rates of repeated commands are not caused only by errors and typos because all commands with non-zero status were filtered out.}
-
-\todotext{Ad. above: Almost all commands repeat themselves with a significant probability. Some commands do not repeat themselves. E.g. hstr, rm, cp, source, mc ... these are simple commands that do not usually have many arguments and achieve simple goals that do not need to be repeated (remove file, copy file). It seems that commands with more arguments are repeated more A) because they help the user achieve complex goals B) the user adjusts the command because it is nontrivial to put it together the arguments C) command performs something fairly complex and user repeats the command (external change) }
-
-\todotext{At the beginning of the session the user often changes to a different directory. Or they use hstr which is a history searching tool.}
-
-\todotext{There are some very frequent commands that are used over and over again. This makes it easier to predict the next command stub. But it does not mean that it is easy to predict the next command line entry. Vast majority of these invocations only share the command but not the arguments.}
-
-\todotext{Sequential graphs differ significantly between users. However, the findings described above could be also found in the sequential graphs of other users.}
-
-\begin{figure}
-\tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
-%\newline
-%\newline
-\centering
-\begin{tabular}{|l|l|}
-\hline
-Vertex style & Transition probability            \\\hline
-Regular/full     & 1.0 -- 0.3 (specified by labels) \\
-Dashed      & 0.3 -- 0.2                         \\
-Dotted      & 0.2 -- 0.1                         \\
-\hline
-\end{tabular}
-%\caption{Sequential structure of command usage (legend).}
-%\label{tab:seq-table}
-
-\caption{Sequential structure of command usage.}
-\label{seq-graph}
-\end{figure}
-
-
-\subsection{Potential of history tools}
-
-
+\newpage
 \section{Standard shell history features}
 
 \redtext{This is some bad intro}
@@ -91,7 +28,7 @@ We only focus on commonly used features. Most of the history features we describ
     \item Stepping through recent history
     \item Prefix search
     \item Reverse search
-    \item Builtin history commands
+    \item Manual history filtering
 \end{itemize}
 
 
@@ -145,7 +82,7 @@ Quite obviously this is not a great way to access older than recent history entr
 Prefix search works similarly as stepping through history using \verb|ARROW_UP|. It returns previous history entries that match the prefix we have already typed. 
 This enables us to reuse recent and even older history entries based on their prefix. Prefix search is convenient in practice; For example, we can search for previous \verb|git| commands which all most likely start with \verb|git| prefix.
 
-When there is no prefix, prefix search works just like simple stepping through recent history. Because of that it can be bound to \verb|ARROW_UP|/\verb|ARROW_DOWN| and used as a reasonable replacement. We can find prefix search configured this way in a popular Zsh configuration framework -- Oh-my-zsh\cite{toolsohmyzsh}.
+When there is no prefix, prefix search works just like simple stepping through recent history. Because of that it can be bound to \verb|ARROW_UP|, \verb|ARROW_DOWN| and used as a reasonable replacement for the default behavior. We can find prefix search configured this way in a popular Zsh configuration framework -- Oh-my-zsh\cite{toolsohmyzsh}.
 
 In both Bash and Zsh, prefix search is not configured by default. Before we people can start using it, they need to find out that it exists and configure it. This is one of many examples where we can see the importance of good defaults; Many people only know the default state of the shell because they never change the default configuration.
 
@@ -161,508 +98,21 @@ Reverse search might seem like the perfect way to search history. However, it do
 Pointing out these limitations might seem like nitpicking. However, we will see later that they do limit the searching capabilities of reverse search significantly.
 
 
-\subsection{Builtin history commands}
+\subsection{Manual history filtering}
 
 Shells offer builtin commands to print and control history. Builtin command \verb|history| and standard shell utilities can be used for powerful history searching.
-For example, running \verb#history | grep foo | grep bar# prints the searches the history using two words and displays all matching results.
+For example, running \verb#history | grep 'pattern1' | grep 'pattern2'# prints the searches the history using two words and displays all matching results.
 
 Manually filtering history overcomes the limitations of reverse search. However, extra typing is necessary to complete the searches compared to interactive methods. Plus, unlike with reverse search, we cannot see the results update as we type the search query.
 
-% \redtext{FC ?}
 
+\section{Target users}
 
-\redtext{---------------------------------------------------------------------------- Break ---}
+When designing any product, we need to make sure we know who the product is for. Shell history tools are no exception. To capture the target user-base we are modelling two typical users as personas.% As the first persona we chose an experienced user because shell history tools are likely more for users that use shell extensively. As the second persona we chose a novice shell user; Designing tools for novice shell users can result in a product that is better for everyone. For example, it is especially important for novice users that the product is easy to install, comes with a good default configuration, and is easy to use for the first time; These characteristics are beneficial to everyone not just novice users. 
 
+\subsection{Typical experienced shell user}
 
-\section{How people use shell}
-
-In this chapter we examine how people use shell and shell history. We consider previous research that studies the properties of how people use command based systems. We also collected a sample of user shell histories and we will be discussing where our data matches the existing findings and where it does not. 
-
-We are looking at properties of command line usage to see if find justifications for standard history features. Examining shell history could also give us insights into how to design history tools. 
-
-After examining shell usage itself we focus on how people use shell history features. We explore existing online discourse about history tools to discover common workflows, problems and configurations.
-
-\subsection{Collecting shell history}
-
-\todotext{TODO: describe how we collected history (skipping errors)}
-\blind
-
-\subsection{Frequency distributions of commands}
-
-In this section, we focus on commands instead of whole command lines. By command we mean the first word of the command line executed by the user. Command is usually an executable program or a shell builtin.
-
-\redtext{According to \cite{greenberg1993computer}, frequency distribution of commands used by a group of similar users follows Zipf distribution.}
-
-\redtext{Zipf distribution has the property that a relatively small number of items have high usage frequencies, and a very large number of items have low usage frequencies.}
-
-\todotext{TODO: 80-20 rule is a looser characteristic of Zipf distribution - 20 \% of items account for 80 \% of usage ... alternative 90-10}
-\blind
-80-20 rule -$>$ https://en.wikipedia.org/wiki/Pareto\_principle
-
-
-
-\todotext{TODO: describe and explain the plots}
-
-% A looser characteristic of this kind of rank distribution is the well-known 80-20 rule of thumb that has been commonly observed in commercial transaction systems - 20\% of the items in question are used 80\% of the time (Knuth, 1973; Peachey,Bunt, and Colbourn, 1982).2
-
-% In measurements recorded from a UNIX site, Hanson, Kraut, and Farber (1984) report a similar trend - 10\% of the 400-500 commands available account for 90\% of the usage
-
-
-% Figure 3.1. The normalized command frequency, compared with Zipf.
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_zipf-cmd-frq.png}}
-  \caption{The normalized command frequency, compared with Zipf from \cite{greenberg1993computer}}
-\end{figure}
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_zipf-cmd-frq.png}}
-  \caption{The normalized command frequency, compared with Zipf. \todotext{unify labels to match Greenberg, export in vector, lose top title, add data from more people}}
-\end{figure}
-\todo{command rank plots should be on the same page}
-\todo{make sure figures are not all over the place}
-
-\todotext{TODO: In our plot the combined history of all the subjects somewhat follows zipf. BUT also most of the individual users follow the zipf - there are exceptions. In Greenberg study individual histories did not follow zipf.}
-
-% ALL: Top 100 %% of cmds amounts for 100.0 %% of all command lines
-% ALL: Top 10 %% of cmds amounts for 63.43728659230594 %% of all command lines
-% ALL: Top 20 %% of cmds amounts for 71.34987480081949 %% of all command lines
-% eva: Top 100 %% of cmds amounts for 100.0 %% of all command lines
-% eva: Top 10 %% of cmds amounts for 62.012411347517734 %% of all command lines
-% eva: Top 20 %% of cmds amounts for 73.35992907801419 %% of all command lines
-% simon: Top 100 %% of cmds amounts for 100.0 %% of all command lines
-% simon: Top 10 %% of cmds amounts for 57.7319587628866 %% of all command lines
-% simon: Top 20 %% of cmds amounts for 66.18556701030928 %% of all command lines
-% tivvit: Top 100 %% of cmds amounts for 100.0 %% of all command lines
-% tivvit: Top 10 %% of cmds amounts for 53.33086145099493 %% of all command lines
-% tivvit: Top 20 %% of cmds amounts for 64.93634902978619 %% of all command lines
-
-
-\todotext{TODO: According to \cite{greenberg1993computer},: For each of the four
-user groups, 10\% of the commands used accounted for 84\%-91\% of all usage}
-
-
-\redtext{Top 10 \% of cmds amounts for 63 \% of all command lines}
-\redtext{Top 20 \% of cmds amounts for 71 \% of all command lines}
-
-\redtext{Our data does somewhat follow the 80-20 (71-20) rule (relatively few items account for a significant portion of the distribution) but it is a significant difference compared to the stats from the study. Because of the low number of subjects we can only theoretize why this is - more commands available?, small sample size?, longer collection period?}
-
-\redtext{We suspect that difference is mainly caused by larger number of commands used by the users overall}
-
-\redtext{TODO: Top used commands differ between people}
-\redtext{According to greenberg, even when people have very similar expertise and identical goals the commands they use vary significantly. Surprising number of commands is not shared by the users from the same group. This diversion shows that there are many ways to achieve the same goal. Commands are smaller units that make up the goals of the users. - Our data is in line with these ideas.} 
-
-\todotext{Conclusion: Command frequencies are highly uneven and individual.}
-
-\subsection{Command Vocabulary}
-
-\redtext{Command vocabulary is the set of commands used by a given person. We are interested in analysing how the vocabulary of the user changes over time.}
-
-\todotext{TODO: describe and explain plots}
-
-
-% Figure 3.2. Command vocabulary size vs. the number of command lines entered for four individuals.
-
-\begin{figure}
-\centering
-  \tmpframe{\includegraphics[width=0.6\linewidth]{figures/greenberg/plot_ref_cmd-vocab-size.png}}
-  \caption{Command vocabulary size vs. the number of command
-lines entered for four individuals. (Greenberg)}
-\end{figure}
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmd-vocab-size.png}}
-  \caption{Command vocabulary size vs. the number of command
-lines entered for \todotext{N individuals}}
-\end{figure}
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmd-vocab-size-time.png}}
-  \caption{Command vocabulary size in time of \todotext{N individuals} (empty spaces are for days without any shell history)}
-\end{figure}
-
-
-
-
-\todotext{TODO: initial "steep" period in the plot is caused by the system encountering the commands for the first time. the more stable part is more representative of actual adoption rate of new commands.}
-
-\todotext{TODO: Greenberg found out that bursts in adoption of new commands is sometimes caused by new goals of the user but sometimes no such new goal can be found in the data. Our data does support this. }
-
-\redtext{Greenberg reports adoption or about 5\% for all users before they enter 1k command line. He concludes that this is an initial learning period when the system encounters most of the commands for the first time. According to Greenbers, after initial 1k cmd lines entered the adoption rate drops quicky under 1\%. This is somewhat in line with our findings. We did observe about 5\% cmd adoption rate during the first 1k cmdlines entered for vast majority of our users. Between 1k and 2k we saw a drop in adoption of new commands to about 3\%. After 2k the adoption dropped to numbers lower than 2\% for most users.}
-
-\todotext{TODO: Two differences - longer initial period of 2k cmdlines and higher adoption rate of up to 2\%}
-
-\redtext{These differences could be caused by multiple factors. There is more commands available compared to XX years before. Additionally, custom commands/scripts seem to be quite common in our data while they seem to be non-existent in the greenberg study. This alone could have a huge impact. Draper (see below) was referring to a number of commands available to users of ... as 570. }
-
-\redtext{Nowadays the number of available commands is virtually unlimited because users can install and create new commands. Number of initially available commands on a newly installed system is in thousands.}
-
-% REF: Draper (1984) estimated the times a command was invoked by noting the UNIX processes spawned during each user's interaction with the system (method 4, Section 2.2.1).5 He suggested that the overall trends observed are representative of real command use. First, out of a vocabulary of the 570 commands available to the population, only 394 (70\%) were used at least once. 
-
-\redtext{We can conclude that command usage distribution was and still is very uneven (few commands dominate the distribution) and that the number of available commands slowly and unevenly increases over time but the adoption of new commands is faster than in the past.}
-
-\redtext{new workflows, aliases, ...}
-
-% eva: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.051
-% eva: Cmd adoption rate at 2k cmdlines = 0.0345
-% eva: Cmd adoption rate between 1k and 2k cmdlines = 0.018
-% eva: Cmd adoption rate between 2k and 3k cmdlines = 0.013
-% eva: New cmd adoption rate after 1k cmdlines = 0.007725856697819315
-% eva: New cmd adoption rate after 2k cmdlines = 0.006263345195729538
-% eva: New cmd adoption rate after 3k cmdlines = 0.005145228215767635
-% simon: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.076
-% simon: Cmd adoption rate at 2k cmdlines = 0.0505
-% simon: Cmd adoption rate between 1k and 2k cmdlines = 0.025
-% simon: Cmd adoption rate between 2k and 3k cmdlines = 0.007
-% simon: New cmd adoption rate after 1k cmdlines = 0.015840041547649963
-% simon: New cmd adoption rate after 2k cmdlines = 0.012627148368993335
-% simon: New cmd adoption rate after 3k cmdlines = 0.015667206915180983
-% tivvit: Cmd adoption rate at 1k (between 0 and 1k) cmdlines = 0.045
-% tivvit: Cmd adoption rate at 2k cmdlines = 0.0315
-% tivvit: Cmd adoption rate between 1k and 2k cmdlines = 0.018
-% tivvit: Cmd adoption rate between 2k and 3k cmdlines = 0.011
-% tivvit: New cmd adoption rate after 1k cmdlines = 0.009304948540814888
-% tivvit: New cmd adoption rate after 2k cmdlines = 0.007877892663712457
-% tivvit: New cmd adoption rate after 3k cmdlines = 0.007264873355586099
-% >>> Avg recurrence rate = 70.29523637022278
-% >>> Max avg recalled characters = 16.34658576344865
-% >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
-
-\subsection{Sequential dependencies between commands}
-
-We just looked at frequencies of commands and command vocabulary of shell users. Now we take a look the dependencies between commands.
-
-\todotext{TODO: describe the graph by Hanson - all users together, node size indicates frequency of the command, arrows indicate significant dependencies, 50 cmds. }
-
-\todotext{TODO: describe findings by Hanson - significant chains, core/modular cmds vs. cmds with significant dependencies, functional clusters of commands}
-
-
-
-% Figure 3.3. Sequential structure of UNIX command usage, from Figure 4 in Hanson et al. (1984).
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/graph_ref_cmd-sequences.png}}
-  \caption{Sequential structure of UNIX command usage, from Figure 4
-in Hanson et al. (1984). (Greenberg)}
-\end{figure}
-
-
-
-\todo{sequential graph and its legend table must be on the same page!}
-
-
-
-
-% REF: "Through a multivariate analysis of UNIX commands invoked by the site population, Hanson, Kraut, and Farber (1984) examined the interaction effects between commands. Their results show statistically significant relationships between certain command chains; the relations between the fifty most frequently used commands are shown in Figure 3.3. Each ball in the network represents a command, its size indicates the usage frequency, and the arrow indicates the significant dependencies. One dimension of these relationships is modularity. Some commands, such as Is, are core commands - they are used frequently and are surrounded by many other commands (i.e., highly modular and independent). Others are not; they are surrounded by specific command sequences. An example of the latter is cp, which is generally preceded by itself and followed by chmod." "Commands are also related by functional clusters, such as editing, process management, orientation, social communication, and so on (Hanson, Kraut, and Farber, 1984), which may not be revealed by statistics."
-
-\redtext{Greenberg concluded that assuming that the sequential dependencies of commands found by polling all the users together is a mistake.}
-
-
-
-\todo{highlight referenced nodes}
-
-\todo{add words delete words}
-
-\todo{NOTE: Summed up toolsmith \%\%\%}
- %The rank frequency distribution of command usage by groups of like and
-%unlike users is approximated by a Zipf distribution.
-%2. With a few exceptions, the frequency of use of most commands differs between
-%groups - rank order is not maintained.
-%3. There is little overlap between the command vocabulary of different users,
-%even for those with apparently similar task requirements and expertise.
-%4. Individuals have small command vocabularies, and new commands are acquired slowly and irregularly. Consequently, the Zipf model may not be an
-%accurate estimate of an individual's behavior.
-%5. Some commands cluster around or follow others in statistically significant
-%ways, although these dependencies vary from one individual to another.
-
-
-
-% \todotext{TODO: Greenberg conducted a study in his work \cite{greenberg1993computer} in 19XX which provides a lot of insight into how people use shell. It's not obvious that conclusions and ideas in the work still hold. To make sure that the usage of shell didn't change to the point where we can't use the ideas anymore. }
-
-
-\subsection{Recurrence rate of command lines}
-
-\redtext{In the previous sections we have examined how people use commands when interacting with a command line interface. Now we focus on whole command lines entered by the user. By \textit{command line entry}, we mean the line entered by the user as it appears in the shell history. Multi-line commands are considered a single command line entry.} 
-
-\todotext{It is important to study command line entries because they contain the full information entered by the user. In contrast, commands only offer partial information. For example, even if we were able to predict the next command of the user with 100\% accuracy user would still have to type in all the arguments themselves. Usefulness of such history mechanism would not be great.}
-
-\todotext{Greenberg has reported average recurrence rate of 73.8\% for all subjects; Recurrence rates for computer scientists and experienced programmers were 74.4\% and 67.7\% respectively. Average recurrence rate of command line entries in our data is 70.3\%. Based on descriptions of groups in \cite{greenberg1993computer} our subjects are computer scientists and experienced programmers.}
-
-\todotext{High average recurrence rate shows the potential of shell history tools. The fact that command line entry was already entered by the user does not mean the user will recall it from history. For example, if remembering and retyping is easier than using history facilities there is no point in recalling the command line entry from the shell history. Naturally, longer command line entries are more likely to be recalled and shorter ones are more likely to be retyped. ... other factors of recall utility }
-
-% Table 5.2. The average recurrence rate of the four sample UNIX user groups
-
-\begin{table}[]
-\centering
-\begin{tabular}{lllll}
-\hline \hline
-Sample name             & \multicolumn{2}{c}{Recurrance rate} & \multicolumn{2}{c}{Range} \\
-                        & mean             & std dev          & minimum     & maximum     \\ \hline
-Novice Programers       & 80.4\%           & 7.2              & 64.7\%      & 91.7\%      \\
-Experienced Programmers & 74.4\%           & 9.7              & 51.4\%      & 90\%        \\
-Computer Scientists      & 67.7\%           & 8.2              & 46.4\%      & 82\%        \\
-Non-programmers         & 69.4\%           & 8.1              & 50\%        & 84.3\%      \\
-                        &                  &                  &             &             \\
-Total                   & 73.8\%           & 9.6              & 46.4\%      & 91.7\%      \\ \hline \hline 
-\end{tabular}
-\caption{The average recurrence rate of the four sample UNIX user groups from \cite{greenberg1993computer}}
-\label{tab:recurrence_rate}
-\end{table}
-
-% \begin{figure}
-%   \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/table_recurr-rate-in-different-samples.png}}
-%   \caption{The average recurrence rate of the four sample UNIX user groups (Greenberg) \todotext{redo as an actual table}} 
-% \end{figure}
-
-
-\subsection{Maximum possible recalled characters}
-
-\redtext{Recurrence rate represents how often people execute command line entries that were already entered before. Maximum possible recalled characters represents how many characters can be recalled from shell history assuming we store all previously entered commands. This metric show us the potential of shell history tools quantified in recalled characters.}
-
-\todotext{TODO: Greenberg reports average command line entry length of 7.58 characters. Maximum possible recalled characters per command line submission was 4.43 characters. Whenever the user types in a new command line entry there can be no characters recalled; This lowers the maximum recalled characters per command line entry.}
-
-\todotext{TODO: Our data shows average command line entry length of 29.26 characters. Maximum possible recalled characters per command line entry is 16.34 characters. We see a significant increase in the average command line entry compared to Greenberg. Naturally, this also increases the potential recalled characters.}
-
-\redtext{This difference makes sense when we look at commands that are available today. There are new complex commands with subcommands and long options. Consider} \verb|git|\redtext{, it has many subcommands which accept different options; Additionally, the order of arguments matters.}
-
-\todo{Is this where we talk about complex commands ??? }
-
-\todotext{We conclude that the potential of shell history facilities has increased over the years because of differences in shell usage, available commands, and shell itself.}
-
-\subsection{Maximum possible recalled characters including prefix matches}
-% prefix matches
-
-\todotext{TODO: We found situations in our collected shell history where the user gradually modified recently submitted command line entries. These entries often did not exactly match any of previous command lines entries but they were very similar. Workflows that repeat parts of previous command line entries are an opportunity for shell history use. Previously introduced metric does not account for this type of command line entry reuse. To estimate the potential of shell history tools we measured the potential recalled characters considering prefix matches.}
-
-\todotext{TODO: Maximum possible recalled characters including prefix matches is 26.77 characters per command line entry. You can see that this is close to the average command line entry length; This means that almost all command line entries share prefixes of significant length with previously submitted command line entries. This of course does not mean that it is possible to create a shell history system that achieves these amounts of character reuse. However the potential of history facilities is great. }
-
-
-
-
-\todo{NOTE: avg recurrence rate \& avg max possible recalled characters \%\%\%}
-% ALL avg cmdline = 29.269552945461168
-% >>> Avg recurrence rate = 70.29523637022278
-% >>> Max avg recalled characters = 16.34658576344865
-% >>> Max avg recalled characters (including prefix matches) = 26.770874841514217
-
-
-% greenberg 1993 vs now
-% the average length of command lines is 7.58
-% recurrence rate is 74.4% for Experienced Programmers (avg group), max chars. recalled for an optimal conditioning method is 4.43 characters predicted per submission.
-
-\blind
-
-\subsection{Potential recalled characters as a function of distance}
-
-\todotext{TODO: add graph with all subjects combined or separated}
-
-\begin{figure}
-\centering
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg/plot_ref_cmdline-recurr-rate.png}}
-  \caption{Recurrence distribution as a measure of distance. (Greenberg)}
-\end{figure}
-
-\begin{figure}
-\centering
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmdline-recurr-rate.png}} 
-  \caption{Recurrence distribution as a measure of distance.}
-\end{figure}
-
-
-\subsection{Command line entry vocabulary}
-
-\todotext{TODO: find out where to put this !!! }
-
-\todo{!!! conclusions from plots !!!}
-
-
-
-\todotext{}
-
-
-
-
-% Figure 5.6. Command line vocabulary size vs. the number of commands entered for four typical individuals.
-
-\begin{figure}
-\centering
-  \tmpframe{\includegraphics[width=0.6\linewidth]{figures/greenberg/plot_ref_cmdline-vocab-size.png}}
-  \caption{Command line vocabulary size vs. the number of commands
-entered for four typical individuals. (Greenberg)}
-\end{figure}
-
-\begin{figure}
-  \tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/plot_cmdline-vocab-size.png}}
-  \caption{Command line vocabulary size vs. the number of commands
-entered for a single experienced programmer \todotext{TODO: title}}
-\end{figure}
-
-\subsection{Predicting command lines entered by users}
-\todotext{TODO: Predicting users' next command line - what is the state of the art, what are the disadvantages}
-
-\blind[2]
-
-
-\todotext{How have shell usage changed since standard shell history features and greenberg study - longer commands, more commands; sessions (there can be more terminal windows open -> history is not strictly sequential anymore); }
-
-
-
-\blind[3]
-
-
-\section{How people use shell history}
-
-\todo{DESC: practical chapter with concrete examples based on the standard history features}
-
-In the previous sections, we have looked at existing research about shell usage. We compared the findings from literature with a small sample of data we collected ourselves. 
-
-We saw that there is a lot of recurrence and patterns in the way people use shell. These properties of shell usage show us the potential of shell history. When designing any shell history tools we should leverage and respect them.
-
-However, we should not blindly assume that leveraging the recurrence and patterns of shell usage will produce useful history tools. To see the full picture, we need to examine not only how people use shell but how they use shell history.  
-
-For example, studying your shell usage could show us that you often use a specific command line entry. However, there is a significant difference in workflow based on whether you prefer to recall the entry from history or if you prefer to type it out. A shell history mechanism that suggests command line entries that you never retrieve from history provides zero value. 
-
-Consider another example; You download and install a new history tool that is supposed to increase your productivity. It promises to predict what command line entry you are going to use next. It is activated when you press \verb|arrow_up|. There is an issue with such a tool; You are likely used to having access to recent history entries when you press \verb|arrow_up|. You probably have a strong expectation that \verb|arrow_up| gives you previous history entry; Chances are that sometimes you press \verb|arrow_up| and execute the retrieved history entry without even reading it. History tool that breaks this expectation will cause mistakes and ultimately you will be forced to either change your habits or uninstall the tool.  
-
-\todo{TODO: Either use ARROW\_UP everywhere or arrow\_up}
-
-\todotext{TODO: no usable research on how people use shell facilities (Greenberg has usage from csh with history expansion only)}
-\todotext{TODO: to get an idea of how people use shell history we explored and "initiated/participated" in online discourse}
-\blind 
-
-
-\subsection{Online discourse about shell history}
-
-\todotext{TODO: talk about our online research - my twitter thread, hackernews threads, SO questions, etc.}
-
-\todotext{SO and SE show the standard issues, questions, wanted features}
-\todotext{TW thread shown things people use and features they want}
-
-
-\todotext{TODO: Naturally, people are selective about what they share online this skews the available information. People are not likely to share the basic usage habits they do not even realize they have. BUT they will share their custom configurations and scripts. }
-% We find mentions of issues they run into when using standard history features.
-
-\subsection{Common shell history issues and usage patterns}
-
-\todotext{TODO: In this section, we present our observations and highlight sentiments that people voice online. Our observations include issues people face when using shell history, what people expect from shell history and ...}
-
-\todotext{TODO: We focus on more general findings. We leave specific tools people use for a later section.}
-
-
-\subsubsection*{Robustness/Reliability of standard shell history}
-
-The most common issues people ask questions about are related to reliability of the history.
-There are various reasons why certain command lines might not be saved to the shell history; This means that people experience situations, when they expect some entry to be present in the history  but they cannot find it because it is missing.
-
-To understand why reliability is essential, imagine you are looking for a command line entry and you are absolutely certain you executed it in the past; In this situation, you could spend a significant amount of time trying to retrieve the command line entry from the history. %You could give up at any time but how likely is that if you know that you executed the command line entry earlier.
-
-The most common reason people lose portions of their shell history is caused by how shells handle multiple simultaneous shell sessions.    
-\todotext{CONNECT}
-
-People expect shell history to handle multiple simultaneous sessions gracefully. This is generally not the case; The user can run into multiple issues depending on what is the default configuration in the package provided by their distribution.
-
-\todotext{The most common issue is - losing history from sessions because the last session overwrites the history file. Some people also expect the history to be shared between sessions which is nontrivial to set it up (in bash, zsh has an option)}
-
-
-\todotext{The most severe issue is a race condition that can cause bash to lose the entire shell history. There is no mechanism that ensures that two shell sessions will not write out shell history at the same time. People have reported losing their whole history because of this issue. When users shutdown their machine with multiple open terminals the chance of the race condition increases because all the shell sessions will be "killed" by the "system" at roughly the same time.}
-
-\todotext{Unlimited history - people expect it}
-\todotext{unlimited search, some people experience their history being truncated on reboots}
-
-
-\todotext{history as a Full transcript of actions - people expect}
-
-
-\todotext{TODO: Shell history is not reliable enough -> People do not trust it -> They start using other solutions}
-\todotext{Using other tools because of preference or convenience is okay. Using other tools because shell history does not feel reliable is a failure of shell history.}
-
-\todotext{Many of these issues can be solved with a right configuration; However, this begs a question, should tools rely on additional configuration for the basic functionality to work properly?}
-
-
-\subsubsection*{Basic/Standard shell history features/usage}
-\todo{Not sure if this is the right place - isn't this essentiall what we need for the description of standard shell features???}
-\todo{CONSIDER: This might get it's own subsection after all the common issues and feature requests/wishes}
-
-\todotext{TODO: Recalling recent history}
-
-\todotext{TODO: Simple stepping through history using arrow keys - failry straight-forward feature commonly used when people need to access recently executed command line entries.}
-
-\todotext{TODO: Prefix search is realized by verb|history-search-backward| and verb|history-search-forward| readline functions in bash. It is very common to replace the simple stepping through history with prefix search; When you use prefix search with an empty line it works almost identically to stepping through history. Prefix search functionality is essentially a superset to stepping through history. }
-
-
-\todotext{Prefix search is often praised in shells where it is enabled by default\footnote{The Fish shell and a popular configuration framework oh-my-zsh both come with a prefix search enabled by default and bound to verb|arrow\_up|} and it is often ignored in bash where one needs to configure it.}
-
-\todotext{TODO: Reverse search}
-
-\todotext{TODO: Reverse search is an interesting feature. Many people use it and find it useful. That makes sense because it is the most powerful interactive history mechanism available to users.} 
-
-\todotext{There are a few issues with reverse search we should point out. Reverse search only shows one result at a time; To show the next one we can press verb|CTRL-R| repeatedly. Common issue people have is that when you press verb|CTRL-R| too many times it is not trivial to go back to the previous result.}
-
-\todotext{TODO: Shows only one result - going through results one by one can be quite tiresome}
-
-\todotext{The default keybinding for getting a previous result is verb|CTRL-S|. The issue is that verb|CTRL-S| is also commonly used for flow control. By default, in some distributions, pressing verb|CTRL-S| freezes all the input coming to the terminal. This can be quite obviously very confusing for new users. It is possible to configure verb|CTRL-S| to be free for forward history search; However, if people do not change the configuration they have no way to get to a previous search result.}
-
-% Terminal can be unfrozen by pressing \verb|CTRL-Q|.
-
-\todotext{TODO: Query in reverse search is consecutive - not ideal when we only remember parts of the command. E.g. ... ?}
-
-\todotext{TODO: manual filtering}
-\todotext{history | grep - gives you a lot of power and extensibility}
-\todotext{This seems to be quite common.}
-\todotext{Two takeaways: Interactive Std. history features may be lacking if people use manual filtering instead - lets try to fix it, AND people like extensible and standard solutions}
-
-
-\todotext{TODO: History substitution}
-\todotext{you don't see what you execute unless you enable the option - minority of people seem to use these (more than just individuals but not many people)}
-\todotext{ !! is quite common, e.g. sudo !!}
-
-
-
-\subsubsection*{Additional information in shell history}
-
-A common sentiment we can find online is the wish to have additional information saved in shell history; The most frequently requested additional information is the current working directory and the time of the execution. Other requested information includes duration of the execution, user and host. 
-
-Some people would also like if there was a way to filter out history entries with non-zero status or perhaps, even to not save them to history at all.
-
-\redtext{We are going to cover the benefits and possibilities afforded by saving additional information to shell history in the later sections in detail.}
-
-\subsubsection*{Control over what is saved to history}
-Sometimes people do not want certain command line entries to be saved to history. 
-It is very common to have the shell configured to not save duplicate entries to the history.  
-Another common reason to not want a certain command line to be saved to history is when it contains some sensitive information. This is typically a password passed as an argument to an executable.
-
-Other command line entries that some people do not want in their history are short useless commands and dangerous commands. An example of the former is \verb|ls| which is easier to type again than to recall from history; An example of the latter is \verb|rm -rf *| which could have catastrophic impact if recalled and executed by accident.
-
-There are configuration options available that make it easy to filter what gets saved to history using simple pattern matching. There is also an option to ignore command line entries starting with a space; This is commonly used to prevent arbitrary commands from being saved to history.
-
-It is worth noting that people sometimes want to delete history entries after they submitted them. Another workflow some people have is to disable saving of command line entries to history for the rest of the current session.
-
-\subsubsection*{Shell history across multiple devices / Synchronizing history between devices}
-
-\redtext{Quite a few people wish to have their shell history synchronized between multiple devices. This is not surprising because many services work independently of a device and the user data is often stored online. It is understandable that people expect their shell history to follow this trend.  }
-
-\redtext{Some people shared workflows that involve reuse of shell history between devices. For example, someone wanted to have access to shell history from different machines when setting up new servers.}
-
-\subsubsection*{Smart shell history features}
-
-\todotext{TODO: A portion of questions we can find online is about features that would require the shell history to understand the contents of the submitted command line entries. This means that shell history would have to include at least a limited parsing of the shell. Examples of such features are expansion of aliases and transformation of relative paths to absolute ones. These expansions could make the history entries independent of set aliases and current working directory. }
-
-\subsubsection*{ADDED: Full transcript}
-\todotext{People sometimes with to have a full transcript of their actions - but history is deduplicated}
-
-% Delete fron history
-
-\subsection{Target users \redtext{MOVED (and typical workflows)} }
-
-When designing any product, we need to make sure we know who the product is for. Shell history tools are no exception. To capture the target user-base we are modelling two typical users as personas. As the first persona we chose an experienced user because shell history tools are likely more for users that use shell extensively. As the second persona we chose a novice shell user; Designing tools for novice shell users can result in a product that is better for everyone. For example, it is especially important for novice users that the product is easy to install, comes with a good default configuration, and is easy to use for the first time; These characteristics are beneficial to everyone not just novice users. 
-
-\todo{TODO!: User groups - find the common characteristics, describe the common characteristics}
-\todotext{ understand shell options, do they speak english?, ... }
-
-\todo{TODO!: personas should have concrete languages, editors they use, etc. }
-
-\subsubsection*{Typical experienced shell user}
-
-Experienced professional programmer \textit{Peter} develops, deploys, and operates back-end applications. Main languages he uses at work are C and C++. He has years of experience with developing on and for the Linux operating system. He is proficient in Bash and he written a few small shell scripts to increase his productivity.
+Experienced professional programmer \textit{Peter} develops, deploys, and operates back-end applications. Main languages he uses at work are C and C++. He has years of experience with developing on and for the Linux operating system. He is proficient in Bash and he has written a few small shell scripts to increase his productivity.
 
 His editor of choice is Vim; He has a sizable Vim configuration with multiple Vim plugins he collected over the years.
 
@@ -670,15 +120,15 @@ The shell he uses is Zsh with Oh-my-zsh \cite{toolsohmyzsh} shell configuration 
 
 He often uses \verb|ssh| to log into remote machines; The remote machines are shared and have the default shell configuration. He keeps his shell and editor configuration somewhat similar to the default one because he does not want to constantly switch between very different environments. 
 
-His daily shell workflows include complex commands with many long arguments. Switches between many different projects. When coming back to a project he sometimes cannot remember what command line entries he was using. He is familiar with Make but he often forgets to create Makefiles for typical tasks in projects.
+His daily shell workflows include complex commands with many long arguments and switching between many different projects. When coming back to a project he sometimes cannot remember what command line entries he was using. He is familiar with Make but he often forgets to create Makefiles for typical tasks in projects.
 
 He makes use of interactive history features like reverse search and prefix search. However, he quite often uses \verb#history | grep 'pattern1' | grep# \verb#'pattern2'# to manually filter shell history because it is both more powerful and sometimes feels easier to use than reverse search. Manual filtering allows him to search by more than one pattern and to see many of the matching results. 
 
-\todotext{TODO: ADD challenges and benefits ? maybe}
+%\todotext{TODO: ADD challenges and benefits ? maybe}
 
-\subsubsection*{Typical novice shell user}
+\subsection{Typical novice shell user}
 
-Junior data analyst \textit{Mark} has recently started his first job. He uses shell because he needs it for his job. The primary language he uses is Python. 
+Junior data analyst \textit{Mark} has recently started his first job. He uses shell because he needs it at work. The primary language he uses is Python. 
 
 The editor he uses is Visual Studio Code because it was recommended to him by a coworker. He likes that it suggests extensions to install based on files he is working with.
 
@@ -688,32 +138,30 @@ Since he does not have much experience with shells, he neither does understand t
 
 There are shell history features he is not aware of like history expansion and prefix search. He uses arrow keys to get recently submitted command line entries and he presses \verb|CTRL-R| when looking for history entries further in the past. 
 
-\todotext{TODO: ADD challenges and benefits ? maybe}
+%\todotext{TODO: ADD challenges and benefits ? maybe}
 
 
 \section{Common shell history workflows}
 
-Now that we know who our target users are we can formulate common workflows for them. We do not specify the workflows for each of the target users separately; Instead, we comment on the difference between the users when necessary. \todo{we only ever make comments about the experience level of the users}
+Now that we know who our target users are we can formulate common workflows for them. Workflows are formulated based on interviewing user, collected shell usage data\footnote{We have collected shell history and usage data from a few people with different experience levels. We used this data to confirm the workflows where possible.}, and our experience with shells. 
 
-Workflows we formulate are based on previous research \cite{greenberg1993computer}, the online discourse we discussed earlier, discussions with potential users, and our own experience with shell history. Additionally, we collected and examined shell usage and history of a few users; This helped us to confirm and formulate the workflows.
+Some of the workflows can be easily fulfilled using standard history features. Others are either difficult or impossible to complete. We describe and explain the issues people can encounter when using standard history features. The list of workflows we cover is following:
 
-\todotext{Workflows are simplified by using common commands to make them easy to understand. Some of them were shortened to fit onto the page. Real examples would contain commands specific to the individual users work and the command line submissions would be longer in some cases.}
+%We do not specify the workflows for each of the target users separately; Instead, we comment on the difference between the users when necessary. \todo{we only ever make comments about the experience level of the users}
 
-\redtext{There is one more thing you should keep in mind when reading the examples; You, unlike the user, will have the full sequence of history entries in front of you. The user in the examples will often have only limited memory of the command line entries he submitted earlier. }
+%Workflows we formulate are based on previous research \cite{greenberg1993computer}, the online discourse we discussed earlier, discussions with potential users, and our own experience with shell history. Additionally, we collected and examined shell usage and history of a few users; This helped us to confirm and formulate the workflows.
+
+%\todotext{Workflows are simplified by using common commands to make them easy to understand. Some of them were shortened to fit onto the page. Real examples would contain commands specific to the individual users work and the command line submissions would be longer in some cases.}
+
+%\redtext{There is one more thing you should keep in mind when reading the examples; You, unlike the user, will have the full sequence of history entries in front of you. The user in the examples will often have only limited memory of the command line entries he submitted earlier. }
 
 
 
 %\redtext{We grouped the workflows to several distinct categories; In each category we explain the  ...}
-\redtext{In this section, we discuss how the users can complete these workflows using standard shell history features. We also point out the limits and shortcomings of the standard history mechanisms. }
-
-
-
-\todo{TODO!: explicit sorting key for workflows - from the most recent to the less recent ones}
-
-\todo{TODO!: consider bullet points to introduce the individual workflows}
+%\redtext{In this section, we discuss how the users can complete these workflows using standard shell history features. We also point out the limits and shortcomings of the standard history mechanisms. }
 
 \begin{itemize}
-    \item Editing a preceding history entry
+    \item Editing an immediately preceding history entry
     \item Blindly recalling very recent history entries
     \item Retrieving recent history entries
     \item Editing recalled history entries
@@ -724,7 +172,7 @@ Workflows we formulate are based on previous research \cite{greenberg1993compute
 
 %Additional configurations and tools will be discussed in later sections.
 
-\subsection{Editing a preceding history entry}
+\subsection{Editing an immediately preceding history entry}
 
 In this first workflow, the user submits a command line entry but is not satisfied with the result. To fix that, he retrieves the immediately preceding history entry, modifies it and executes it again. We will look at multiple example sequences of command line submissions for this workflow.
 
@@ -742,7 +190,7 @@ The next example shows a different case.
     sudo !!
 \end{verbatim}
 
-Here, the user wants to install the \verb|zsh| package. The command fails because superuser permissions are needed to install packages to the system. Instead of using interactive history features, the user uses csh-style history expansion \verb|!!| which repeats the previous history entry. 
+Here, the user wants to install the \verb|zsh| package. The command fails because superuser permissions are needed to install packages to the system. Instead of using interactive history features, the user uses history substitution \verb|!!| which repeats the previous history entry. 
 
 By using \verb|!!| we can efficiently prepend or append to the previous command line entry. There are other csh-style history expansions but \verb|!!| is by far the most commonly used one. 
 
@@ -758,19 +206,11 @@ In this next example, we see how the user processes \verb|data.txt| file. In eac
 
 This example shows that there is not always an explicit error that could be detected by the shell to predict that the user will recall the previous history entry. It also shows that the editing process can be often continuous.
 
-We just saw multiple different situations in which people continue working on the same command. We also saw different approaches to retrieving previous history entries. It is worth noting that in all of these situations the user relies on the sequential property of the history. 
-
-% \subsubsection*{Retrieving recent history entries - \redtext{deprecated}}
-
-% \todo{TODO: restructure - you can delete this intro, just give the surrounding text a quick read}
-% In this second category, we consider workflows that involve retrieving \textit{recent} history entries. In this context, recent means that the user remembers the history entry they are looking for. \redtext{In all of these workflows the user also wants to retrieve the full history entry and execute it without any editing.}
-% \todo{TODO: people do remember recent results vs. define recent as "people remember" }
-
-% \todotext{MAIN: recalling recent and semi-recent commands "as exact matches", "recent" ~ the user remembers the command}
+We just saw multiple different situations in which people continue working on the same command. We also saw different approaches to retrieving previous history entries. It is worth noting that in all of these situations the user relies on the order of the shell history. 
 
 \subsection{Blindly recalling very recent history entries}
 
-This second workflow is a retrieval and execution of a very recent history entry; The user remembers the exact position of the history entry he wants to recall. An example of such workflow is running the following sequence of command line submissions.
+This second workflow is a retrieval and execution of a very recent history entry. Here, the user remembers the exact position of the history entry he wants to recall. An example of such workflow is running the following sequence of command line submissions.
 \begin{verbatim}
     make build
     vim hello_world.c
@@ -778,13 +218,13 @@ This second workflow is a retrieval and execution of a very recent history entry
 \end{verbatim}
 First, we use \verb|make| to build a project. Then we edit a file using \verb|vim|. After that, we press \verb|ARROW_UP| twice and press \verb|ENTER| to execute the recalled history entry -- \verb|make build|. 
 
-\todo{can be up to 3? arrow up's}
+
 Consider, if we used a graphical editor or if we ran the editor from a different terminal; In such case, we would only have to press \verb|ARROW_UP| once but the workflow would essentially stay the same.
 
 When recalling very recent commands the users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of recent history entries.
 
-\subsection{Retrieving recent history entries}
-The third workflow is a recall of history entry that is still recent but the user no longer remembers the exact position in the history list. This means that the user needs to read the history entries as they appear to see if the desired entry was retrieved. This is an example sequence of command line entries for this workflow.
+\subsection{Retrieving recent history entries}\label{workflow-recent-history-arrow-up}
+The third workflow is a retrieval of history entry that is still recent but the user no longer remembers the exact position in the history list. This means that the user needs to read the history entries as they appear to see if the desired entry was retrieved. This is an example sequence of command line entries for this workflow.
 
 \begin{verbatim}
     systemctl start nginx.service
@@ -798,15 +238,15 @@ The third workflow is a recall of history entry that is still recent but the use
 
 In this example, the user is trying to start an Nginx \cite{reese2008nginx} web server. At first, the server does not start and the command returns an error. The user quickly realizes that there is an syntactic error in the configuration file after checking it using \verb|nginx -t|. Then, the configuration is fixed using \verb|vim| and the syntax is checked again using \verb|nginx -t|. 
 
-At this point, the user presses \verb|ARROW_UP| five or six times\footnote{This depends of whether or not they have history deduplication turned on.} to retrieve a recently executed command line entry \verb|systemctl start nginx.service|. Every time they press \verb|ARROW_UP| a single result appears and they need to read it. There is no way to tell if the desired result is one press of a button away, three, or seven. % When the user presses \verb|ARROW_UP| too many times they can show previous history entries by pressing \verb|ARROW_DOWN|.
+At this point, the user presses \verb|ARROW_UP| five or six times\footnote{It could five or six depending on whether or not the user has history deduplication turned on.} to retrieve a recently executed command line entry \verb|systemctl start nginx.service|. Every time they press \verb|ARROW_UP| a single result appears and they need to read it. There is no way to tell if the desired result is one press of a button away, three, or seven. % When the user presses \verb|ARROW_UP| too many times they can show previous history entries by pressing \verb|ARROW_DOWN|.
 
 
 % It seems that people experience the sunk cost fallacy\footnote{\redtext{TODO: describe?}} which combined with the lack of feedback from the system drives them to stick to the original plan -- pressing \verb|ARROW_UP|. 
 
 You might think that people would not press \verb|ARROW_UP| five or six times and would rather use other history mechanisms.
-The usage data we collected shows that even somebody who claimed to not press \verb|ARROW_UP| excessively actually does so quite often. Pressing \verb|ARROW_UP| five times is more common than you would expect and pressing it over ten times is rare but it still happens. We also quite often saw people pressing \verb|ARROW_UP| too many times and then using \verb|ARROW_DOWN| to go back to previous history entries; We think that it is easy to overshoot when you only see one history entry at a time.
+However, the usage data we collected shows that even someone who claimed to not press \verb|ARROW_UP| excessively actually does so quite often. Pressing \verb|ARROW_UP| five times is more common than you would expect and pressing it over ten times is rare but it still happens. We also quite often saw people pressing \verb|ARROW_UP| too many times and then using \verb|ARROW_DOWN| to go back to previous history entries; We think that it is easy to overshoot when you only see one history entry at a time.
 
-\todo{we could include reasons why people do this but I don't think it's necessary/important (see drafts in comments)}
+%\todo{we could include reasons why people do this but I don't think it's necessary/important (see drafts in comments)}
 
 % 1-2 was the most common ... 5-6 quite common ... 8 - 10 rare  20 exceptions
 % WHY: sunk cost fallacy + lack of feedback from the system
@@ -815,20 +255,21 @@ The usage data we collected shows that even somebody who claimed to not press \v
 
 %It seems that in situations like this one people do remember the history entry well and perceive it as recent. This is why they chose to use  
 
-\paragraph{History prefix search}
+\paragraph{Prefix search}
 
 An efficient alternative way to fulfil the same workflow is to use history prefix search. To use prefix search the user needs to remember the first word or at least the first few characters of the command line entry; This is very likely since all the command line entries we are retrieving in this workflow are recent.
 
-We will use the example with Nginx to compare using prefix search with just pressing \verb|ARROW_UP|. When using prefix search, the user types in a prefix -- \verb|systemctl| -- and presses \verb|ARROW_UP| twice to get to the desired history entry. In contrast, when only using \verb|ARROW_UP| it took five or six presses to get to the history entry.
+We will use the example with Nginx to compare using prefix search with simple stepping through recent history. When using prefix search, the user types in a prefix -- \verb|systemctl| -- and presses \verb|ARROW_UP| twice to get to the desired history entry. In contrast, when only using \verb|ARROW_UP| it took five or six presses to get to the history entry.
 
 This might not seem like an improvement because we need to type the prefix before we start pressing \verb|ARROW_UP|. However, we have to realize that going through multiple history entries and reading them one by one requires a significant amount of time and effort compared to typing. 
     
-This is a good example of how the number of keystrokes is not the only thing we should be taking into account; Generally speaking, shell history should save effort and time of its users. This means both the physical typing and the cognitive overhead required to retrieve the entries.
+This is a good example of how the number of keystrokes is not the only thing we should be taking into account; Generally speaking, shell history should save effort and time of its users. Retrieving previous history entries should be both mechanically and cognitively less demanding than typing them again.\cite{greenberg1993computer}
+
 % REF(greenberg): Recurring inputs should be reentered more easily than the user's original entry, with the aim of reducing both physical tedium and the cognitive overhead of remembering past inputs. Reuse facilities should not be targeted only to experts, as they can help everyone.
 
 % the prefix could be shorter e.g. "sys", "system"  ... typing vs. effort required to decide how long/short prefix is sufficient
 
-\todotext{Is this ending good? - continue (check comments)}
+%\todotext{Is this ending good? - continue (check comments)}
 
 % ADD(polished?): There is a vocal group of people with strong preference for prefix search. The rest of the people either do not know that prefix search exists, do not have it configured, or prefer plain \verb|ARROW_UP| possibly out of habit.
 % NOTE: maybe this^ belongs earlier? (but maybe not)
@@ -836,7 +277,7 @@ This is a good example of how the number of keystrokes is not the only thing we 
 
 \subsection{Editing recalled history entries}
 
-In the precious section, we saw a workflow where the user retrieved a recent history entry and executed it again as is. Now, we are going to look at a similar workflow where the user retrieves a history entry, edits it and then executes it again. Workflows with editing are a little less common than the ones with direct execution according to the usage data we collected. An example of a workflow with editing follows.
+In the previous section, we saw a workflow where the user retrieved a recent history entry and executed it without any changes. Now, we are going to look at a similar workflow where the user retrieves a history entry, edits it and then executes it again. Workflows with editing are a little less common than the ones with direct execution according to the usage data we collected. An example of a workflow with editing follows.
 
 \begin{verbatim}
     curl --data "value=test" http://localhost:8080/submit
@@ -849,20 +290,19 @@ In the precious section, we saw a workflow where the user retrieved a recent his
 \end{verbatim}
 
 
-Here, the user is using \verb|curl| to test a server endpoint running locally at \verb|localhost:3000/submit|. \todo{Check overflow} After being done with the testing they commit the changes, tag the version as a pre-release\footnote{Here "rc" in "v2.4.0-rc.1" version stands for release candidate which is sometimes used to mark pre-release versions.}, and pushes both commits and tags to the upstream. This triggers a CI pipeline that deploys the new version to testing environment. The user wants to test that the endpoint also works there.
+Here, the user is using \verb|curl| to test a server endpoint running locally at \verb|localhost:3000/submit|. After being done with the testing he commits the changes, tags the version as a pre-release\footnote{Here "rc" in "v2.4.0-rc.1" version stands for release candidate which is sometimes used to mark pre-release versions.}, and pushes both commits and tags to the upstream. This triggers a CI pipeline that deploys the new version to testing environment. The user wants to test that the endpoint also works there.
 
-At this point, the user presses \verb|ARROW_UP| six times to get to the desired history entry. Alternatively, he could use prefix search which would be more efficient.
-
+At this point, the user presses \verb|ARROW_UP| six times to get to the desired history entry.\footnote{Alternatively, he could also use prefix search which would be more efficient.} 
 After retrieving the desired history entry, the user needs to edit it to change the server URL from \verb|localhost| to \verb|test.example.com|. He holds down \verb|ARROW_LEFT| for a about a second, holds down \verb|DELETE| for about a second, types \verb|test.example.com|, and finally executes the changed command line entry. 
 
 This seems a little tedious but it is still more efficient than typing the whole command line entry from scratch. Instead of navigating by and deleting single characters, we could use \verb|CTRL+ARROW_LEFT| to navigate by words and \verb|ALT+BACKSPACE| to delete whole words; This would be faster and more efficient. %However, it seems that many people do not use the command line editing functions.\todo{TODO: Ask more people, so far more people use it than I expected}
 
-This workflow shows us how people edit history entries after they retrieve them. We see that standard history mechanisms make it possible to edit history entries after retrieval. Reverse search, which we did not see in any workflow yet, is not an exception. This is a useful property that we should include in our designs as well. 
+This workflow shows us how people edit history entries after they retrieve them. We see that standard history mechanisms make it possible to edit history entries after retrieval. %Reverse search, which we did not see in any workflow yet, is not an exception. 
+This is a useful property that we should include in our designs as well. 
 
-\todo{Is this the right order?}
 \subsection{Repeating a sequence of history entries}\label{workflow-repeating-a-sequence}
 
-In this workflow, the user has executed a sequence of command line entries and wants to retrieve and repeat all the command line entries in the sequence. 
+In this workflow, the user has executed a sequence of command line entries. He wants to retrieve and repeat all the command line entries in the sequence. 
 Consider a following example.
 
 \begin{verbatim}
@@ -875,13 +315,13 @@ Consider a following example.
     dot -Tpng -ograph.png graph.dot
     feh graph.png
 \end{verbatim}
-\todo{Consider removing the second repetition}
-\todo{Actually test these commands (I wrote this using my memory and help pages)}
 
-In this example, we are editing the \verb|generate_dot.c| file in another window. In this terminal, we compile a source file \verb|generate_dot.c|, generate a graph in the DOT\cite{graphvizthedotlanguage} language, run Graphviz\cite{ellson2001graphviz} command \verb|dot| to generate an image, and finally use image viewer \verb|feh|\cite{toolsfeh} to display the image.
+In this example, we are editing the \verb|generate_dot.c| file in another window. In current terminal, we compile a source file \verb|generate_dot.c|, generate a graph in the DOT\cite{graphvizthedotlanguage} language, run Graphviz\cite{ellson2001graphviz} command \verb|dot| to generate an image, and finally use image viewer \verb|feh|\cite{toolsfeh} to display the resulting image.
 
 % ALT (too long): After observing the resulting image, we edit the source file \verb|generate_dot.c| in another window.
 After observing the image, we edit the source file \verb|generate_dot.c| in another window.
+
+
 Now, we want to repeat the whole process of generating the graph and view the resulting image. To retrieve the \verb|gcc| history entry, we press \verb|ARROW_UP| four times. Retrieving the next \verb|./generate_dot.out| entry also takes four presses of \verb|ARROW_UP|. Similarly, we need four key presses for each of \verb|dot| and \verb|feh| history entries. 
 
 We need four key presses every time because with each executed command line entry we are pushing all the history entries further back in the history. We see that using \verb|ARROW_UP| to repeat a block of history entries is quite inefficient.  
@@ -890,7 +330,7 @@ There is other standard history mechanism we could use to repeat a block of hist
 Executing \verb|fc -4 -1| opens an editor with last four history entries and then, closing the editor executes the commands. This, however, is quite cumbersome in practice and not many people seem to use it. 
 
 %Alternatively, we could use history expansion \verb|!-4| to recall and execute the fourth previous history entry; However, history expansion is not saved to 
-\todo{Consider mentioning history expansion (see comment)}
+%\todo{Consider mentioning history expansion (see comment)}
 %\verb|!-4| works in a similar way
 
 Repeating a sequence of history entries is not the most common workflow. However, it shows us the limits and inefficiencies of standard shell history.
@@ -900,7 +340,7 @@ Repeating a sequence of history entries is not the most common workflow. However
 
 In all the workflows we discussed so far, the user wanted to recall a fairly recent history entry. Now, we move on to workflows where the user searches for history entries that are older. In these workflows, the memory of the user is often a limiting factor; Both the knowledge of shell history and the desired command line entry is limited.
 
-Below, we see an example for such workflow; The upper part are relevant history entries and at the bottom we see the command line entry the user wants to find. 
+Below, we see an example for such workflow; The upper part contains relevant history entries from history. In the bottom part we see the command line entry the user wants to find. 
 
 %This means that simply pressing \verb|ARROW_UP| is no longer an effective way to retrieve them.
 % \redtext{We are going to look at multiple examples of workflow where the user searches for an older. We will discuss how the workflow changes when the user remembers less and less information about the desired history entry. The first example follows.}
@@ -933,7 +373,7 @@ In the example above, the user wants to remotely login to a \verb|thumbnail api|
 
 If the user saw the full example in front of him as we do now it would be quite easy to choose a good searching strategy. However, the user does not see nor he remembers all the relevant information. He will need to make use of his limited memory to find the desired command line entry. 
 
-A common way to search shell history is reverse search; The user initiates reverse search by pressing \verb|CTRL+R| and types in the query \verb|thumbnail|. Resulting prompt is shown below.\footnote{The search result and the prompt should be on the same line; We moved them to separate lines because they would not fit the page otherwise.}
+A common way to search shell history is reverse search; The user initiates reverse search by pressing \verb|CTRL-R| and types in the query \verb|thumbnail|. Resulting prompt is shown below.\footnote{The search result and the prompt should be on the same line; We moved them to separate lines because they would not fit the page otherwise.}
 % Reverse search displays a single most recent history entry that matches the query  
 
 \begin{verbatim}
@@ -948,17 +388,17 @@ Here, we see that the \verb|thumbnail| query matched a history entry that is not
     scp root@thumbnail-api.dev.example.com:/log/thumbnail/1.log
 \end{verbatim}
 
-The reverse search still does not show the desired history entry but it shows an entry that is much closer to what the user is looking for. The user thinks that the query is specific enough and presses \verb|CTRL+R| to show the next search result.
+The reverse search still does not show the desired history entry. However,  it shows a result that is much closer to what the user is looking for. The user thinks that the query is specific enough and presses \verb|CTRL-R| to show the next search result.
 
 \begin{verbatim}
 (reverse-i-search)`thumbnail-api':
     ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
 
-The next result is the desired history entry. This was a pretty efficient but also a quite idealistic reverse search example. It worked out so well because the user was able to provide a specific enough query -- \verb|thumbnail-api|. We should look at a more realistic situation where the user struggles to come up with such query. %We will use the same shell history and desired command line entry as in the previous case. (same sentence as the start of the ne)
-\paragraph{\redtext{TODO: title} Limits of history reverse search}
+The next result is the desired history entry; The user can press \verb|ENTER| to execute it. This was a pretty efficient but also a quite idealistic reverse search example. It worked out so well because the user was able to provide a specific enough query -- \verb|thumbnail-api|. We should look at a more realistic situation where the user struggles to come up with such query. %We will use the same shell history and desired command line entry as in the previous case. (same sentence as the start of the ne)
+\paragraph{Realistic example of reverse search}
 
-In this example, we are using the same shell history and desired command line entry as in the previous example. Again, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He presses \verb|CTRL+R| and starts searching using \verb|ssh| as a query; It is actually very natural and quite common to use the beginning of the line as a query in reverse search.
+In this example, we are using the same shell history and desired command line entry as in the previous example. Again, the user wants to remotely login to a \verb|thumbnail api| server in development environment using \verb|ssh|. He presses \verb|CTRL-R| and starts searching using \verb|ssh| as a query; It is actually very natural and quite common to use the beginning of the line as a query in reverse search.
 
 \begin{verbatim}
 (reverse-i-search)`ssh': ssh 192.168.2.105
@@ -972,7 +412,7 @@ The most recent matched history entry does not look very promising. The user tri
 
 Here, we see how the user struggles to make the query more specific; Extending the query requires knowledge of the details of the desired command line entry. The user does not remember that he should be logging in under \verb|root|.  % It is exactly details like this one that we hope to retrieve from shell history so that we do not need to remember them. 
 
-The user sees that the search has failed and so he aborts it by pressing \verb|CTRL+C|. He starts over by pressing \verb|CTRL+R|, typing \verb|thumbnail|, and hoping for better results.
+The user sees that the search has failed and so he aborts it by pressing \verb|CTRL-C|. Then, he starts over by pressing \verb|CTRL-R|. He types \verb|thumbnail| as a query, hoping it will bring better results.
 
 % Shell history should be helping people to reconstruct history entries from pieces. Should people remember details about the history entries in order to be able to retrieve them?
 
@@ -995,24 +435,24 @@ The user is in a similar situation. He presses \verb|CTRL-R| repeatedly to displ
 (reverse-i-search)`thumbnail': cd git/thumbnail_api
 \end{verbatim}
 
-The user knows that pressing \verb|CTRL-S| \textit{should} bring back the previous result. However, he also knows that pressing \verb|CTRL-S| freezes all input coming to his terminal; This is the default\footnote{Default configuration on many popular distributions has CTRL-S bound to generate XOFF -- the software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
+The user knows that pressing \verb|CTRL-S| should bring back the previous result. However, he also knows that pressing \verb|CTRL-S| freezes all input coming to his terminal; This is the default\footnote{Default configuration on many popular distributions uses CTRL-S to produce XOFF -- a software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
 
 At this point, the user gets annoyed because the only option is to start over. He aborts the search, presses \verb|CTRL-R|, and types in the query \verb|thumbnail|. Then, it takes five presses of \verb|CTRL-R| to get to the desired result; This time he is more careful to not go too far again.
 
 
-\paragraph{\redtext{TODO: title: why reverse search sucks}}
+\paragraph{Limits of reverse search}
 
 As we just saw, the reverse search is not always an effective way to search the shell history. It heavily relies on the ability of the user to form a single continuous query; A single query that is specific enough to match the desired history entry without matching many other history entries. 
 
-This drawback is further amplified by the reverse search only displaying a single result at a time. Displaying multiple results at a time would make it easier to find the desired history entry in cases when there are many matching results. 
+This drawback is further amplified by only displaying a single result at a time. Displaying multiple results at a time would make it easier to find the desired history entry in cases when there are many matching results. 
 
-Despite these downsides, the reverse search is a quite popular way to search the shell history. Why do people use it given the disadvantages we discussed? The reverse search is not without its flaws but it is still the most powerful interactive way to search the shell history. 
+Despite these downsides, the reverse search is a quite popular way to search the shell history. Why do people use it given the disadvantages we discussed? The reverse search is not without its flaws but it is still the most powerful interactive way to search the shell history. %We suspect that many people simply use what is available by default.
 
 If the reverse search is as bad as we claim are there other alternatives that people choose to use instead? Another very popular method people use is manual history filtering. Manual filtering searches the history non-interactively; It brings its own set of advantages and disadvantages which we cover in the next section.
 
 
 %There are two fundamental issues with it. 
-\todo{MOVE this vvv  a bit later (SEE comments)}
+%\todo{MOVE this vvv  a bit later (SEE comments)}
 % The first issue is that reverse search only accepts a single query. This limits the expressiveness of the search and disrupts the workflow of the user. 
 % ***This is just not very useful if you remember multiple different parts of the command line entry.
 % Ad. expressiveness: ssh, thumbnail, and api are all good queries, the user is certain that they match the desired history entry but they are not specific enough individually. Put them together and they match the desired history entry and nothing else.
@@ -1031,7 +471,7 @@ If the reverse search is as bad as we claim are there other alternatives that pe
 % EXTRA ISSUE: once reverse search fails you there is no way back
 
 
-\paragraph{\redtext{TODO title}Manual history filtering}
+\paragraph{Manual history filtering}
 
 As mentioned before, manual filtering is a popular non-interactive way to search the shell history. It can be used to fulfil similar workflows as the reverse search. To properly compare the two methods we will use the same example as before; You can see the same relevant history entries with the same desired history entry below.
 
@@ -1053,7 +493,7 @@ As mentioned before, manual filtering is a popular non-interactive way to search
     ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
 
-As in the previous examples, the user wants to remotely login to the \verb|thumbnail| \verb|api| server in development environment using \verb|ssh|. He uses the \verb|history| built-in to print the shell history together with the \verb|grep| command to filter the history entries.
+As in the previous example, the user wants to remotely login to the \verb|thumbnail| \verb|api| server in development environment using \verb|ssh|. He uses the \verb|history| built-in to print the shell history together with the \verb|grep| command to filter the history entries.
 
 First, he types \verb#history | grep ssh#; The output could look something like this.
 
@@ -1087,22 +527,24 @@ $ history | grep ssh | grep thumbnail | grep api
 421    ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
 
-Here, the combination of queries filtered out all history entries but the desired one.
+Here, using three queries filtered out all history entries but the desired one.
 
-We see that manual filtering has some clear advantages over reverse search.
-First, skimming through the displayed results is relatively quick. This allows us to use queries that are not very specific.
+\paragraph{Advantages of manual filtering}
+
+We saw that manual filtering has some clear advantages over reverse search.
+First, skimming through the displayed results is relatively quick. This allows the user to use queries that are not very specific.
 Even generic query like \verb|ssh| that was not specific enough for reverse search gave us some useful results when filtering manually.
 
 Additionally, in situation when the query is not specific enough, it is easy to combine multiple queries together. This makes manual filtering much more powerful than the reverse search. 
-When using the reverse search we had to choose between the queries. Here we can use all of them; This results in a very flexible workflow where we refine the search instead of guessing which single query we should use.
+When using the reverse search we had to choose between the queries. Here we can use all of them. This results in a very flexible workflow where we refine the search instead of guessing which single query we should use.
 
 
-As we already mentioned earlier, manual filtering is a non-interactive history mechanism. This comes with an obvious disadvantage; To filter history manually the user has to type extra characters \verb#history | grep# instead of simply pressing \verb|CTRL+R| to initiate the reverse search. In some situations, the reverse search might be a more effective way to search the history.
+As we already mentioned earlier, manual filtering is a non-interactive history mechanism. This comes with an obvious disadvantage; To filter history manually the user has to type extra characters \verb#history | grep# instead of simply pressing \verb|CTRL-R| to initiate the reverse search. In some situations, the reverse search might be a more effective way to search the history.
 
-It is important to realize that manual history filtering is essentially just a use of standard shell utilities for searching history.
-This makes it more appealing to experienced shell users because they use what they already know. At the same time, novice users who are not familiar with \verb|grep| and shell pipes may have a hard time even understanding how manual filtering works. 
+%It is important to realize that manual history filtering is essentially just a use of standard shell utilities for searching history.
+%This makes it more appealing to experienced shell users because they use what they already know. At the same time, novice users who are not familiar with \verb|grep| and shell pipes may have a hard time even understanding how manual filtering works. 
 
-\todo{If this feels like there is a conclusion missing check the comments vvv}
+%\todo{If this feels like there is a conclusion missing check the comments vvv}
 
 % the most powerful option to search is not easily available to novice users - this is understandable but not ideal (we should not assume that people who don't know shell basics do not need powerful history search)
 % +++ we saw other examples of workflows with history mechanisms that not everyone knows of, but this the first one where it is the only options because the alternatives are not just less efficient - they won't find the result at all (in a significant number of situations)
@@ -1135,9 +577,9 @@ Now, we consider situations where it is possible to at least partially replace t
     sudo dd if=~/manjaro.iso of=/dev/sdc bs=4M status=progress
 \end{verbatim}
 
-In this example, the user wants to use \verb|dd| to create a bootable USB drive from an iso file. The user uses \verb|dd| as a search query. We are not considering a specific existing history mechanism. Instead, we discuss possibilities and potential of shell history in this specific situation.
+In this example, the user wants to use \verb|dd| to create a bootable USB drive from an ISO file. The user uses \verb|dd| as a search query. We are not considering a specific existing history mechanism. Instead, we discuss possibilities and potential of shell history in this specific situation.
 
-All of the history entries in the example match the query. However, not all of these history entries are actually useful; Two of the entries that do not start with \verb|sudo| will result in an error if executed\footnote{We assume that the user is not currently logged in as a superuser.}. 
+All of the history entries in the example match the query. However, not all of these history entries are actually useful; Two of the entries that do not start with \verb|sudo| will result in an error if executed\footnote{In this example, the user is not currently logged in as a superuser.}. 
 
 In situations like this one, it could be useful if the history entries that originally ended with a zero status code were displayed before the ones that failed. Reordering search results could help the user to find the relevant results more quickly. 
 
@@ -1153,6 +595,7 @@ In situations like this one, it could be useful if the history entries that orig
 
 \paragraph{Directory sensitive history}
 
+In this next example, we look at the advantages of directory sensitive history.
 
 %# history from ~/git/image_server directory:
 
@@ -1173,77 +616,16 @@ In situations like this one, it could be useful if the history entries that orig
     git push --tags
 \end{verbatim}
 
-Here, we see a section of shell history related to a specific project. The user executed all of the command line entries above a long time ago in the \verb|~/git/image_server/| directory. He did not work on the \verb|image_server| project since. This means that he does not remember these history entries and his history is filled with many other command line entries he executed since.
+Here, we see a section of shell history related to a specific project. The user executed all of the command line entries above a long time ago in the \verb|~/git/image_server/| directory. He did not work on the \verb|image_server| project since. This means that he does not remember these history entries. Plus, his history is filled with many other command line entries he executed since.
 
-The user comes back to the project by typing and executing \verb|cd ~/git/| \verb|image_server|\todo{CHECK: verb overflow -$>$ verb split}. He wants to continue working on the project. He knows that he needs to edit some code, build the project, test it, and release a new version. However, he does not remember concrete command line entries for these tasks. 
+The user comes back to the project by typing and executing \verb|cd ~/git/| \verb|image_server|. He wants to continue working on the project. To do so he needs to edit some code, build the project, test it, and release a new version. However, he does not remember the specific command line entries for these tasks. 
 
 Some of the command line entries he needs are easy to remember because they are generic; Examples of such entries are \verb|git pull| which pulls new changes from upstream and \verb|make build| which build the project. However, some of the tasks require knowledge specific to this project. For example, it might take some effort to find out that running tests is done using \verb|./script/run_tests.sh|. Similarly, it is not obvious that \verb|VERSION| environment variable should be set when running \verb|make release|.
 
 This information is stored in the shell history but it is not easy to retrieve. Standard history mechanisms only search by the command line entry itself. It could be very useful if the user was able to display and search the history from the current directory.
 
 
-
-
-%In situations like these, the user is essentially rediscovering the workflow for the project. This is very inefficient given that all the relevant history entries are already stored in the shell history. The issue is that retrieving the relevant entries using standard history mechanisms is very hard. The command line entry itself does not contain enough 
-
-%with standard history is that none of the available history mechanisms allow us to retrieve the history entries we need. 
-
-
-%It would be useful if the necessary information could be retrieved from somewhere instead of being rediscovered over and over again. 
-
-
-% makefiles help
-
-%Makefiles can help solve this issue; They contain command line entries needed to work with a specific project. However, not all command line entries are saved to Makefiles.
-
-%people often use command line entries without saving them to the Makefile. 
-
-
-
-
-
-
-
-%it would be useful if the user did not have to spend time rediscovering the workflow  could retrieve relevant history entries from history. 
-% often it is hard/impossible to tell that the history belongs to the directory 
-% many of the history entries 
-% the server url is possibly useful but based on its name you would never say so
-
-% there is useful info in history related to the project
-% this info is in history but it cant be searched using standard history mechanisms
-
-
-%We need to realize that many of these  history entries 
-%Another example is the server URL \verb|processing-node-13.c137.dev.example.com|\todo{Overflow?} which is probably related to this project but .
-
-%In situations like this one, the user could benefit from being able to access the shell history based on the current directory. 
-
-
-
-\subsubsection*{History as a transcript}
-%These are also less common but requested
-
-\subsubsection*{Delete specific entry from history}
-
-% see the full process how something was done, w/o deduplication
-\todotext{USECASE: Retrieve a transcript of command line usage around certain time}
-
-% pentester "script" recording
-% redteam blueteam
-\todotext{USECASE: Retrieve a transcript of command line usage between two dates ideally with UTC timestamps}
-
-
-
-
-% \subsubsection*{Repeating a previous search}
-
-% \todotext{USECASE: use case where we find something in history and want to find a similar command immediately: 1 use resh cli to find the first command, 2 execute, 3 arrow\_up, 4 ctrlR gives you similar results to what you found before}
-
-
-\todotext{TODO: conclusion of the chapter}
-
-
-\section{Existing history tools and common history configurations}
+\section{Existing history tools}
 \todo{chapter with various possible solutions, inspirations, etc.}
 
 \todotext{TODO: mention our online research again}
@@ -1286,7 +668,7 @@ In the following sections, we will examine various history tools and configurati
 % NOTE: myabe we could explicitly mention that we want to follow the order
 
 
-\subsection{History autosuggestions}
+\subsection{Autosuggestions}
 
 \todo{section Order-sensitive text}
 First, important history feature we discuss are autosuggestions. As you type on the command line autosuggestions suggest a single history entry that starts with characters you already typed. The suggested text is displayed in grey as shown in figure \ref{fish-autosuggestions} where the user just typed \verb|ssh|.  
@@ -1302,13 +684,15 @@ First, important history feature we discuss are autosuggestions. As you type on 
 This history feature is very quick and convenient to use. You can use the shell as you would normally with the option to accept the suggestion whenever it matches what you want to type. Autosuggestions can replace neither \verb|ARROW_UP| nor proper history search; However, they work well in combination with these and other history mechanisms.
 
 Autosuggestions also have some interesting properties compared to stepping through history using \verb|ARROW_UP|.
-When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries\footnote{We described a specific workflow showing this in previous section \redtext{REF: workflow blind recall}.}.  This is not the case with autosuggestions. The displayed suggestion can be the most recent matching history entry but it also does not have to be. Autosuggestions can use more experimental and more advanced recommendation techniques.
+When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries\footnote{We described a specific workflow showing this in previous section \ref{workflow-recent-history-arrow-up}.}.  This is not the case with autosuggestions. The displayed suggestion can be the most recent matching history entry but it also does not have to be. Autosuggestions can use more experimental and more advanced recommendation techniques.
 
 Autosuggestions were originally designed and developed as part of the Fish\cite{fishdocs} shell; These are context-sensitive suggestions that take current directory into account. Upon command line execution Fish checks if any parameter is a valid path and marks that in the shell history. Later history entries are suggested only if all the marked parameters are valid paths\cite{toolsfishissueautosuggestions}.
 
-There is also an implementation of autosuggestions available for Zsh\cite{toolszshautosuggestions}; Unlike its original version, this implementation does not offer context-sensitive suggestions. Another project\cite{toolszshhistdb} does offer integration with Zsh autosuggestions that offers history based on the current directory.
+There is also an implementation of autosuggestions available for Zsh\cite{toolszshautosuggestions}; Unlike its original version, this implementation does not offer context-sensitive suggestions. Another project\cite{toolszshhistdb} uses Zsh autosuggestions to offer history based on the current directory.
 
-Unfortunately there is not native nor ad-hoc support for autosuggestions in Bash. In addition, based on our experience with Bash and its line-editing library Readline\cite{ramey2001gnureadline} implementing autosuggestions for Bash is likely impossible.
+Unfortunately there is no native nor ad-hoc support for autosuggestions in Bash. 
+
+%In addition, based on our experience with Bash and its line-editing library Readline\cite{ramey2001gnureadline} implementing autosuggestions for Bash is likely impossible.
 
 
 \subsection{Forward in history}
@@ -1325,7 +709,7 @@ How does the history system know the future? First of all, the system needs to r
 
 Forward in history feature exists in Python console in Blender \cite{tools-blender-docs-python-console}. This makes a lot of sense because every cycle and condition in Python console is a sequence. Naturally, using the Python console often includes  workflows which require sequence repeating.
 
-Arguably, using shell involves less sequence repeating than using a Python console in Blender. However, as we saw earlier in section \ref{workflow-repeating-a-sequence}, it is still a relevant workflow which is not well supported by any of the standard shell history mechanisms.  
+Arguably, using shell involves less sequence repeating than using a Python console in Blender. However, as we saw earlier in section \ref{workflow-repeating-a-sequence}, it is still a relevant workflow which is not well supported by the standard shell history mechanisms.  
 
 
 % DO NOT INCLUDE: Additionally, in Blender, Python history starts clean for each project, the history wraps, commands are not always added to the end of the history, and it is easy to dump the whole history and use it as a script.
@@ -1341,7 +725,7 @@ Hstr\cite{toolshstr} is an interactive history searching tool that addresses bot
 When launched it displays a full screen terminal app as shown in the figure \ref{hstr-screenshot}. You type a query at the top and a page of matching history results is displayed below. In the default "keywords" matching mode, each word of the query is used as a separate searching term. 
 In addition to the default "keywords" matching mode, there are also "exact" and "regexp" matching modes. 
 
-Hstr is quite popular\footnote{Hstr is hosted on GitHub where it has over two thousand "stars" and over eight thousand downloads. } on GitHub where it is hosted. Some of the people who use Hstr describe it as life-changing.
+Hstr is quite popular\footnote{Hstr is hosted on GitHub where it has over two thousand stars and over eight thousand downloads. } on GitHub where it is hosted. Some of the people who use Hstr describe it as life-changing.
 
 \begin{figure}[]
   \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-hstr-std.pdf}}
@@ -1352,7 +736,7 @@ Hstr is quite popular\footnote{Hstr is hosted on GitHub where it has over two th
 
 \subsection{Fuzzy history search}
 
-Fzf\cite{tools-fzf} is a popular\footnote{Fzf has over twenty eight thousand "stars" on GitHub.} general-purpose command-line fuzzy finder. The documentation of the project recommends several ways that can be used to interactively search shell history.
+Fzf\cite{tools-fzf} is a popular\footnote{Fzf has over twenty eight thousand stars on GitHub.} general-purpose command-line fuzzy finder. The documentation of the project recommends several ways that can be used to interactively search shell history.
 
 Searching history using Fzf addresses the issues of the history reverse search. 
 Like Hstr, Fzf can display a full page of results from history. 
@@ -1419,15 +803,15 @@ By default, the remote server is an instance maintained by the project author. T
 
 Recently\footnote{Open source implementation of Bashhub server was written in February 2020.} a new open source implementation\cite{toolsbashhubserver} of the Bashhub server has appeared. This addresses the privacy and security issues by making it possible to run and use your own instance of the server.
 
-\redtext{Bashhub is somewhat popular on GitHub\footnote{Bashhub has 744 "stars" on GitHub.}
-Bashhub is not a viable replacement for standard reverse search and manual history searching.}
+%\redtext{Bashhub is somewhat popular on GitHub\footnote{Bashhub has 744 "stars" on GitHub.}
+%Bashhub is not a viable replacement for standard reverse search and manual history searching.}
 
 %ALT sample: There is an additional open source implementation of Bashhub server available.
 %ALT sample: This makes it possible to self-host instead of trusting the someone with your shell history.
 
 
 % bashhub library
-\redtext{Mention https://github.com/rcaloras/bash-preexec library ??? I don't think so}
+%\redtext{Mention https://github.com/rcaloras/bash-preexec library ??? I don't think so}
 
 \subsection{Contextual history search powered by a neural network}
 
@@ -1453,48 +837,12 @@ Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replac
 
 When trying to use McFly we found its behavior to be unpredictable; Not knowing why specific results are being shown made the tool less useful. 
 
-McFly also shares some problems with reverse search, it only uses a single query for searching; This can make it hard to find what you need in situations when you are unable to think of a better query\footnote{We already described such situation in \redtext{REF: reverse search workflow}}. 
+McFly also shares some problems with reverse search, it only uses a single query for searching; This can make it hard to find what you need in situations when you are unable to think of a better query\footnote{We already described such situation in section \ref{workflow-search-w-limited-knowledge}}. 
 
-\redtext{McFly is popular on GitHub.\footnote{McFly has about sixteen hundred "stars" on GitHub.}}
+%\redtext{McFly is popular on GitHub.\footnote{McFly has about sixteen hundred "stars" on GitHub.}}
 
 %\begin{figure} \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-mcfly-full.pdf}}  \caption{McFly interactive history search \redtext{REMOVE IMAGE}} \end{figure}
 
-
-\todo{DELETE this section vvv}
-
-\subsection{Contextual history saved in a SQLite}
-
-
-\redtext{TODO: advanced-shell-history - contextual history with smart querying - too buggy to be useful - non-interactive}
-
-
-
-\todotext{TODO: Other less notable shell history tools - underdeveloped, non-interactive, ...}
-% https://github.com/larkery/zsh-histdb  608 gh stars +it is a oh my zsh plugin
-
-
-%%%
-these tools usually store the history in a SQLite database. This makes sense because the history is inherently relational. However, this can potentially limit the ability to use regex or fuzzy searching. This must not be underestimated given how popular and powerful fuzzy searching is. 
-% is this desing? ^^^
-
-
-\paragraph{}
-
-\redtext{TODO: short conclusion about history tools, configurations, etc.}
-
-
-%\redtext{Explicit searching by context sounds like a useful feature obvious feature for tools that record history with context. 
-%While this feature is easy to implement and it sounds useful it does not really bring much value. }
-
-
-\redtext{Hstr and Fzf are a major improvement over standard history reverse search. Bashhub and McFly use context but they do not match the benefits provided by Hstr or Fzf. }
-
-There are some tools that did not warrant a separate section. 
-
-These tools provided features like explicit history search.
-%\redtext{There are other contextual history tools. Usually, they save some basic context like directory and exit status to a SQLite database. The main feature of these tools is the ability to explicitly search history by context. }
-
-\redtext{All of these contextual tools show us that it is not easy to use context in a meaningful way. We should carefully examine the available context and consider how it can be useful to the user.}
 
 \section{Usefulness of contextual information}
 
@@ -1504,10 +852,17 @@ In previous section we talked about existing history tools. We saw that contextu
 
 Useful history tools address real workflows and provide value to the user.
 In this section, we explore available contextual information. We will discuss how different parts of the context relate to shell usage and history usage. %We do this to identify the usefulness of different parts of available contextual information. 
+We cover following parts of the available contextual information:
 
-\redtext{IDEA: a bulleted list of the 5 following sections}
+\begin{itemize}
+    \item Exit status
+    \item Directory and Git related context
+    \item Sequential relationships, sessions, and time
+    \item Host and portability of history entries
+    \item Usage of history features
+\end{itemize}
 
-\subsection{Exit status and pipestatus}
+\subsection{Exit status}
 
 Zero exit status is interpreted by the shell as success; In contrast, non-zero status indicates failure.\cite{bashman} People often immediately edit and resubmit command line entries that returned an error. However, people probably rarely want to repeat older command line entries that failed. Does this mean that we can use exit status to filter out errors and only serve successful history entries to the user?
 
@@ -1518,7 +873,7 @@ Additionally, even history entries that are technically errors can be useful to 
 Generally, it is reasonable to assume that people retrieve history entries with zero exit status more often than the ones with errors. However, given the caveats described above, we should excercise this assumption conservatively. Removing history entries based on exit status would prevent the user from retrieving them. To preserve this ability we can display all history entries but prioritize the successful ones.
 
 
-In addition to exit status, there is \verb|$pipestatus| shell variable. Pipestatus gives us additional information about exit status of commands in a pipeline; Pipeline is a sequence of commands connected by shell pipes. Pipestatus is an array of exit statuses of individual commands that make up the pipeline.\cite{bashman}\cite{zshdocs} Pipelines that return zero exit status can still contain failed commands\footnote{\redtext{pipefail (both bash and zsh)}}. History entries with even one failed command in the pipeline can be treated as unsuccessful.
+%In addition to exit status, there is \verb|$pipestatus| shell variable. Pipestatus gives us additional information about exit status of commands in a pipeline; Pipeline is a sequence of commands connected by shell pipes. Pipestatus is an array of exit statuses of individual commands that make up the pipeline.\cite{bashman}\cite{zshdocs} Pipelines that return zero exit status can still contain failed commands\footnote{\redtext{pipefail (both bash and zsh)}}. History entries with even one failed command in the pipeline can be treated as unsuccessful.
  
 %PIPESTATUS (bash)
 %An array variable (see Arrays) containing a list of exit status values from the processes in the most-recently-executed foreground pipeline (which may contain only a single command).
@@ -1551,9 +906,9 @@ Git remotes\footnote{Remotes are remote repositories tracked by Git. Origin is t
 
 Command line entries are generally not executed individually; They are a part of longer sequences and tasks.\cite{greenberg1993computer} Each entry is related to its preceding and following command line entries. 
 
-In previous analysis\redtext{REF: dependencies between commands }, we saw that there are sequential dependencies between command stubs; These dependencies represent workflows that users recognize and remember.
+When analyzing shell history we collected from people, we observed significant sequential dependencies between command stubs; These dependencies represent workflows that users recognize and remember.\footnote{This specific analysis can be found in appendix in section \ref{seq-app}.}
 
-Apart from immediate sequential dependencies, each command belongs to a terminal session\footnote{\redtext{???} Terminal session consists of all history entries entered into the same terminal. Terminal sessions are equivalent the shell sessions in the majority of cases.}. Our data shows big differences between how people use sessions; Some people often create new terminals even for a few command line entries and then close them. Others keep terminals open for a long time and reuse them for different tasks.
+Apart from immediate sequential dependencies, each command belongs to a terminal session. We have observed significant differences between how people use sessions; Some people often create new terminals even for a few command line entries and then close them. Others keep terminals open for a long time and reuse them for different tasks.
 Additionally, people very often switch back and forth between multiple open terminals. Command line entries from simultaneous terminal sessions are usually different but all related to the same task.
 
 These relationships between history entries and sessions are definitely interesting and possibly useful. To illustrate, imagine you type a command line entry that you already executed five times in the past. Maybe it is related to a specific task and to complete it you will need similar commands as before. Situations like this one show us the potential usefulness of session and history entry relationships.
@@ -1569,12 +924,12 @@ One more use for sequences of command line entries is recording them as a full n
 
 %Having access to a full sequential history\footnote{Standard shell history is often deduplicated. Full sequential history is a shell history that is not deduplicated.} that represents a transcript of your actions also has its value.
 
-\subsection{Host and portability of history entries between devices}
+\subsection{Host and portability of history entries}
 
 Imagine that you have your shell history synchronized between multiple devices.
-Each of the devices is at least a little bit different so it is a good idea to be able to tell them apart. The \verb|$HOST| environment variable is a good identifier of the device. 
+Each of the devices is at least a little bit different so it is a good idea to be able to tell them apart. Devices usually have hostnames we can use to identify them. 
 
-Since each device can be different we should look at the possible differences that are relevant to the shell history. Different operating systems\footnote{We are only considering Unix-like systems in this work.} use different package managers to install software. For example, Debian-based distributions use Apt, Arch-based distributions use Pacman, and on MacOS people use Homebrew. Commands for one package manager will not work with others.
+Since each device can be different we should look at the possible differences that are relevant to the shell history. Different operating systems use different package managers to install software. For example, Debian-based distributions use Apt, Arch-based distributions use Pacman, and on MacOS people use Homebrew. Commands for one package manager will not work with others.
 
 Many history entries are valid in both Bash and Zsh but not all history entries. Shell configuration might differ between devices which could cause some history entries to not work on all devices properly. A good example are specific shell aliases that the user added to one of their devices.
 
@@ -1586,28 +941,7 @@ As we can see there are many reasons why history entries might not be portable. 
 We could detect and handle these portability issues individually. Or alternatively we could take a simpler approach; Prioritize history entries from the current device over those from other devices. This could be effective because many of the portability issues are related to mixing shell history from different devices. 
 
 
-%We can use the host to prioritize the history from the current device and to explicitly show the user which host is the specific history entry coming from.
-
-\todo{NOTES related to compatibility - might be useful later in the design chapter}
-
-%However, only some of these portability issues have elegant solutions. For example, aliases can be detected and saved as part of the history entry. Upon retrieval the user can get an offer to set the alias or to even add it to the shell RC file\footnote{RC files for Bash and Zsh are ".bashrc" and ".zshrc" respectively.}. 
-
-%penalize
-%warn
-%bundle and restore
-
-%We could use this information to detect and handle these situations. warn the user or even bundle and recreate the original context. 
-
-% Understanding the command line entry is hard  
-% Modifying the command line entry is hard
-
-% Understanding limited parts of the command is doable  
-% Recreating the context of the command is doable  
-% -$>$ Bundling the context with the command is doable
-
-% Imagine a command with relative paths and two approaches: 1) you modify the paths to be absolute and then somehow offer the modified command to the user 2) you detect the presence of relative paths and offer an option to change to the directory on recall
-
-\subsection{Usage of history mechanisms}
+\subsection{Usage of history features}
 
 So far we have only described context related to the the usage of shell and to the device. Now we look at context that is related to how people use shell history. 
 
@@ -1617,6 +951,4 @@ For example, when you retrieve a specific history entry using \verb|CTRL-R|, you
 
 A detailed transcript of user interactions with the history mechanisms would give us even more useful information. Consider a situation where the user presses \verb|ARROW_UP| ten times and then gives up and uses \verb|CTRL-R| to search the history instead. This is not an effective way to use history. However, it would be wrong to blame the user. If such situation happens a lot to many users we should look into if we can redesign \verb|ARROW_UP| to improve it.
 
-The interactions between the user and the history system can help us understand how people use history. They are essential for informing design decisions and estimating usefulness of the system. Interactions can help us understand when the system works and when it does not.
- 
-%When exploring relevant research, we did not find anyone who recorded shell history with the history interactions of the user. Furthermore, we did not find any tools that are capable of recording the shell history with user interactions. We think that collecting a dataset of shell history with the user history interactions would enable future research. To move forward towards this goal we should record the history usage data as part of the history.
+The interactions between the user and the history features can help us understand how people use history. Knowing how people use standard shell history and our history solution is essential for informing design decisions. It is also crucial for evaluating the performance and usefulness of final solution. %Interactions can help us understand when the system works and when it does not.
