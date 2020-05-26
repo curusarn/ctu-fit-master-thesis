@@ -47,11 +47,9 @@
 \let\myRef\ref
 \renewcommand\ref{\unskip~\myRef}
 
-% \usepackage{spverbatim} % verb and verbatim with line breaks - doesn't break what I need
 
 \newcommand\hatx{\^{}}
 \newcommand{\hatxxx}{\hatx\hatx\hatx}
-
 
 % list of acronyms
 %\usepackage[acronym,nonumberlist,toc,numberedsection=autolabel,nomain]{glossaries}
@@ -91,10 +89,8 @@ Způsob jakým lidé používají shell závisí na kontextu jako je třeba sou�
 %Even nowadays, command line is a popular way to interact with computers. Shell history allows people to reuse previous commands which increases productivity. 
 %The way people use shell changes based on context such as current directory. In this work, we intend to use additional context to enhance the standard shell history.
 
-Zkoumáme jak lidé používali shell v minulosti a jak ho používají v současnosti.
 Analyzujeme funkce standartní historie a to jak je lidé používají. Identifikujeme interaktivní zpětné vyhledávání jako neefektivní mechanismus standartní historie vhodný pro náhradu.   
 
-%We research how people used shell in the past and how they use it now.
 %We analyze standard history features and how people use them. We identify reverse search as inefficient standard feature we need to redesign.
 
 Prozkoumáním existujících nástrojů historie shellu najdeme nástroje, které řeší problémy s interaktivním zpětným vyhledáváním. Nacházíme také kontextové nástroje historie shellu, které ale nepřináší uživateli velké zlepšení.
@@ -127,7 +123,6 @@ Naše řešení bylo za posledních pět měsíců nainstalováno přes 600 krá
 The way people use shell changes based on context such as current directory. In this work, we intend to use available context to enhance the standard shell history.
 
 % e describe target users for our system and typical workflows people perform. Based on the workflows w
-We research how people used shell in the past and how they use it now.
 We analyze standard history features and how people use them. We identify reverse search as inefficient standard feature we need to redesign.
 
 By exploring existing history tools we find tools that address the issues of reverse search. We also find out that existing contextual history tools do not bring much value to the user. 
@@ -173,8 +168,7 @@ People use shell differently in different situations. For example, some director
 We focus on Unix-based operating systems because more than half of all developers use them\footnote{According to \cite{stackoverflow2019devsurvey}, 25.6\% and 26.8\% of developers use Linux and MacOS respectively.}. 
 Default shell on GNU/Linux is Bash \cite{ramey1994gnubash} and default shell on MacOS is Zsh\footnote{According to \cite{apple2019zsh}, default shell in MacOS is Zsh since October 2019.}. Because of that, we focus on these two popular shells.
 
-We research how people used shell in the past and compare it with how they use it now.
-Then, we look at standard history features and what issues people encounter when using them. We introduce target users and formulate typical shell history workflows. We explore existing history tools and how they improve standard shell history. Then, we design a new contextual history system based on our analysis. We implement core parts of the designed system. Finally, we test the system using data we collect from our users. Based on that, we draw conclusion about this work.
+We examine standard history features and what issues people encounter when using them. We introduce target users and formulate typical shell history workflows. We explore existing history tools and how they improve standard shell history. Then, we design a new contextual history system based on our analysis. We implement core parts of the designed system. Finally, we test the system using data we collect from our users. Based on that, we draw conclusion about this work.
 
 \paragraph{Defined terms}
 
@@ -207,21 +201,17 @@ To avoid confusion through out this work, we define following terms:
 
 \redtext{Intro the problem, explain why we solved it and THEN describe how}
 
-We have researched how people used shells in the past and how they use it now.
-%??? We have collected and analysed shell history or several people.
-The average number potential retrieved characters increased four times since the original study was conducted (around 1993). We have identified that sequential properties of shell history are connected with real specific workflows (inconclusive?). These findings reinforced the idea that it makes sense to design and develop new contextual history tools. 
-\redtext{................. Everything above this is a draft \hatxxx ..................}
 
-We have explored shell history features available in current standard shells and pointed out their disadvantages. Market research was conducted to find out what issues people encounter and how they use existing shell history features. 
 
-Based on collected usage data and market research we described the target users of shell history tools. For these target users we have formulated typical workflows that accomplish different tasks using shell history. We have provided a detailed explanation of these workflows pointing out issues with standard shell history mechanisms. As the main finding, we have identified reverse search as very inefficient history feature that is worth redesigning.
+We have described shell history features available in current standard shells and pointed out their disadvantages. 
+We have described the target users of our shell history tool. Based on shell history we collected we have formulated typical workflows that accomplish different tasks using shell history. We have provided a detailed explanation of these workflows pointing out issues with standard shell history mechanisms. As the main finding, we have identified reverse search as very inefficient history feature that is worth redesigning.
 
-We have explored what popular history tools are available. We have found state-of-the-art non-contextual history tools that provide major improvement over standard history by replacing reverse search. These tools address the specific issues of reverse search we identified. There are some contextual history tools that are based on appealing ideas; These tools however, do not match the improvements provided by the state-of-the-art non-contextual history tools. We have described how available contextual information relates to ways people use shell. \redtext{TODO: shorten analysis above as necessary}
+We have explored what popular history tools are available. We have found state-of-the-art non-contextual history tools that provide major improvement over standard history by replacing reverse search. These tools address the specific issues of reverse search we identified. We found contextual history tools that are based on appealing ideas; These tools however, do not match the improvements provided by the state-of-the-art non-contextual history tools. We have described how available contextual information relates to ways people use shell. \redtext{TODO: shorten analysis above as necessary}
 
 
 % design
 
-Based on our previous analysis, we have designed a history system. The design is a result of iterative process that involved feedback from users. Our design matches the improvements of the state-of-the-art non-contextual history tools. Furthermore, it uses context to enhance the capabilities of the shell history. The design was tested to make sure that it fulfills all requirements. 
+Based on our previous analysis, we have designed a history system. The design is a result of iterative process that involved feedback from users. Our design matches the improvements of the state-of-the-art non-contextual history tools. Furthermore, it uses context to enhance the capabilities of the shell history. The design was tested to make sure that it fulfills all set requirements. 
 
 % implementation
 
@@ -233,8 +223,6 @@ We have implemented a significant portion of the design. The working solution re
 We have evaluated the performance of the search application and compared it with both state-of-the-art history tool and standard builtin history search mechanism. 
 We have suggested metrics and used them to compare our solution with state-of-the-art history searching tool -- Hstr \cite{toolshstr}.
 The average performance of our history searching application is either similar or better than Hstr. 
-
-%We have compared the tools using real life scenarios
 
 We have found real life situations where our solution provides significant advantage over both standard reverse search and Hstr.
 Our solution enables the user to search with significantly less knowledge and typing. Furthermore, our search application on average saves more typed characters to the user. 
