@@ -9,169 +9,134 @@
 
 \todotext{TODO: describe layout/contents of the chapter}
 
-\section{How people use shell}
+\blind
 
-\subsection{\redtext{Comparing past and todays usage od shell}}
+\section{Origins of standard history features in shells}
 
-\begin{itemize}
-    \item Previous research
-    \item We collected and compared with previous esearch
-    \item Most of the characteristics were similar and did not lead to noteworthy findings
-    \item We only point out the interesting observations that lead to conclusions
-    \item Additional plots comparing our data with previous research can be found in the appendix. LINK
-\end{itemize}
+In this chapter we explore the standard shell history features which are most likely available to majority our target users.
+Most of the history features we see and use today were adopted from older shells. Many of these features stayed similar to their original versions. We look at the shells and the history features chronologically to see the evolution and improvements in shell history facilities over the years.  
 
-\subsection{Personal nature of shell usage}
-
-\begin{itemize}
-    \item According to \cite{greenberg1993computer}, the way people use shell is highly individual.
-    \item 
-\end{itemize}
-
-
-\subsection{Sequential relationships between history entries}
-
-%In earlier chapter, we saw that there are a big differences in vocabularies of different people so it is not surprising that sequential properties of the commands also differ significantly between individuals.
-
-
-
-Here, we study sequential dependencies between commands for a selected individual.
-We create the graph by taking 41 most used commands. Each node represents a command and the size of the node is proportionate to the command frequency. Each vertex represents a transition probability from one command to the next one. 
-
-%We decided to create the graph this way because it represents properties that could be potentially used in history tools; It only uses the probability of transition from one command to the next one. Hanson used a method which also considers the reverse transition probabilities; That is the probability that given command was preceded by the previous command. For example, when predicting the next command we only have the information about the past and current command. 
-The \verb|_start_| and \verb|_end_| nodes represents the start and the end of a terminal session.
-
-\todotext{Errors filtered out because we want to study the history to help people achieve their goals - filtering exit status !0 is not fully correct but the resulting data is more useful than without any filtering.}
-
-\todotext{There are strong dependencies between certain commands - e.g. mkdir almost always followed cd - cd into the newly created directory, source is almost always followed by git w/o clear reason; Existence of strong dependencies suggests that it could be worth to predict the next command using the previous one.}
-
-\todotext{Many commands have a high probability of being repeated - e.g. jq which is almost always followed by itself, curl, git, ssh ...; High rate of commands being repeated shows the need to recall recent history records - even the most immediate ones. Remember that these high rates of repeated commands are not caused only by errors and typos because all commands with non-zero status were filtered out.}
-
-\todotext{Ad. above: Almost all commands repeat themselves with a significant probability. Some commands do not repeat themselves. E.g. hstr, rm, cp, source, mc ... these are simple commands that do not usually have many arguments and achieve simple goals that do not need to be repeated (remove file, copy file). It seems that commands with more arguments are repeated more A) because they help the user achieve complex goals B) the user adjusts the command because it is nontrivial to put it together the arguments C) command performs something fairly complex and user repeats the command (external change) }
-
-\todotext{At the beginning of the session the user often changes to a different directory. Or they use hstr which is a history searching tool.}
-
-\todotext{There are some very frequent commands that are used over and over again. This makes it easier to predict the next command stub. But it does not mean that it is easy to predict the next command line entry. Vast majority of these invocations only share the command but not the arguments.}
-
-\todotext{Sequential graphs differ significantly between users. However, the findings described above could be also found in the sequential graphs of other users.}
 
 \begin{figure}
-\tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
-%\newline
-%\newline
-\centering
-\begin{tabular}{|l|l|}
-\hline
-Vertex style & Transition probability            \\\hline
-Regular/full     & 1.0 -- 0.3 (specified by labels) \\
-Dashed      & 0.3 -- 0.2                         \\
-Dotted      & 0.2 -- 0.1                         \\
-\hline
-\end{tabular}
-%\caption{Sequential structure of command usage (legend).}
-%\label{tab:seq-table}
-
-\caption{Sequential structure of command usage.}
-\label{seq-graph}
+  \tmpframe{\includegraphics[width=\linewidth]{figures/misc/shells.png}}
+  \caption{Linux shells since 1977, from \cite{jones2011shells} \todotext{TODO: Better quality or begone.}}
 \end{figure}
 
+\todotext{TODO: Add summaries of the features using bullet point lists.}
+\todotext{TODO: Point out drawback of the features as you describe them.}
+\todotext{TODO: Break up the walls of text with bold text and bullet point lists.}
 
-\subsection{Potential of history tools}
+\subsection{History features of C shell}
 
+C shell (Csh) was initially released in 1978. 
+It features history substitution: a simple history mechanism enabling reuse of previously executed commands inspired by Interlisp\cite{joy1994cshintroduction}. Size of the history is configurable\footnote{Examples featured in \cite{joy1994cshintroduction} and \cite{dubois1995tcshusing}
+show history size set to 10 and 20 records respectively.} but according to \cite{cshman}, too large values may run the shell out of memory.
 
-\section{Standard shell history features}
+% History is disabled by default (I think) persistence accross sessions is on my install
 
-\redtext{This is some bad intro}
-In this section, we explore standard shell history features. % which are most likely available to the majority our target users. 
-We only focus on commonly used features. Most of the history features we describe are enabled by default. The list of history features we describe is following:
+C shell history substitution allows the user to reuse: the previous command line using \verb|!!|, the last argument of the previous command line using \verb|!$|, and all arguments of the previous command line using \verb|!*|. To run other commands lines than the previous one we could use \verb|!cc| which executes the last command line from history starting with \verb|cc|. Executing a command line based on absolute or relative index can be done using \verb|!5| or \verb|!-2| respectively. To see what command is about to be executed we could use e.g. \verb|!cc:p|, \verb|!5:p|, or \verb|!-2:p|; This only prints the history record instead of executing it. It is also possible to replace parts of command lines using \verb|!!:s/foo/bar/| or a shorthand \verb|^foo^bar| where \verb|foo| is replaced by \verb|bar| in the previous command and the result gets executed. \redtext{When using these features we do not see the resulting substituted command line until executing it. This can lead to errors or printing the substitutions first which slows users down.}
+    
+There is a \verb|history| command which prints out recent history records with their indexes. There are also other less notable history substitution features available; These are accessible using different modifiers that can follow \verb|!| character. Another noteworthy features of Csh are: file name tab completion, tilde expansion, command aliases, and job control.\todo{check \& ref? } \redtext{history can be easily persisted across logins}
 
-\begin{itemize}
-    \item Saving history entries
-    \item History substitution
-    \item Stepping through recent history
-    \item Prefix search
-    \item Reverse search
-    \item Builtin history commands
-\end{itemize}
-
-
-%Shells offer two editing modes which change the behavior and keybindings for some of the history features. We only cover the default Emacs editing mode.
-%Most of the history features are either present in both modes or they have an equivalent feature in Vi mode.
+\redtext{savehist - allows to merge history instead of overwriting it}
+%savehist
+%If set, the shell does 'history -S' before exiting. If the first word is set to a number, at most that many lines are saved. (The number must be less than or equal to history.) If the second word is set to 'merge', the history list is merged with the existing history file instead of replacing it (if there is one) and sorted by time stamp and the most recent events are retained. (+)
+\redtext{commands lines are saved to history after the history expansion is performed}
 
 
+\subsection{History features of Tenex C shell}
+Tenex C shell (Tcsh) is an enhanced version of the C shell released in 1983\todo{REF}; It offers command line editing and programmable tab completion\cite{dubois1995tcshusing}. Since Tcsh is a version of C shell, it does support all the previously described features of C shell. The history holds 100 previous command lines by default and it also contains datetime of the command line execution.
 
-\redtext{Fuck vim mode because it does not seem to be common enough - as in many people who use vim as an editor still use the default emacs mode in shell.}
+Tcsh offers command line editing; This means that the user can manipulate the contents of the command line by using various built-in functions. A few examples of such functions are: \verb|delete-word|, \verb|expand-glob|, and \verb|history-search-backward|. All built-in functions can be bound to arbitrary key combinations. Additionally, Tcsh features emacs and vi editing modes which come with default keybindings usual for the respective editors. When describing the default keybindings for Tcsh in this section we are only considering the emacs mode.
 
-\subsection{Saving history entries}
+A portion of built-in functions allows the user to reuse command lines from the shell history. Functions \verb|up-history| and \verb|down-history| allow the user to step through the history; Default keybindings are \verb|CTRL-P| and \verb|arrow_up| for \verb|up-history|; and \verb|CTRL-N| and \verb|arrow_down| for  \verb|down-history| \cite{tcshman}. This is something you are likely already used to in your modern shell.
 
-%First, we take a look at how command line entries are saved into history.
-Whenever you submit a command line entry in shell it is added to history. Saved history entries are then available for future reuse. %We describe specific ways to access the history a bit later.
+% BAD ALT: Pressing \verb|CTRL-P| invokes \verb|up-history| function which replaces the current command line contents with previous command line from history. Pressing \verb|CTRL-P| repeatedly continues up through the history. Pressing \verb|CTRL-N| invokes \verb|down-history| function which steps through the history in the other direction. These two functions are also often bound to \verb|arrow_up| and \verb|arrow_down| keys. 
 
-It is possible to configure shell to not save duplicate entries to history.  
-In Zsh, we can also keep duplicates in history but prevent them from showing up when searching.  
-There are options to prevent specific command line entries from being saved to history based on a user specified pattern. %This is done using \verb|HISTIGNORE| option in Bash.
+Besides stepping through history, Tcsh features prefix search. The functions \verb|history-search-backward| \todo{make sure this doesn't overflow :( } and \verb|history-search-forward| use the command line contents before the cursor as a prefix to search the history in the desired direction. The default keybindings for these functions are a little weird; \todo{TODO: Pressing ESC an then x is just a way of pressing ALT-x without having ALT. }
+You need to press \verb|ESC| and then \verb|p| or \verb|n| for backward or forward search respectively. 
 
-We can configure shell history to save time of the execution alongside the history entry. In Zsh, it is also possible to record and save duration of the execution.
+Another useful history feature of Tcsh is interactive string search. In contrast to prefix search this feature allows us to search history using any part of the command line not just the prefix. This feature is realised by \verb|i-search-back| and \verb|i-search-fwd| functions. Invoking these functions prints a secondary prompt under the primary one: \verb|bck:| or \verb|fwd:| depending on the invoked function. Typing searches the history interactively in the desired direction. Invoking the functions repeatedly steps through the history records that match the query.
+These functions sound quite useful but despite that they are not bound to any keys by default.
+% \redtext{So the users need to set up the key bindings themselves.}
 
-\paragraph{Missing history entries}
+Activating vi mode in Tcsh changes some of the keybindings. In addition to regular keybindings, stepping through history is available on keys \verb|K| and \verb|J|, and prefix search is available on \verb|SHIFT-K| and \verb|SHIFT-J|. Instead of \verb|i-search-back| and \verb|i-search-fwd| functions vi mode offers \verb|vi-search-back| and \verb|vi-search-fwd| with similar functionality.
+% \redtext{vi mode has defaults - back: ? ,fwd: /}
 
-When we execute a command line entry we generally expect to be able to find it in history. This is not always the case. There are multiple reasons why executed command line entries can be missing in the shell history.
-
-In Bash, simultaneous terminal sessions can overwrite the history of one another when it is being written to disk.\cite{bashman}\cite{bash-session-issues-1} This can be prevented by properly configuring the shell.
-
-Shell history is not unlimited. We might not be able to find history entries simply because they are too old and our history size is too small. Size of shell history can be increased with configuration options. % \verb|HISTSIZE| and \verb|SAVEHIST| or \verb|HISTFILESIZE|.
-
-\subsection{History substitution}
-
-History substitution is a powerful feature that allows users to reuse previous history entries or their parts. 
-For example, we can use \verb|!!| to repeat previous history entry and \verb|!$| to repeat its last argument. Executing a history entry based on its absolute or relative index can be done using \verb|!5| or \verb|!-2| respectively.
-
-The flexible notation of history substitution makes it possible to match recent history and perform substitutions on them. For instance, \verb|!cc| executes the last history entry that starts with \verb|cc|. An example of substitution is \verb|!!:s/foo/bar/|; It retrieves the previous history entry and replaces instances of \verb|foo| with \verb|bar|.
-
-History substitution is powerful and flexible but it is non-interactive. Users do not know what the substitution evaluates to until they execute it. For example, submitting \verb|!rm| could lead to a irreversible losses.
-
-It is possible to configure shell to show us the result of the substitution before executing it. Doing so however, adds extra step to each history substitution we perform. The additional required interaction can be very annoying in simple cases such as \verb|sudo !!|. A less invasive way to evaluate the substitutions before execution is \verb|magic-space|; It causes shell to expand substitutions after we press \verb|SPACE|.
-
-\subsection{Stepping through recent history}
-
-Repeatedly pressing \verb|ARROW_UP| gives us access to immediately previous history entries. Conversely, we can press \verb|ARROW_DOWN| to get back to the original command line. 
-
-This is very quick and convenient way to access recent history entries. Instead of trying to remember the previous history entries we can interactively step through them.
-
-Quite obviously this is not a great way to access older than recent history entries. Pressing \verb|ARROW_UP| many times and reading the results as they appear can take considerable amounts of time.
-
-\subsection{Prefix search}
-
-Prefix search works similarly as stepping through history using \verb|ARROW_UP|. It returns previous history entries that match the prefix we have already typed. 
-This enables us to reuse recent and even older history entries based on their prefix. Prefix search is convenient in practice; For example, we can search for previous \verb|git| commands which all most likely start with \verb|git| prefix.
-
-When there is no prefix, prefix search works just like simple stepping through recent history. Because of that it can be bound to \verb|ARROW_UP|/\verb|ARROW_DOWN| and used as a reasonable replacement. We can find prefix search configured this way in a popular Zsh configuration framework -- Oh-my-zsh\cite{toolsohmyzsh}.
-
-In both Bash and Zsh, prefix search is not configured by default. Before we people can start using it, they need to find out that it exists and configure it. This is one of many examples where we can see the importance of good defaults; Many people only know the default state of the shell because they never change the default configuration.
-
-\subsection{Reverse search}
-
-With prefix search, we could only search the history by prefix.
-Reverse search allows us to interactively search for previous history entries based on any part of the command line entry. It can be activated using \verb|CTRL-R|.
-
-In contrast to prefix search, reverse search is available by default and people seem to use it a lot. Reverse search is the most powerful interactive history search feature included in Bash and Zsh.
-
-Reverse search might seem like the perfect way to search history. However, it does have its limitations. First, we cannot search using more than one word. In other words, the search query needs to be consecutive. Second, only one result is displayed at a time. We need to repeatedly press \verb|CTRL-R| to see more results.
-
-Pointing out these limitations might seem like nitpicking. However, we will see later that they do limit the searching capabilities of reverse search significantly.
+\redtext{histdup - prunes duplicates from history}
+% tcsh man page (+ means "not available in csh")
+%histdup (+)
+%               Controls  handling  of  duplicate  entries in the history list.  If set to `all' only unique history events are entered in the history list.  If set to `prev' and the last
+%               history event is the same as the current command, then the current command is not entered in the history.  If set to `erase' and the same event is  found  in  the  history
+%               list, that old event gets erased and the current one gets inserted.  Note that the `prev' and `all' options renumber history events so there are no gaps.
 
 
-\subsection{Builtin history commands}
+% Since we are mainly interested in history features we only focus on the functions that use history 
+% Command line editing was an important step forward in interactive shell use. It enables the user
+% As the name suggest it was inspired by features available in Tenex operating system. 
 
-Shells offer builtin commands to print and control history. Builtin command \verb|history| and standard shell utilities can be used for powerful history searching.
-For example, running \verb#history | grep foo | grep bar# prints the searches the history using two words and displays all matching results.
+\subsection{History features of Korn shell}
+Korn shell (Ksh) was initially released in 1983; It was originally written as a proprietary software until being released as open source in 2005. \todo{REF} History features of Korn shell are a very similar to the features of Tenex C shell. Ksh offers stepping through history, string search, and vi mode variant of the string search. It is worth mentioning that in Ksh, string search is bound to \verb|CTRL-R| by default which is what you are probably used to in modern shells. 
 
-Manually filtering history overcomes the limitations of reverse search. However, extra typing is necessary to complete the searches compared to interactive methods. Plus, unlike with reverse search, we cannot see the results update as we type the search query.
+Ksh offers a shell builtin command \verb|fc| that provides a superset of C shell history mechanism\cite{rosenblatt2000kshlearning}. It allows the user to list recent history entries, edit command lines from history with an editor, and run history entries with changes. Running \verb|fc -l| lists the previous command lines from history (with indexes). So does \verb|history|, because in Ksh it is just an alias for \verb|fc -l|. To edit previous command line from history in an editor we could use \verb|fc| (without arguments) which executes the resulting command after we are done editing it. If we want to choose an editor we could use \verb|fc -e vi|. Running \verb|fc -e - foo=bar| skips the editing, replaces occurrences of \verb|foo| with \verb|bar| and executes the result. To access more then the previous command line we would use absolute or relative indexes similarly to the history expansion in Csh. For example, \verb|fc 5| and \verb|fc -2| opens an editor with fifth from the history list and the second command relative to current command line. It is also possible to select ranges of commands for editing with e.g. \verb|fc -2 -6|.
 
-% \redtext{FC ?}
+% We are not describing other Ksh history features in detail because of the similarity with already described Tcsh history features.
 
 
-\redtext{---------------------------------------------------------------------------- Break ---}
+\subsection{History features of Bourne again shell}
+Bourne again shell (Bash) was initially released in 1989.
+Default history size in Bash is 500 records.\cite{bashman} Each history entry contains datetime of the execution. Unless the user disables the \verb|cmdhist| option, all lines of a multi-line command are saved as one history record; Based on \verb|lithist| option, newlines are either embeded into history or replaced by semicolons to keep the syntax of the saved commands correct. 
+
+There are shell variables that can be used to prevent certain command lines from being saved to history. Variable \verb|HISTCONTROL| can be used to prevent saving duplicates, and to skip saving command lines starting with a space. Variable \verb|HISTIGNORE| allows using pattern matching to prevent various command lines from being saved into history.  
+
+Bash features history expansion (\verb|!!|, \verb|!$|, \verb|!cc|, etc.) which is compatible with the Csh\cite{ramey1994gnubash}.
+Bash features a \verb|histverify| option that alters the behaviour of history expansion. When it is enabled, the results of history expansion are  pasted onto the command line instead of being executed immediately. This option is disabled by default. 
+
+\todo{COMMENTED: use this later as an example for memory load}
+% It seems that authors of Bash realised the danger of history expansion; It forced the users were either forced to rely on their memory or to explicitly ask for the history expansion result to be printed first.}
+% This shows us both the importance of not relying on memory/recall and the importance of adhering to the existing standard.
+\todo{NOTE: we could briefly introduce Readline}
+Command line editing in Bash provides most of the history related functions from Tcsh. Some of these functions have different names and some of them have different default keybindings.
+
+Functions for stepping through history \verb|up-history| and \verb|down-history| are named \verb|previous-history| and \verb|next-history| respectively; Default keybindings did not change. 
+
+Interactive string search (better known as reverse search) is available in Bash as \verb|reverse-search-history| and \verb|forward-search-history| with default keybindings \verb|CTRL-R| and \verb|CTRL-S|. 
+Common issue with this keybinding is that \verb|CTRL-S| is often used to freeze the output of the terminal using OS's terminal driver\todo{REF: ask Barinka, he will know}; This means that many users do not have the option to search in the "forward" direction.   
+Bash also provides non-interactive versions of these functions bound to \verb|ALT-P| and \verb|ALT-N|. However, besides saving your CPU from searching the history multiple time, they do not seem to provide any advantage over their interactive counterparts. 
+
+Prefix search functions are still available under the same name (\verb|history-search-backward| \todo{overflow!} and \verb|history-search-forward|) but they do not have default keybindings in Bash. Alternative substring searching versions for these functions are available which do not search just by prefix but can match anywhere on the command line: \verb|history-substring-search-backward| and \verb|history-substring-search-forward|.\todo{overflow!}
+
+Another two history functions we can find in Bash are \verb|yank-last-arg| and \verb|yank-nth-arg|. The first one pastes the last argument of the previous history entry onto the command line. The second one pastes the Nth argument. Default keybindings for \verb|yank-last-arg| are \verb|ALT-.| or \verb|ALT-_|. To use \verb|yank-nth-arg| we need to provide an argument to Bash input library; This can be done by pressing an \verb|ALT| key with a numeric argument. Then we can press \verb|CTRL-ALT-Y|. Without providing any argument the function pastes the first argument of the previous history entry onto the command line.
+
+
+Other than command line editing functions Bash offers builtin commands to list, reuse and manipulate the history. The \verb|fc| builtin is very similar to the one available in Ksh. We can list of recent command lines from history with \verb|fc -l|, edit and execute them with \verb|fc| without any arguments, and substitute and execute them with \verb|fc -s foo=bar|. It is possible to select command lines and ranges of command lines from the history using absolute or relative indexes.
+
+Compared to Ksh, \verb|history| is no longer just an alias; It is a Bash builtin which can be used to display and control the shell history. Without any arguments, \verb|history| prints out a list of previous history entries with indexes. Using various command line options it can be used to: add command lines to history, delete them, or clear the history. It can load new or all history entries from the history file to the history of this shell session; New entries could appear in the history file because of other simultaneously running shell sessions. Conversely, we can use the \verb|history| builtin to append or write the history of this shell session to the history file.
+
+
+\subsection{History features of Z shell}
+
+Z shell (Zsh) was originally released in 1990. Most of the history features available in Bash are also offered by Zsh.
+The default history size is just 30 lines. The history contains the executed command line, the datetime and the duration of the execution. This information is only saved to history when the \verb|EXTENDED_HISTORY| option is enabled. 
+
+% Zsh is overall more feature-rich than Bash. 
+% Many features and options that are natively supported in Zsh are non-trivial or impossible to set up in Bash\todo{example?, ref?}.
+% We are not going to cover Zsh in great detail because of its similarity to Bash.
+
+Zsh does feature csh-style history expansion. Like Bash, it can be configured to evaluate the history expansion and paste the result onto the command line instead of executing it; This behavior can be enabled using \verb|HIST_VERIFY| option. Another way to see what the history expansion evaluates to is the \verb|magic-space| function. It evaluates history expansion and inserts a space when invoked. When we bind this function to spacebar the history expansion will get evaluated every time we press \verb|SPACE|.
+
+\todo{NOTE: we could briefly introduce ZSH ZLE}
+We can find Zsh equivalents for almost all Bash command line editing functions that allow history reuse. In addition, we can find variations and extra functions compared to what is available in Bash. Using \verb|arrow_up| and \verb|arrow_down| keys we can retrieve recent command lines from history. Prefix search is available but unbound by default. There is a variant of prefix search that always searches by first word on the current command line no matter where the cursor is. This variant of prefix search is bound to \verb|ALT-P| and \verb|ALT-N| by default. Interactive reverse search functions are also available with the same default keybindings as in Bash.
+
+Zsh offers pattern matching variants for the most of the history searching functions; These treat the typed query as a pattern instead of a string that should be matched exactly. Vi mode variants for some of the searching functions are available as well.  
+
+The \verb|fc| builtin command is supported and the functionality is comparable to its Bash counterpart. Like in Ksh, \verb|history| is just an alias for \verb|fc -l|. 
+
+% There are alternatives to achieve almost anything that can be done in Bash. For example, ...
+
+
+\blind
+\todotext{TODO: short conclusion about shells ? }
 
 
 \section{How people use shell}
@@ -345,6 +310,25 @@ We just looked at frequencies of commands and command vocabulary of shell users.
 in Hanson et al. (1984). (Greenberg)}
 \end{figure}
 
+\begin{figure}
+\tmpframe{\includegraphics[width=\linewidth]{figures/greenberg_new/graph_cmd-sequence_vit_41_0-1_crop.png}}
+%\newline
+%\newline
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Edge style & Transition probability            \\\hline
+Regular/full     & 1.0 -- 0.3 (specified by labels) \\
+Dashed      & 0.3 -- 0.2                         \\
+Dotted      & 0.2 -- 0.1                         \\
+\hline
+\end{tabular}
+%\caption{Sequential structure of command usage (legend).}
+%\label{tab:seq-table}
+
+\caption{Sequential structure of command usage.}
+\label{seq-graph}
+\end{figure}
 
 
 \todo{sequential graph and its legend table must be on the same page!}
@@ -356,7 +340,30 @@ in Hanson et al. (1984). (Greenberg)}
 
 \redtext{Greenberg concluded that assuming that the sequential dependencies of commands found by polling all the users together is a mistake.}
 
+In earlier chapter, we saw that there are a big differences in vocabularies of different people so it is not surprising that sequential properties of the commands also differ significantly between individuals.
 
+We created a graph sequential dependencies between commands for a selected individual. Since we are studying sequential properties of commands with the relation to history tools; We chose not to use the same method as Hanson so the graphs are not comparable. 
+
+\todotext{TODO: polish this up}
+We created the graph by taking 41 most used commands. Each node represents a command and the size of the node is proportionate to the command frequency. Each vertex represents a transition probability from one command to the next one. We decided to create the graph this way because it represents properties that could be potentially used in history tools; It only uses the probability of transition from one command to the next one. Hanson used a method which also considers the reverse transition probabilities; That is the probability that given command was preceded by the previous command. For example, when predicting the next command we only have the information about the past and current command. 
+
+
+The \verb|_start_| command represents a start of a new terminal session.
+The \verb|_end_| command represents an end of the terminal session; It does not matter how the session ended.
+
+\todotext{Errors filtered out because we want to study the history to help people achieve their goals - filtering exit status !0 is not fully correct but the resulting data is more useful than without any filtering.}
+
+\todotext{There are strong dependencies between certain commands - e.g. mkdir almost always followed cd - cd into the newly created directory, source is almost always followed by git w/o clear reason; Existence of strong dependencies suggests that it could be worth to predict the next command using the previous one.}
+
+\todotext{Many commands have a high probability of being repeated - e.g. jq which is almost always followed by itself, curl, git, ssh ...; High rate of commands being repeated shows the need to recall recent history records - even the most immediate ones. Remember that these high rates of repeated commands are not caused only by errors and typos because all commands with non-zero status were filtered out.}
+
+\todotext{Ad. above: Almost all commands repeat themselves with a significant probability. Some commands do not repeat themselves. E.g. hstr, rm, cp, source, mc ... these are simple commands that do not usually have many arguments and achieve simple goals that do not need to be repeated (remove file, copy file). It seems that commands with more arguments are repeated more A) because they help the user achieve complex goals B) the user adjusts the command because it is nontrivial to put it together the arguments C) command performs something fairly complex and user repeats the command (external change) }
+
+\todotext{At the beginning of the session the user often changes to a different directory. Or they use hstr which is a history searching tool.}
+
+\todotext{There are some very frequent commands that are used over and over again. This makes it easier to predict the next command. But it does not mean that it is easy to predict the next command line. Vast majority of these invocations only share the command but not the arguments.}
+
+\todotext{Sequential graphs differ significantly between users. However, the findings described above could be also found in the sequential graphs of other users.}
 
 \todo{highlight referenced nodes}
 
