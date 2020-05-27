@@ -32,7 +32,7 @@ The list of history features we cover is the following:
 \subsection{Saving history entries}
 
 %First, we take a look at how command line entries are saved into history.
-Whenever you submit a command line entry in shell, it is added to history. Saved history entries are then available for future reuse. %We describe specific ways to access the history a bit later.
+Whenever you submit a command line entry in shell, it is added to the history. Saved history entries are then available for future reuse. %We describe specific ways to access the history a bit later.
 
 It is possible to configure shell to not save duplicate entries to history. 
 In Zsh, we can also keep duplicates in history but prevent them from showing up when searching. 
@@ -72,7 +72,7 @@ Quite obviously, this is not a great way to access older than recent history ent
 Prefix search works similarly as stepping through history using \verb|ARROW_UP|. It returns previous history entries that match the prefix we have already typed. 
 This enables us to reuse recent and even older history entries based on their prefix. Prefix search is convenient in practice; For example, we can search for the previous \verb|git| commands which all most likely start with \verb|git| prefix.
 
-When there is no prefix, prefix search works just like simple stepping through recent history. Because of that, it can be bound to \verb|ARROW_UP|, \verb|ARROW_DOWN| and used as a reasonable replacement for the default behavior. We can find prefix search configured this way in a popular Zsh configuration framework -- Oh-my-zsh\cite{toolsohmyzsh}.
+When there is no prefix, prefix search works just like simple stepping through recent history. Because of that, it can be bound to arrow keys and used as a reasonable replacement for the default behavior. We can find prefix search configured this way in a popular Zsh configuration framework -- Oh-my-zsh\cite{toolsohmyzsh}.
 
 In both Bash and Zsh, the prefix search is not configured by default. Before we people can start using it, they need to find out that it exists and configure it. This is one of many examples where we can see the importance of default configuration; Many people only know the default state of the shell because they never change the default configuration.
 
@@ -90,8 +90,11 @@ Pointing out these limitations might seem like nitpicking. However, we will see 
 
 \subsection{Manual history filtering}
 
-Shells offer builtin commands to print and control history. Builtin command \verb|history| and standard shell utilities can be used for powerful history searching.
-For example, running \verb#history | grep 'pattern1' | grep 'pattern2'# prints the searches the history using two words and displays all matching results.
+Shells offer built-in commands to print and control history. Built-in command \verb|history| and standard shell utilities can be used for powerful history searching.
+For example, to search the history using two words and displays all matching results we can run following command line entry. 
+\begin{verbatim}
+    history | grep 'pattern1' | grep 'pattern2'
+\end{verbatim}
 
 Manually filtering history overcomes the limitations of reverse search. However, extra typing is necessary to complete the searches compared to interactive methods. Plus, unlike with reverse search, we cannot see the results update as we type the search query.
 
@@ -112,9 +115,13 @@ He often uses \verb|ssh| to log into remote machines; The remote machines are sh
 
 His daily shell workflows include complex commands with many long arguments and switching between many different projects. When coming back to a project, he sometimes cannot remember what command line entries he was using. He is familiar with Make, but he often forgets to create Makefiles for typical tasks in projects.
 
-He makes use of interactive history features like reverse search and prefix search. However, he quite often uses \verb#history | grep 'pattern1' | grep# \verb#'pattern2'# to manually filter shell history because it is both more powerful and sometimes feels more comfortable to use than reverse search. Manual filtering allows him to search by more than one pattern and to see many of the matching results. 
+He makes use of interactive history features like reverse search and prefix search. However, he quite often uses manual history filtering.
 
-%\todotext{TODO: ADD challenges and benefits ? maybe}
+\begin{verbatim}
+    history | grep 'pattern1' | grep 'pattern2'     
+\end{verbatim}
+
+It is more powerful than the reverse search and sometimes it also feels more comfortable. Manual filtering allows him to search by more than one pattern and to see many of the matching results. 
 
 \subsection{Typical novice shell user}
 
@@ -137,30 +144,17 @@ Now that we know who our target users are, we can formulate common workflows for
 
 Some of the workflows can be easily fulfilled using standard history features. Others are either difficult or impossible to complete. We describe and explain the issues people can encounter when using standard history features. The list of workflows we cover is the following:
 
-%We do not specify the workflows for each of the target users separately; Instead, we comment on the difference between the users when necessary. \todo{we only ever make comments about the experience level of the users}
-
-%Workflows we formulate are based on previous research \cite{greenberg1993computer}, the online discourse we discussed earlier, discussions with potential users, and our own experience with shell history. Additionally, we collected and examined shell usage and history of a few users; This helped us to confirm and formulate the workflows.
-
-%\todotext{Workflows are simplified by using common commands to make them easy to understand. Some of them were shortened to fit onto the page. Real examples would contain commands specific to the individual users work and the command line submissions would be longer in some cases.}
-
-%\redtext{There is one more thing you should keep in mind when reading the examples; You, unlike the user, will have the full sequence of history entries in front of you. The user in the examples will often have only limited memory of the command line entries he submitted earlier. }
-
-
-
-%\redtext{We grouped the workflows to several distinct categories; In each category we explain the ...}
-%\redtext{In this section, we discuss how the users can complete these workflows using standard shell history features. We also point out the limits and shortcomings of the standard history mechanisms. }
 
 \begin{itemize}
     \item Editing an immediately preceding history entry
-    \item Blindly recalling very recent history entries
+    \item Blindly retrieving very recent history entries
     \item Retrieving recent history entries
-    \item Editing recalled history entries
+    \item Editing retrieved history entries
     \item Repeating a sequence of history entries
     \item Searching with limited knowledge
     \item Searching with implicit context
 \end{itemize}
 
-%Additional configurations and tools will be discussed in later sections.
 
 \subsection{Editing an immediately preceding history entry}
 
@@ -172,7 +166,7 @@ In this first workflow, the user submits a command line entry but is not satisfi
 \end{verbatim}
 In this example, the user is trying to download a file from \verb|pastebin| using \verb|wget|. The first command ends with a non-zero exit status because \verb|--silent| is not an option of \verb|wget|. He presses \verb|ARROW_UP| to retrieve the previous command line entry, fixes the mistake, and presses \verb|ENTER| to submit the command line entry again. 
 
-Using \verb|ARROW_UP| is efficient in situations when we need to either edit the end of the command line entry or append to it. % Command line editing -> more efficiency
+Using \verb|ARROW_UP| is efficient in situations when we need to either edit the end of the command line entry or append to it.
 The next example shows a different case.
 
 \begin{verbatim}
@@ -182,7 +176,7 @@ The next example shows a different case.
 
 Here, the user wants to install the \verb|zsh| package. The command fails because superuser permissions are needed to install packages to the system. Instead of using interactive history features, the user uses history substitution \verb|!!| which repeats the previous history entry. 
 
-By using \verb|!!| we can efficiently prepend or append to the previous command line entry. There are other csh-style history expansions but \verb|!!| is by far the most commonly used one. 
+By using \verb|!!| we can efficiently prepend or append to the previous command line entry. There are other history substitutions but \verb|!!| is by far the most commonly used one. 
 
 So far, we only saw situations where the submitted command line ended with a non-zero exit status, and then the user fixed the error. This is not always the case because not all errors result in a non-zero exit code; Some errors are logical, and not all programs respect the convention of properly signaling errors. Additionally, users sometimes gradually change and develop a command line entry to make sure that each step of the process works as intended. This is shown in the example below.
 
@@ -194,24 +188,24 @@ So far, we only saw situations where the submitted command line ended with a non
 
 In this next example, we see how the user processes \verb|data.txt| file. In each step, he uses \verb|ARROW_UP| to retrieve the previous history entry and continues editing it. When he is satisfied with the result, he redirects the processed data into a file. 
 
-This example shows that there is not always an explicit error that could be detected by the shell to predict that the user will recall the previous history entry. It also shows that the editing process can often be continuous.
+This example shows that there is not always an explicit error that could be detected by the shell to predict that the user will retrieve the previous history entry. It also shows that the editing process can often be continuous.
 
 We just saw multiple different situations in which people continue working on the same command. We also saw different approaches to retrieving previous history entries. It is worth noting that in all of these situations, the user relies on the order of the shell history. 
 
-\subsection{Blindly recalling very recent history entries}
+\subsection{Blindly retrieving very recent history entries}
 
-This second workflow is a retrieval and execution of a very recent history entry. Here, the user remembers the exact position of the history entry he wants to recall. An example of such workflow is running the following sequence of command line submissions.
+This second workflow is a retrieval and execution of a very recent history entry. Here, the user remembers the exact position of the history entry he wants to retrieve. An example of such workflow is running the following sequence of command line submissions.
 \begin{verbatim}
     make build
     vim hello_world.c
     make build
 \end{verbatim}
-First, we use \verb|make| to build a project. Then we edit a file using \verb|vim|. After that, we press \verb|ARROW_UP| twice and press \verb|ENTER| to execute the recalled history entry -- \verb|make build|. 
+First, we use \verb|make| to build a project. Then we edit a file using \verb|vim|. After that, we press \verb|ARROW_UP| twice and press \verb|ENTER| to execute the retrieved history entry -- \verb|make build|. 
 
 
 Consider, if we used a graphical editor or if we ran the editor from a different terminal; In such case, we would only have to press \verb|ARROW_UP| once but the workflow would essentially stay the same.
 
-When recalling very recent commands the users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of recent history entries.
+When retrieving very recent history entries the users often remember the exact position of the history entry; This means that they do not read the history entry that appears on the command line but they blindly execute it instead. This is an efficient workflow that shows us the importance of the order of recent history entries.
 
 \subsection{Retrieving recent history entries}\label{workflow-recent-history-arrow-up}
 The third workflow is a retrieval of history entry that is still recent, but the user no longer remembers the exact position in the history list. This means that the user needs to read the history entries as they appear to see if the desired entry was retrieved. An example sequence of command line entries for this workflow follows.
@@ -228,7 +222,7 @@ The third workflow is a retrieval of history entry that is still recent, but the
 
 In this example, the user is trying to start an Nginx \cite{reese2008nginx} web server. At first, the server does not start, and the command returns an error. The user quickly realizes that there is a syntactic error in the configuration file after checking it using \verb|nginx -t|. Then, the configuration is fixed using \verb|vim|, and the syntax is rechecked using \verb|nginx -t|. 
 
-At this point, the user presses \verb|ARROW_UP| five or six times\footnote{It could five or six depending on whether or not the user has history deduplication turned on.} to retrieve a recently executed command line entry \verb|systemctl start nginx.service|. Every time they press \verb|ARROW_UP| a single result appears, and they need to read it. There is no way to tell if the desired result is one press of a button away, three, or seven. % When the user presses \verb|ARROW_UP| too many times, they can show previous history entries by pressing \verb|ARROW_DOWN|.
+At this point, the user presses \verb|ARROW_UP| five or six times\footnote{It could take five or six depending on whether or not the user has history deduplication turned on.} to retrieve a recently executed command line entry \verb|systemctl start nginx.service|. Every time they press \verb|ARROW_UP| a single result appears, and they need to read it. There is no way to tell if the desired result is one press of a button away, three, or seven. % When the user presses \verb|ARROW_UP| too many times, they can show previous history entries by pressing \verb|ARROW_DOWN|.
 
 
 % It seems that people experience the sunk cost fallacy\footnote{\redtext{TODO: describe?}} which combined with the lack of feedback from the system drives them to stick to the original plan -- pressing \verb|ARROW_UP|. 
@@ -264,7 +258,7 @@ This is a good example of how the number of keystrokes is not the only thing we 
 % NOTE: maybe this^ belongs earlier? (but maybe not)
 
 
-\subsection{Editing recalled history entries}
+\subsection{Editing retrieved history entries}
 
 In the previous section, we saw a workflow where the user retrieved a recent history entry and executed it without any changes. Now, we look at a similar workflow. Here, the user retrieves a history entry, edits it, and then executes it again. Workflows with editing are a little less common than those with direct execution according to the usage data we collected. An example of a workflow with editing follows.
 
@@ -318,16 +312,13 @@ We need four keypresses every time because with each executed command line entry
 There is another standard history mechanism we could use to repeat a block of history entries; 
 Executing \verb|fc -4 -1| opens an editor with the last four history entries and then, closing the editor executes the commands. This, however, is quite cumbersome in practice, and not many people seem to use it. 
 
-%Alternatively, we could use history expansion \verb|!-4| to recall and execute the fourth previous history entry; However, history expansion is not saved to 
-%\todo{Consider mentioning history expansion (see comment)}
-%\verb|!-4| works in a similar way
 
 Repeating a sequence of history entries is not the most common workflow. However, it shows us the limits and inefficiencies of standard shell history.
 
 
 \subsection{Searching with limited knowledge}\label{workflow-search-w-limited-knowledge}
 
-In all the workflows we discussed so far, the user wanted to recall a fairly recent history entry. Now, we move on to workflows where the user searches for older history entries. In these workflows, the user's memory is often a limiting factor; Both the knowledge of shell history and the desired command line entry are limited.
+In all the workflows we discussed so far, the user wanted to retrieve a fairly recent history entry. Now, we move on to workflows where the user searches for older history entries. In these workflows, the user's memory is often a limiting factor; Both the knowledge of shell history and the desired command line entry are limited.
 
 Below, we see an example of such workflow; The upper part contains relevant history entries from history. In the bottom part, we see the command line entry the user wants to find. 
 
@@ -700,7 +691,7 @@ McFly\cite{toolsmcfly} is a tool that tries to predict your next command line en
     \item exit status
 \end{itemize}
 
-Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replace the standard reverse search. Pressing \verb|CTRL-R| launches McFly full screen terminal app shown in figure \ref{tools-mcfly}. At first, the app displays a list of ten predicted history entries. The list of history entries is updated as you type; It only shows results that exactly match the typed query. The list always contains ten results or less, which is a curious design decision. 
+Unlike Bashhub, this tool is designed to be bound to \verb|CTRL-R| and to replace the standard reverse search. Pressing \verb|CTRL-R| launches McFly full-screen terminal app shown in figure \ref{tools-mcfly}. At first, the app displays a list of ten predicted history entries. The list of history entries is updated as you type; It only shows results that exactly match the typed query. The list always contains ten results or less, which is a curious design decision. 
 
 
 \begin{figure}[h]

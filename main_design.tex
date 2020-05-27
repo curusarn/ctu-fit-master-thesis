@@ -80,7 +80,7 @@ As we saw in the analysis, the standard reverse search does not provide a good f
 %\paragraph{Matching the state-of-the-art}
 
 Hstr\cite{toolshstr} and Fzf\cite{tools-fzf} are existing projects that replace reverse search and provide improved searching capabilities. 
-Standard reverse search only uses a single query for searching and displays a single result at a time. In contrast, both of the tools mentioned above allow using more than a single query for searching and show a full screen of history results. We use these tools as an inspiration. Our searching application should match the key improvements provided by Hstr and Fzf. 
+Standard reverse search only uses a single query for searching and displays a single result at a time. In contrast, both of the tools mentioned above allow using more than a single query for searching and show a screen full of history results. We use these tools as an inspiration. Our searching application should match the key improvements provided by Hstr and Fzf. 
 
 %\paragraph{Enhancing history searching with context}
 
@@ -195,7 +195,7 @@ Command line & COMMAND-LINE & always \\\hline \hline
 
 Host and directory also share a single column, but they do have separate headers. Columns are being dynamically resized to fit the data and to not waste space. Command line entry, host, and directory are shortened to fit the screen if necessary. 
 
-Near the bottom of the screen, there is a status bar with details about the currently selected command and help. These details are displayed without any shortening, and the status bar is expanded to accomodate them. Under the command details, there is help that shows key bindings and other information.
+Near the bottom of the screen, there is a status bar with details about the currently selected entry and help. These details are displayed without any shortening, and the status bar is expanded to accomodate them. Under the command details, there is help that shows key bindings and other information.
 
 
 The wireframe in figure \ref{wireframe-detail} shows the detail view. In this view, the user can see the details and surrounding history entries for a single command line entry. Each command line entry can appear in history multiple times; The user can switch between these occurrences. The next occurrence is partially displayed to make it easier to compare the surrounding history entries.
