@@ -288,7 +288,7 @@ As you can see in figure \ref{impl-daemon-channels}, the daemon consists of four
 
 The history collector uses \verb|/record| request to send history records to the daemon. The search application uses \verb|/dump| request to get all history records. And the \verb|/recall| request is used by the arrow key handler to get command line entries from the daemon. 
 
-All of the requests use JSON as a data exchange format. Conveniently, history records are also saved to storage as JSON. 
+All of the requests use JSON as a data exchange format. Conveniently, history records are also saved to storage as JSON.\footnote{An example of a JSON history record can be found in appendix in section \ref{json-example}} 
 
 \redtext{Link to appendix to description of JSON structure}
 

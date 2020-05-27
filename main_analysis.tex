@@ -93,7 +93,7 @@ Pointing out these limitations might seem like nitpicking. However, we will see 
 Shells offer built-in commands to print and control history. Built-in command \verb|history| and standard shell utilities can be used for powerful history searching.
 For example, to search the history using two words and displays all matching results we can run following command line entry. 
 \begin{verbatim}
-    history | grep 'pattern1' | grep 'pattern2'
+    history | grep 'word1' | grep 'word2'
 \end{verbatim}
 
 Manually filtering history overcomes the limitations of reverse search. However, extra typing is necessary to complete the searches compared to interactive methods. Plus, unlike with reverse search, we cannot see the results update as we type the search query.
@@ -343,7 +343,7 @@ Below, we see an example of such workflow; The upper part contains relevant hist
 ssh root@thumbnail-api.dev.example.com
 \end{verbatim}
 
-In the example above, the user wants to remotely log in to a \verb|thumbnail api| server in the development environment using \verb|ssh|. 
+In the example above, the user wants to remotely log into a \verb|thumbnail api| server in the development environment using \verb|ssh|. 
 
 If the user saw the full example in front of him as we do now, it would be quite easy to choose a good searching strategy. However, the user does not see, nor he remembers all the relevant information. He will need to make use of his limited memory to find the desired command line entry. 
 
@@ -543,7 +543,6 @@ Some of the command line entries he needs are easy to remember because they are 
 
 This information is stored in the shell history, but it is not easy to retrieve. Standard history mechanisms only search by the command line entry itself. It could be very useful if the user was able to display and search the history from the current directory.
 
-
 \section{Existing history tools}
 
 In this section, we take a look at popular existing history tools. Many of these tools relate to the workflows we identified earlier. We describe how these tools work, and we explain how they are useful to users. 
@@ -558,6 +557,7 @@ Most of the tools we cover can be used to enhance the capabilities of standard s
     \item Contextual shell history in the cloud
     \item Contextual history search powered by a neural network
 \end{itemize}
+
 
 \subsection{Autosuggestions}
 

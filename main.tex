@@ -148,12 +148,7 @@ Our solution has been installed over 600 times in the last four months. Some of 
 
 \begin{document}
 
-%\newacronym{GUI}{GUI}{Graphical User Interface}
-%\newacronym{CLI}{CLI}{Command Line Interface}
-%\newacronym{GNU}{GNU}{GNU's Not Unix!}
 \begin{introduction}
-
-
 
 Classic command line interfaces were mostly replaced by GUIs in consumer software \cite{norman2007ui}. However, among IT professionals and enthusiasts, CLIs and shells are a popular way to interact with computers.\footnote{CLIs and shells are active topics on websites that are popular among developers. Specifically, GitHub Topics, Stack Overflow, and Super User all register notable activity under topics/tags about CLIs, Bash, and Zsh.} 
 %CLIs are generally not replaceable by GUIs. GUIs do not work well when the number of available actions is high \cite{norman2007ui}. 
@@ -258,37 +253,97 @@ More research should be done to explore relationships between history entries. E
 
 \chapter{Contents of attached medium}\label{app:SDcontent}
 
-\todotext{TODO: Visualise the contents of enclosed media. Use of dirtree is recommended. Note that directories src and text with appropriate contents are mandatory.}
+\subsection*{Available online}
 
+The contents of the attached medium are also available at:
+
+\url{https://github.com/curusarn/ctu-fit-master-thesis-data}
+
+%\todotext{TODO: render and commit the PDF to the repo}
+\subsection*{Installation}
+
+Installation instructions for the RESH project are available at:
+
+\url{https://github.com/curusarn/resh}
+
+\subsection*{Building from source}
+
+If you want to you can build the RESH project from source using \verb|make build| (in the RESH project directory). You will need to install Go first. Build and install the project using \verb|make install|.
 
 \begin{figure}
 	\dirtree{%
-		.1 readme.txt\DTcomment{the file with CD contents description}.
-		.1 data\DTcomment{the data files directory}.
-		.2 graphs\DTcomment{the directory of graphs of experiments}.
-		.3 *.eps\DTcomment{the B/W graphs}.
-		.3 *.png\DTcomment{the color graphs}.
-		.3 *.dat\DTcomment{the graphs data files}.
-		.1 exe\DTcomment{the directory with executable WBDCM program}.
-		.2 wbdcm\DTcomment{the WBDCM program executable (UNIX)}.
-		.2 wbdcm.exe\DTcomment{the WBDCM program executable (Windows)}.
+		.1 README.md\DTcomment{the file with description of the contents of this medium}.
+		.1 release\DTcomment{the directory with tarballs of the latest release of RESH}.
+		.2 resh\_2.7.6\_checksums.txt\DTcomment{the file with checksums of tarballs}.
+		.2 resh\_2.7.6\_darwin\_*.tar.gz\DTcomment{tarballs of the latest release (MacOS)}.
+		.2 resh\_2.7.6\_linux\_*.tar.gz\DTcomment{tarballs of the latest release (Linux)}.
 		.1 src\DTcomment{the directory of source codes}.
-		.2 wbdcm\DTcomment{the directory of WBDCM program}.
-		.3 Makefile\DTcomment{the makefile of WBDCM program (UNIX)}.
-		.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
+		.2 resh\DTcomment{the git directory of RESH project}.
+		.3 README.md\DTcomment{the readme for RESH}.
+		.3 Makefile\DTcomment{the makefile for RESH}.
+		.2 thesis\DTcomment{the git directory of LATEX source codes of the thesis}.
 		.3 figures\DTcomment{the thesis figures directory}.
-		.3 *.tex\DTcomment{the \LaTeX{} source code files of the thesis}.
+		.3 *.tex\DTcomment{the LATEX source code files of the thesis}.
 		.1 text\DTcomment{the thesis text directory}.
-		.2 thesis.pdf\DTcomment{the Diploma thesis in PDF format}.
-		.2 thesis.ps\DTcomment{the Diploma thesis in PS format}.
+		.2 thesis.pdf\DTcomment{the thesis in PDF format}.
 	}
 \end{figure}
 
 \chapter{Additional notes}\label{app:extras}
 
-\redtext{This should not be empty}
+\section{Example history record}\label{json-example}
 
-\newpage
+Below we see an example of a JSON structure representing a history record.
+
+\begin{verbatim}
+{
+  "cmdLine": "echo 'hello reader'",
+  "exitCode": 0,
+  "shell": "zsh",
+  "uname": "Linux",
+  "machineId": "adf43f004f1748d181e606c329aaf921",
+  "sessionId": "a1968bc6-e791-4202-838c-1dbd0111c6e0",
+  "recordId": "5f0969c8-9e74-42fd-95cb-1ae8b72c6848",
+  "home": "/home/simon",
+  "lang": "en_US.UTF-8",
+  "login": "simon",
+  "pwd": "/home/simon/git/resh",
+  "shellEnv": "/usr/bin/zsh",
+  "term": "xterm-256color",
+  "realPwd": "/home/simon/git/resh",
+  "pid": 13296,
+  "sessionPid": 13296,
+  "host": "tower",
+  "shlvl": 1,
+  "timezoneBefore": "+0200",
+  "timezoneAfter": "+0200",
+  "realtimeBefore": 1590585373.0301247,
+  "realtimeAfter": 1590585373.060966,
+  "realtimeBeforeLocal": 1590592573.0301247,
+  "realtimeAfterLocal": 1590592573.060966,
+  "realtimeDuration": 0.030841350555419922,
+  "realtimeSinceSessionStart": 646.9090037345886,
+  "realtimeSinceBoot": 23034.209003734588,
+  "gitDir": "/home/simon/git/resh",
+  "gitRealDir": "/home/simon/git/resh",
+  "gitOriginRemote": "git@github.com:curusarn/resh",
+  "osReleaseId": "manjaro",
+  "osReleaseVersionId": "",
+  "osReleaseIdLike": "arch",
+  "osReleaseName": "Manjaro Linux",
+  "osReleasePrettyName": "Manjaro Linux",
+  "reshUuid": "704f1603-0eee-4f91-b2c6-2573bcc4dfb1",
+  "reshVersion": "v2.7.6-2-g92eac3c-DEV",
+  "reshRevision": "92eac3cbe132",
+  "recalled": false,
+  "recallHistno": 1,
+  "recallActionsRaw": "|||arrow_up:|||arrow_up:echo ",
+  "recallLastCmdLine": "echo 'hello reader'",
+  "cols": "211",
+  "lines": "56"
+}
+\end{verbatim}
+
 \section{Sequential structure of command usage}\label{seq-app}
 
 Figure \ref{seq-graph} shows sequential relationships between command stubs in shell usage of a single chosen user. 

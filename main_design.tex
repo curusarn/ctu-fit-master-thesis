@@ -7,8 +7,6 @@ The design we present in this chapter is a result of iterative process based on 
 We are designing new features to be integrated into shell and by extension workflows of people. Because of that we need to respect the standard history features and the habits that people have built by using them. This is especially important for CLI features because they have low discoverability\footnote{For example, if we add a new history feature to an unused key binding, there is no way for our users to discover it. Compare this with GUI application where available features can be displayed on the screen.}.
 
 
-%This is true for any design but it is especially important for features integrated into shell. Discoverability is very bad in shell because available features are invisible.
-
 The design should be simple and minimalist so that the user is not overwhelmed with available features. Overloading history mechanisms with complex functionality does not make them better.\cite{greenberg1993computer}
 
 
@@ -32,7 +30,6 @@ We selected following requirements based on the previous analysis:
 
 \begin{itemize}
 \item Record shell history with context and usage
-% \item Allow unlimited history
 \item Allow history sharing between open sessions
 \item Provide good out-of-the-box experience
 \subitem Allow people to use the history system without configuring it first
@@ -73,10 +70,6 @@ The core focus of this design is providing a replacement for the standard revers
 Standard history features form the base that people are used to. We should not redesign and replace them unless we have a good reason to.
 As we saw in the analysis, the standard reverse search does not provide a good feature set to complete many workflows. Furthermore, there are other tools available that provide features that solve the issues of reverse search. Because of this, we design a searching application that replaces and improves the reverse search.
 
-%For example, we have no reason to change history expansion. Accessing recent history entries using \verb|ARROW_UP| works reasonably well in many situations. Furthermore, people expect \verb|ARROW_UP| to give them immediately previous history entries. Because of these reasons, we do not redesign \verb|ARROW_UP|.
-
-% In contrast
-
 %\paragraph{Matching the state-of-the-art}
 
 Hstr\cite{toolshstr} and Fzf\cite{tools-fzf} are existing projects that replace reverse search and provide improved searching capabilities. 
@@ -84,26 +77,13 @@ Standard reverse search only uses a single query for searching and displays a si
 
 %\paragraph{Enhancing history searching with context}
 
-%In analysis, we have identified workflows that are directly related to context. 
-%Additionally, we described different ways how context relates to shell usage. 
-
 In addition to matching the state-of-the-art features, we want to use context to enhance the searching capabilities of our history system. Our searching application should make it easier to retrieve history that match the current context. 
-
-
-% todo: do not be as specific CUT here
-
-
-%This means that history entries from current directory, git repository, and host should be prioritized.
-%In contrast, history entries with errors should be penalized.
-%The relevant context should be visible when it affects the order of results.
-%However, the user interface should not be cluttered with irrelevant context. 
-
 
 
 \subsection{Additional features}
 
 Here, we describe features that are not the main focus of our design. These features are less important than providing a replacement for the reverse search. However, they are still valuable; We want to make sure they fit with the rest of the design. 
-The chosen additional features are Forward in history, synchronizing history between devices, and Fish-like Autosuggestions.
+The chosen additional features are Forward in history, synchronizing history between devices, and Fish-like autosuggestions.
 
 
 
@@ -289,10 +269,8 @@ The terminal history searching application needs to serve relevant entries to th
 
 After scoring all the history records, they are sorted. Finally, history entries with the highest scores are displayed to the user.
 
-% It is essential to strike a good balance between effects of the query and the context. 
 \paragraph{Scoring metric}
 
-%Results that are displayed near the top ... is very important because it 
 The score for a record \(r\) with query \(q\) and current context \(c\) is a sum of three parts: 
 
 \[ Score_r(q,c) = w_1 \cdot QueryScore_r(q) + w_2 \cdot ContextScore_r(c) + w_3 \cdot TimeScore_r \]
@@ -304,10 +282,6 @@ The first part, \(QueryScore\), represents how well the history record matches t
 The second most important part is \(ContextScore\); It represents the similarity between the context of the history record and the current context. Finally, \(TimeScore\) gives higher scores to more recent history entries. The influence of \(TimeScore\) on the total resulting score should be marginal.
 
 Now that we covered how the partial scores relate to each other, we look at them individually.
-
-
-
-
 
 \paragraph{Query score}
 
@@ -347,26 +321,14 @@ In other words, any two history records \(r\) and \(s\) with different contexts 
 Here, \(context\) of history record \(r\) is defined as its directory, git repository, exit status, and host:
 \[ context_r = (directory_r, gitRepository_r, exitStatus_r, host_r) \]
 
-
-
 \paragraph{Time score}
 
 The last part of the score is \(TimeScore\). It is the least important of the partial scores. The most recent entries have the highest \(TimeScore\), and older entries have lower \(TimeScore\). 
-
-
 
 \paragraph{Score weights}
 
 We described the scoring function as a whole. We also introduced some important properties of the partial scoring functions. However, the resulting behavior of the whole scoring function depends on the concrete weights we use. 
 Specific weights should be determined experimentally based on real-life shell history.
-
-
-
-%\subsection{Open session tracking}
-
-%Features like forward in history need to quickly serve specific history entries to the user. This requires the necessary history records to be processed and held in memory. 
-%Data processing is the responsibility of the daemon. Daemon keeps track of open sessions and prepares the necessary history records for them.
-
 
 \subsection{History synchronization between devices}
 
