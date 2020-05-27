@@ -1,10 +1,10 @@
 
 \chapter{Analysis}
 
-In this chapter, look at the current state-of-the-art. 
+In this chapter, we look at the current state-of-the-art. 
 We examine standard shell features because they represent both what people are used to and the starting point for our solution.
 
-Because we want to know who we design for we introduce target users for our future design. We formulate shell history workflows based on shell usage data we collected from several people. %Each workflow is described in detail. 
+Because we want to know who we design for we introduce target users for our future design. We formulate shell history workflows based on shell usage data we have collected from several people. %Each workflow is described in detail. 
 These workflows show us when standard shell history features work well and when there are issues. We explain the limitations and disadvantages of standard shell history features.
 
 After that, we review existing history tools to see what problems they solve. We identify tools that address the issues of standard shell history features. We also find contextual history tools that do not bring much value to the user.
@@ -14,10 +14,11 @@ Then, we explore what contextual information is available in shell. We break it 
 
 \section{Standard shell history features}
 
-In this section, we describe common standard shell history features of Bash\cite{bashman} and Zsh\cite{zshdocs}. Most of these features are enabled by default, so the user does not have to configure them before using them.
-%These features are most likely available to the majority of our target users. %Standard shell history features shape how people use shell history. 
-For each of the features, we point out its advantages and disadvantages.
-The list of history features we cover is the following:
+In this section, we describe common standard shell history features of Bash\cite{bashman} and Zsh\cite{zshdocs}. Most of these features are enabled by default; The user can use them without configuring them first.
+We cover following history features:
+
+%For each of the features, we point out its advantages and disadvantages.
+%The list of history features we cover the following:
 
 \begin{itemize}
     \item Saving history entries
@@ -101,7 +102,9 @@ Manually filtering history overcomes the limitations of reverse search. However,
 
 \section{Target users}
 
-When designing any product, we need to make sure we know who the product is for. Shell history tools are no exception. To capture the target user-base, we are modeling two typical users as personas.% As the first persona, we chose an experienced user because shell history tools are likely more for users that use shell extensively. As the second persona, we chose a novice shell user; Designing tools for novice shell users can result in a product that is better for everyone. For example, it is especially important for novice users that the product is easy to install, comes with a good default configuration, and is easy to use for the first time; These characteristics are beneficial to everyone not just novice users. 
+When designing any product, we need to make sure we know who the product is for. Shell history tools are no exception. To capture the target user-base, we are modeling two typical users as personas.
+
+% As the first persona, we chose an experienced user because shell history tools are likely more for users that use shell extensively. As the second persona, we chose a novice shell user; Designing tools for novice shell users can result in a product that is better for everyone. For example, it is especially important for novice users that the product is easy to install, comes with a good default configuration, and is easy to use for the first time; These characteristics are beneficial to everyone not just novice users. 
 
 \subsection{Typical experienced shell user}
 
@@ -131,18 +134,21 @@ The editor he uses is Visual Studio Code because it was recommended to him by a 
 
 He is using Bash with the default configuration provided by Ubuntu distribution; Apart from that, he does not have any custom shell configuration. 
 
-Since he does not have much experience with shells, he neither understands the shell configuration files nor feels confident editing them. If he discovered or someone recommended a new shell tool to him, he would prefer an installation without the need to edit the shell configuration files. Additionally, he expects any programs and tools he installs to work out-of-the-box without requiring much configuration. 
+Since he does not have much experience with shells, he does not understands the shell configuration files. Because of that, he does not feel confident editing them. 
 
-There are shell history features he is not aware of like history expansion and prefix search. He uses arrow keys to get recently submitted command line entries, and he presses \verb|CTRL-R| when looking for history entries further in the past. 
+If he discovered or someone recommended a new shell tool to him, he would prefer an installation without the need to edit the shell configuration files. Additionally, he expects any programs and tools he installs to work out-of-the-box without requiring much configuration. 
 
-%\todotext{TODO: ADD challenges and benefits ? maybe}
+There are shell history features he is not aware of such as history substitution and prefix search. He uses arrow keys to get recently submitted command line entries, and he presses \verb|CTRL-R| when looking for history entries further in the past. 
 
 
 \section{Common shell history workflows}
 
-Now that we know who our target users are, we can formulate common workflows for them. Workflows are formulated based on interviewing users, collected shell usage data\footnote{We have collected shell history and usage data from a few people with different experience levels. We used this data to confirm the workflows where possible.}, and our experience with shells. 
+Now that we know who our target users are, we can formulate common workflows for them. Workflows are formulated based on interviewing users, collected shell usage data\footnote{We have collected shell history and usage data from a few people with different experience levels. We used this data to find workflows and to determine how common different workflows are.}, and our experience with shells. 
 
-Some of the workflows can be easily fulfilled using standard history features. Others are either difficult or impossible to complete. We describe and explain the issues people can encounter when using standard history features. The list of workflows we cover is the following:
+Some of the workflows can be easily fulfilled using standard history features. Others are either difficult or impossible to complete. We describe and explain the issues people can encounter when using standard history features. 
+
+\newpage
+In the next few sections, we describe following workflows in detail:
 
 
 \begin{itemize}
@@ -192,7 +198,7 @@ This example shows that there is not always an explicit error that could be dete
 
 We just saw multiple different situations in which people continue working on the same command. We also saw different approaches to retrieving previous history entries. It is worth noting that in all of these situations, the user relies on the order of the shell history. 
 
-\subsection{Blindly retrieving very recent history entries}
+\subsection{Blindly retrieving very recent history entries}\label{workflow-blind-retrieval}
 
 This second workflow is a retrieval and execution of a very recent history entry. Here, the user remembers the exact position of the history entry he wants to retrieve. An example of such workflow is running the following sequence of command line submissions.
 \begin{verbatim}
@@ -406,7 +412,7 @@ The user is in a similar situation. He presses \verb|CTRL-R| repeatedly to displ
 (reverse-i-search)`thumbnail': cd git/thumbnail_api
 \end{verbatim}
 
-The user knows that pressing \verb|CTRL-S| should bring back the previous result. However, he also knows that pressing \verb|CTRL-S| freezes all input coming to his terminal; This is the default\footnote{Default configuration on many popular distributions uses CTRL-S to produce XOFF -- a software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
+The user knows that pressing \verb|CTRL-S| should bring back the previous result. However, he also knows that pressing \verb|CTRL-S| freezes all input coming to his terminal; This is the default\footnote{In default configuration on many popular distributions CTRL-S produces XOFF -- a software flow control sequence that stops all input coming to the terminal.} behaviour and he could never be bothered to find out how to fix it.
 
 At this point, the user gets annoyed because the only option is to start over. He aborts the search, presses \verb|CTRL-R|, and types in the query \verb|thumbnail|. Then, it takes five presses of \verb|CTRL-R| to get to the desired result; This time he is more careful not to go too far again.
 
@@ -547,7 +553,7 @@ This information is stored in the shell history, but it is not easy to retrieve.
 
 In this section, we take a look at popular existing history tools. Many of these tools relate to the workflows we identified earlier. We describe how these tools work, and we explain how they are useful to users. 
 
-Most of the tools we cover can be used to enhance the capabilities of standard shell history. Apart from shell history tools, we also describe history features of other programs such as the Fish shell\cite{fishdocs} and the Python console in Blender\cite{tools-blender-docs-python-console}. Full list of tools we look at is the following:
+Most of the tools we cover can be used to enhance the capabilities of standard shell history. Apart from shell history tools, we also describe history features of other programs such as the Fish shell\cite{fishdocs} and the Python console in Blender\cite{tools-blender-docs-python-console}. Full list of tools we cover is the following:
 
 \begin{itemize}
     \item Autosuggestions
@@ -557,7 +563,6 @@ Most of the tools we cover can be used to enhance the capabilities of standard s
     \item Contextual shell history in the cloud
     \item Contextual history search powered by a neural network
 \end{itemize}
-
 
 \subsection{Autosuggestions}
 
@@ -571,15 +576,15 @@ The first history feature we discuss are autosuggestions. As you type on the com
 \end{figure}
 
 
-This history feature is very quick and convenient to use. You can use the shell as you would normally do, with the option to accept the suggestion whenever it matches what you want to type. Autosuggestions can replace neither \verb|ARROW_UP| nor proper history search; However, they work well in combination with these and other history mechanisms.
+This history feature is very quick and convenient to use. You can use the shell as you would normally do, with the option to accept the suggestion whenever it matches what you want to type. Autosuggestions can replace neither \verb|ARROW_UP| nor proper history search; However, they work well in combination with these and other history features.
 
 Autosuggestions also have some interesting properties compared to stepping through history using \verb|ARROW_UP|.
-When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries\footnote{We described a specific workflow showing this in the previous section \ref{workflow-recent-history-arrow-up}.}. This is not the case with autosuggestions. The displayed suggestion can be the most recent matching history entry, but it also does not have to be. Autosuggestions can use more experimental and more advanced recommendation techniques.
+When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries\footnote{We described a specific workflow showing this in the previous section \ref{workflow-blind-retrieval}}. This is not the case with autosuggestions. %The displayed suggestion can be the most recent matching history entry, but it also does not have to be. 
+Autosuggestions can use more experimental and more advanced recommendation techniques.
 
 Autosuggestions were originally designed and developed as part of the Fish\cite{fishdocs} shell; These are context-sensitive suggestions that take the current directory into account. Upon command line execution, Fish shell checks if any parameter is a valid path and marks that in the shell history. Later, history entries are only suggested if all the marked parameters are valid paths\cite{toolsfishissueautosuggestions}.
 
 There is also an implementation of autosuggestions available for Zsh\cite{toolszshautosuggestions}; Unlike its original version, this implementation does not offer context-sensitive suggestions. Another project\cite{toolszshhistdb} uses Zsh autosuggestions to offer history based on the current directory.
-
 Unfortunately, there is no native nor ad-hoc support for autosuggestions in Bash. 
 
 %In addition, based on our experience with Bash and its line-editing library Readline\cite{ramey2001gnureadline} implementing autosuggestions for Bash is likely impossible.
@@ -590,14 +595,20 @@ Unfortunately, there is no native nor ad-hoc support for autosuggestions in Bash
 In standard shell history, we can access the previously executed history entries by pressing \verb|ARROW_UP|. Pressing \verb|ARROW_DOWN| can be used to get back to the original prompt.
 As we saw in section \ref{workflow-repeating-a-sequence}, this behavior is quite inefficient when we want to retrieve a sequence of history entries.
 
-Forward in history feature allows you to repeat sequences of command line entries efficiently. 
-When you execute a command line entry and press \verb|ARROW_UP|, you get preceding history entries. In contrast, \verb|ARROW_DOWN| can give you access to following history entries.
+Forward in history feature allows you to repeat sequences of command line entries efficiently. It overloads \verb|ARROW_DOWN| with a secondary functionality. 
+By pressing \verb|ARROW_DOWN|, we can access entries from history that follows the command line entry we just executed. Essentially, when we retrieve and execute any history entry, we can use \verb|ARROW_DOWN| to retrieve more history entries that follow it. In other words, \verb|ARROW_DOWN| gives us access to the history relative to the previously executed history entry.
 
-How does the history system know the future? First of all, the system needs to record full non-deduplicated sequential history. Every command line entry in this full history is a part of a sequence. This means that there are specific preceding and following history entries for every command line submission. Whenever you retrieve a command line entry, the history entries that follow it in the history are available via \verb|ARROW_DOWN|.
+%\redtext{WIP MARKER}
+
+%When you execute a command line entry and press \verb|ARROW_UP|, you get preceding history entries. In contrast, \verb|ARROW_DOWN| can give you access to following history entries.
+
+%How does the history system know the future? First of all, the system needs to record full non-deduplicated sequential history. 
+
+%Every command line entry in this full history is a part of a sequence. This means that there are specific preceding and following history entries for every command line submission. Whenever you retrieve a command line entry, the history entries that follow it in the history are available via \verb|ARROW_DOWN|.
 
 % Pressing \verb|ARROW_DOWN| gives you quick access to the history entries that follow the history entry you just executed. 
 
-Forward in history feature exists in Python console in Blender \cite{tools-blender-docs-python-console}. This makes a lot of sense because every cycle and condition in Python console is a sequence. Naturally, using the Python console often includes workflows that require sequence repeating.
+Forward in history feature can be found in Python console in Blender \cite{tools-blender-docs-python-console}. This makes a lot of sense because every cycle and condition in Python console is a sequence. Naturally, using the Python console often includes workflows that require sequence repeating.
 
 Arguably, using shell involves less sequence repeating than using a Python console in Blender. However, as we saw earlier in section \ref{workflow-repeating-a-sequence}, it is still a relevant workflow that is not well supported by the standard shell history mechanisms. 
 
@@ -610,14 +621,7 @@ Hstr\cite{toolshstr} is an interactive history searching tool that addresses bot
 
 When launched, it displays a full-screen terminal application, as shown in figure \ref{hstr-screenshot}. You type a query at the top, and a page of matching history results is displayed below. In the default "keywords" matching mode, each word of the query is used as a separate searching term. 
 In addition to the default "keywords" matching mode, there are also "exact" and "regexp" matching modes. 
-
 Hstr is quite popular\footnote{Hstr has over two thousand stars and over eight thousand downloads on GitHub.} on GitHub, where it is hosted. Some of the people who use Hstr describe it as life-changing.
-
-\begin{figure}
-  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-hstr-std.pdf}}
-  \caption{Hstr interactive history search}
-  \label{hstr-screenshot}
-\end{figure}
 
 
 \subsection{Fuzzy history search}
@@ -625,22 +629,24 @@ Hstr is quite popular\footnote{Hstr has over two thousand stars and over eight t
 Fzf\cite{tools-fzf} is a popular\footnote{Fzf has over 28 thousand stars on GitHub.} general-purpose command line fuzzy finder. The documentation of the project recommends several ways that can be used to interactively search shell history.
 
 Searching history using Fzf addresses the issues of the history reverse search. 
-Like Hstr, Fzf can display a full page of results from history. 
+As shown in figure \ref{fzf-screenshot}, Fzf can display a full page of results from history. 
 
 Fuzzy search allows Fzf to retrieve both exactly and approximately matching history entries. Exact and close matches are returned first, and fuzzy matches are returned after. 
+This behavior essentially provides the functionality of a multi-query search. In addition, fuzzy search can match the desired history result even when you make typos in the query. Unlike "keywords" matching in Hstr, fuzzy matching is tolerant to mistakes and typos; Naturally, this is very appealing to users. 
 
-This essentially provides the functionality of a multi-query search. In addition, fuzzy search can match the desired history result even when you make typos in the query. Unlike "keywords" matching in Hstr, fuzzy matching is tolerant to mistakes and typos; Naturally, this is very appealing to users. 
-
-Fuzzy search is a commonly requested feature in various history tools. Some people who are already using Fzf cannot imagine using history tools without a fuzzy search.
-
-% \begin{figure}\tmpframe{\includegraphics[width=\linewidth]{figures/existing-tools/fzf-fh-screenshot.png}}\caption{Searching history interactively using Fzf}\end{figure}
-
-\begin{figure}
-  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-fzf-std.pdf}}
-  \caption{Searching history interactively using Fzf}
+\begin{figure}[h!]
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-hstr-std.pdf}}
+  \caption{Hstr interactive history search}
+  \label{hstr-screenshot}
 \end{figure}
 
+\begin{figure}[h!]
+  \permanentframe{\includegraphics[width=0.995\linewidth]{figures/existing-tools/xterm-fzf-std.pdf}}
+  \caption{Searching history interactively using Fzf}
+  \label{fzf-screenshot}
+\end{figure}
 
+Fuzzy search is a commonly requested feature in various history tools. Some people who are already using Fzf cannot imagine using history tools without a fuzzy search.
 
 \subsection{Contextual shell history in the cloud}
 
