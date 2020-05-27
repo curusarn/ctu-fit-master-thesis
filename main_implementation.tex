@@ -246,7 +246,7 @@ Formally, for a single word query \(q\) that matches record \(r\), for all conte
 
 \[ w_1 \cdot QueryScore_r(q) > \max{(w_2 \cdot ContextScore)} \]
 
-Furthermore, we do not want the contextual penalty to hide history results that match the query. We extend the previous rule to include this; For a single word query \(q\) that matches record \(r\), for all contexts, and for all records following should hold:
+Furthermore, we do not want the contextual penalty to hide history results that match the query. We extend the previous rule to include this. For a single word query \(q\) that matches record \(r\), for all contexts, and for all records following should hold:
 
 \[ w_1 \cdot QueryScore_r(q) + \min{(w_2 \cdot ContextScore_r)} > \max{(w_2 \cdot ContextScore)} \]
 

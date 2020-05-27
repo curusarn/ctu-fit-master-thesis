@@ -2,9 +2,9 @@
 \chapter{Design}
 
 In this chapter, we design our history system based on the previous analysis.
-The design we present in this chapter is a result of iterative process based on experiments and feedback from users. Designing user interfaces without iterative design often leads to usability issues.\cite{nielsen1993iterative}
+The design we present in this chapter is a result of an iterative process based on experiments and feedback from users. Designing user interfaces without iterative design often leads to usability issues.\cite{nielsen1993iterative}
     
-We are designing new features to be integrated into shell and by extension workflows of people. Because of that we need to respect the standard history features and the habits that people have built by using them. This is especially important for CLI features because they have low discoverability\footnote{For example, if we add a new history feature to an unused key binding, there is no way for our users to discover it. Compare this with GUI application where available features can be displayed on the screen.}.
+We are designing new features to be integrated into shell and, by extension, workflows of people. Because of that, we need to respect the standard history features and the habits that people have built by using them. This is especially important for CLI features because they have low discoverability\footnote{For example, if we add a new history feature to an unused key binding, there is no way for our users to discover it. Compare this with GUI application where available features can be displayed on the screen.}.
 
 
 The design should be simple and minimalist so that the user is not overwhelmed with available features. Overloading history mechanisms with complex functionality does not make them better.\cite{greenberg1993computer}
@@ -12,12 +12,12 @@ The design should be simple and minimalist so that the user is not overwhelmed w
 
 The first step of our design is to formulate requirements. These are based on previous analysis, workflows we identified, issues people have with standard history, and existing history tools. 
 
-Second, we design the architecture of the history system. We describe what parts the system consists of. We also explain purpose of these parts and the interactions between them.
+Second, we design the architecture of the history system. We describe what parts the system consists of. We also explain the purpose of these parts and the interactions between them.
 
 %
 Then, we focus on the interactive parts of our design. We explain the behavior we want the user to experience. The biggest interactive part of the system is an application that replaces standard reverse search. We design the visual layout of the application, keybindings, colors, and responsiveness. 
 
-After that, we move on to the backend of the system. Backend includes the processes that support the interactive parts of the design. We show what data we need to handle and how we represent it.
+After that, we move on to the backend of the system. The backend includes the processes that support the interactive parts of the design. We show what data we need to handle and how we represent it.
 
 Finally, we check and confirm that our design matches the initial requirements. For each requirement, we explain how our design fulfills it.
 
@@ -35,7 +35,7 @@ We selected following requirements based on the previous analysis:
 \subitem Allow people to use the history system without configuring it first
 \subitem Allow use of the system without reading manuals or help pages
 \item Respect existing history features and existing habits of people
-\subitem Do not change keybindings used to complete existing workflows
+\subitem Do not change keybindings used for existing workflows
 \subitem Support original workflows when replacing history mechanisms
 \item Provide a replacement for reverse search
 \subitem Solve the issues with standard reverse search
@@ -181,8 +181,6 @@ Near the bottom of the screen, there is a status bar with details about the curr
 The wireframe in figure \ref{wireframe-detail} shows the detail view. In this view, the user can see the details and surrounding history entries for a single command line entry. Each command line entry can appear in history multiple times; The user can switch between these occurrences. The next occurrence is partially displayed to make it easier to compare the surrounding history entries.
 
 
-% \subsubsection{Modes (Context/RAW)} - added after user feedback
-
 \paragraph{Key bindings}
 When designing key bindings, it is essential to respect existing key bindings and to leverage what are the users already used to.
 We want to avoid collisions with flow control keybindings so we do not use \verb|CTRL-S| and \verb|CTRL-Q|. Additionally, we do not reuse standard job control key bindings \verb|CTRL-Z|. 
@@ -265,7 +263,7 @@ Now we design the inner workings of the system that make it possible to provide 
 
 \subsection{Search algorithm}
 
-The terminal history searching application needs to serve relevant entries to the user based on the typed query and current context. When searching, each history record is assigned a score; This score is based on how well history record matches the query, how well it matches the current context, and also on its time of execution. 
+The terminal history searching application needs to serve relevant entries to the user based on the query and current context. When searching, each history record is assigned a score. This score is based on how well history record matches the query, how well it matches the current context, and also on its time of execution. 
 
 After scoring all the history records, they are sorted. Finally, history entries with the highest scores are displayed to the user.
 
@@ -344,9 +342,9 @@ The daemon controls this whole synchronization process; It initiates the individ
 In this section, we discuss what data we need to handle and how it should be represented so that all the chosen requirements and features are possible.
 
 
-Contextual shell history is inherently relational; Each history record was executed as part of a given session, on a host, in a specific directory. However, we do not need the relational properties of the history for most of the features. For example, when searching, we need to calculate scores for all history entries, not just the ones with matching context. 
+Contextual shell history is inherently relational. Each history record was executed as part of a given session, on a host, in a specific directory. However, we do not need the relational properties of the history for most of the features. For example, when searching, we need to calculate scores for all history entries, not just the ones with matching context. 
 
-We represent the data as a stream of history records; Each record can be uniquely identified by its ID. Separate entries are very easy to merge when we synchronize history from multiple devices.
+We represent the data as a stream of history records. Each record can be uniquely identified by its ID. Separate entries are very easy to merge when we synchronize history from multiple devices.
 
 Based on all requirements and features of our design, each record has to contain at least following data:
 \begin{itemize}
@@ -376,7 +374,7 @@ Based on all requirements and features of our design, each record has to contain
 
 Here, we describe the communication between the components of our history system. Figure \ref{design-api} shows requests, responses, and execution that happen in the system. Data that is sent with each request is displayed under the arrow. 
 
-The search application requests all history records when it is launched and then requests details for a specific history record when the user switches to the detail view. Response with the details for the history record contains a list of occurrences of the command line entry; Each occurrence consists of the history record and surrounding command line entries.
+The search application requests all history records when it is launched and then requests details for a specific history record when the user switches to the detail view. Response with the details for the history record contains a list of occurrences of the command line entry. Each occurrence consists of the history record and surrounding command line entries.
 
 Arrow key handler is simpler; It requests a history entry based on the current session, the prefix that is already typed on the command line, and history offset that represents how many times did the user press the arrow key. The response is a single command line entry to display.
 
@@ -384,7 +382,7 @@ Autosuggestions handler requests a command line entry to show. The request conta
 
 All of these components are integrated into the shell and activated when a specific key is pressed. Furthermore, they directly manipulate the contents of the command line when they return a command line entry to the user.
 
-The history collector is also integrated into the shell so that it can collect the current context and send it to the daemon. Synchronization connector does not receive any data; instead, it is executed by the daemon to complete low-level synchronization tasks. 
+The history collector is also integrated into the shell so that it can collect the current context and send it to the daemon. Synchronization connector does not receive any data; Instead, it is executed by the daemon to complete low-level synchronization tasks. 
 
 \section{Design testing}
 
@@ -412,7 +410,7 @@ Our design does not expect people to configure the system before using it. Desig
 
 \begin{itemize}
 \item Respect existing history features and existing habits of people
-\subitem Do not change keybindings used to complete existing workflows
+\subitem Do not change keybindings used for existing workflows
 \subitem Support original workflows when replacing history mechanisms
 \end{itemize}
 
