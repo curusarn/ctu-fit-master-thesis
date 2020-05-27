@@ -780,9 +780,9 @@ One more use for sequences of command line entries is recording them as a full n
 \subsection{Host and portability of history entries}
 
 Imagine that you have your shell history synchronized between multiple devices.
-Each of the devices is at least slightly different, so it is a good idea to be able to tell them apart. Devices usually have hostnames we can use to identify them. 
+Each of the devices is at least slightly different, so it is a good idea to be able to tell them apart. Devices usually have hostnames which we can use to identify them. 
 
-Since each device can be different, we should look at the possible differences that are relevant to the shell history. Different operating systems use different package managers to install software. For example, Debian-based distributions use Apt, Arch-based distributions use Pacman, and on MacOS people use Homebrew. Commands for one package manager will not work with others.
+Since each device can be different, we should look at the possible differences that are relevant to the shell history. Different operating systems use different package managers to install software. For example, Debian-based distributions use Apt, Arch-based distributions use Pacman, and on MacOS users use Homebrew. Commands for one package manager will not work with the others.
 
 Many history entries are valid in both Bash and Zsh, but not all history entries. Shell configuration might differ between devices, which could cause some history entries to not work properly on all devices. A good example are specific shell aliases that the user added to one of their devices.
 
