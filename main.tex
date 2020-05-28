@@ -47,16 +47,8 @@
 \let\myRef\ref
 \renewcommand\ref{\unskip~\myRef}
 
-
 \newcommand\hatx{\^{}}
 \newcommand{\hatxxx}{\hatx\hatx\hatx}
-
-% why is it so hard to render tilde in Latex
-
-\usepackage[formats]{listings}
-
-\lstdefineformat{R}{~=\( \sim \)}
-\lstset{basicstyle=\ttfamily,format=R,columns=fixed,basewidth=0.5em}
 
 % list of acronyms
 %\usepackage[acronym,nonumberlist,toc,numberedsection=autolabel,nomain]{glossaries}
@@ -142,7 +134,7 @@ We implement the core parts of the design. It records shell history with context
 Based on our users' usage data, we compare our solution with one of the state-of-the-art history tools -- Hstr.
 Our solution, on average, performs similarly or better than Hstr.
 
-There are many situations where our solution outperforms Hstr. It requires less knowledge and less typing when searching. Our solution, on average, saves more typed characters to the user. 
+There are many situations where our solution outperforms Hstr. It requires less knowledge and less typing when searching. Our solution, on average, saves the user more typed characters. 
 
 Our solution has been installed over 600 times in the last four months. Some of our users previously used Hstr, and our application covers all of their previous workflows. We have received overwhelmingly positive feedback from the community.
 
