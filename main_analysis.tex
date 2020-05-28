@@ -763,7 +763,7 @@ Git remotes\footnote{Remotes are remote repositories tracked by Git. Origin is t
 
 Command line entries are generally not executed individually; They are a part of longer sequences and tasks.\cite{greenberg1993computer} Each entry is related to its preceding and following command line entries. 
 
-While analyzing shell history we collected from people, we observed significant sequential dependencies between command stubs. These dependencies represent workflows that users recognize and remember.\footnote{This specific analysis can be found in an appendix in section \ref{seq-app}.}
+While analyzing shell history we collected from people, we observed significant sequential dependencies between command stubs. These dependencies represent workflows that users recognize and remember.\footnote{Analysis of sequential dependencies between history entries can be found in an appendix in section \ref{seq-app}.}
 
 Apart from immediate sequential dependencies, each command belongs to a terminal session. We have observed significant differences between how people use sessions. Some people often create new terminals even for a few command line entries and then close them. Others keep terminals open for a long time and reuse them for different tasks.
 Additionally, people very often switch back and forth between multiple open terminals. Command line entries from simultaneous terminal sessions are usually different but all related to the same task.
@@ -772,7 +772,7 @@ These relationships between history entries and sessions are definitely interest
 
 However, it is not apparent if these relationships are general enough to be useful in the average case. It is unclear how to use this complex contextual information to provide value to the user. It is beyond the scope of this work to study the relationships between history entries and between sessions.
 
-Nevertheless, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them\footnote{We saw such a situation in section \ref{workflow-repeating-a-sequence} earlier}. We should support such workflows.
+Nevertheless, not all of the sequential contextual information is difficult to interpret and use. Sequences of history entries are useful because there are situations when people want to repeat them.\footnote{We have described such a situation in section \ref{workflow-repeating-a-sequence}.} We should support such workflows.
 
 One more use for sequences of command line entries is recording them as a full non-deduplicated transcript. Having a full transcript of your actions gives you the ability to refer back to what you were doing earlier. A transcript of command line entries should also include the time of execution for the individual entries.
 
