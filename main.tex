@@ -51,6 +51,13 @@
 \newcommand\hatx{\^{}}
 \newcommand{\hatxxx}{\hatx\hatx\hatx}
 
+% why is it so hard to render tilde in Latex
+
+\usepackage[formats]{listings}
+
+\lstdefineformat{R}{~=\( \sim \)}
+\lstset{basicstyle=\ttfamily,format=R,columns=fixed,basewidth=0.5em}
+
 % list of acronyms
 %\usepackage[acronym,nonumberlist,toc,numberedsection=autolabel,nomain]{glossaries}
 \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
