@@ -183,7 +183,7 @@ When we compare our history search application with Hstr, we are providing our c
 
 To evaluate the history tools, we simulate the successful searches performed by the user. Then we use previously introduced metrics to compare the utility of these history tools.
 
-When simulating the searches, we iterate over all situations when the user searched his history\footnote{Actually, we skip searches performed before the first one thousand history entries. We do this to not perform searches on almost empty history. We can still observe some minor warm-up effect, but it does not skew the results.}. With each simulated search, we are essentially asking questions such as:
+When simulating the searches, we iterate over all situations when the user searched his history.\footnote{Actually, we skip searches performed before the first one thousand history entries. We do this to not perform searches on almost empty history. We can still observe some minor warm-up effect, but it does not skew the results.} With each simulated search, we are essentially asking questions such as:
 
 \begin{itemize}
     \item Does this history entry show up in \textbf{first 20 results} if we use \textbf{no query}?

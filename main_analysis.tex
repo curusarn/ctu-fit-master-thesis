@@ -515,7 +515,7 @@ Now, we consider situations where it is possible, at least partially, to replace
 
 In this example, the user wants to use \verb|dd| to create a bootable USB drive from an ISO file. The user uses \verb|dd| as a search query. We are not considering a specific existing history mechanism. Instead, we discuss the possibilities and potential of shell history in this particular situation.
 
-All of the history entries in the example match the query. However, not all of these history entries are useful. Two of the entries that do not start with \verb|sudo| will result in an error if executed\footnote{In this example, the user is not currently logged in as a superuser.}. 
+All of the history entries in the example match the query. However, not all of these history entries are useful. Two of the entries that do not start with \verb|sudo| will result in an error if executed.\footnote{In this example, the user is not currently logged in as a superuser.} 
 
 In situations like this one, it could be useful if the history entries that originally ended with a zero status code were displayed before the ones that failed. Reordering search results could help the user to find the relevant results more quickly. 
 
@@ -578,7 +578,7 @@ The first history feature we discuss are autosuggestions. As you type on the com
 This history feature is very quick and convenient to use. You can use the shell as you would normally do, with the option to accept the suggestion whenever it matches what you want to type. Autosuggestions can replace neither \verb|ARROW_UP| nor proper history search. However, they work well in combination with these and other history features.
 
 Autosuggestions also have some interesting properties compared to stepping through history using \verb|ARROW_UP|.
-When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries\footnote{We described a specific workflow showing this in the previous section \ref{workflow-blind-retrieval}}. This is not the case with autosuggestions. %The displayed suggestion can be the most recent matching history entry, but it also does not have to be. 
+When people use simple \verb|ARROW_UP| they often expect to retrieve immediately recent history entries.\footnote{We described a specific workflow showing this in the previous section \ref{workflow-blind-retrieval}} This is not the case with autosuggestions. %The displayed suggestion can be the most recent matching history entry, but it also does not have to be. 
 Autosuggestions can use more experimental and more advanced recommendation techniques.
 
 Autosuggestions were originally designed and developed as part of the Fish\cite{fishdocs} shell; These are context-sensitive suggestions that take the current directory into account. Upon command line execution, Fish shell checks if any parameter is a valid path and marks that in the shell history. Later, history entries are only suggested if all the marked parameters are valid paths\cite{toolsfishissueautosuggestions}.
